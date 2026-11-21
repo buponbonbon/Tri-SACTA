@@ -8,24 +8,19 @@ Evaluates test-time adaptation and conformal prediction across 5 sequential comp
 - Regime 4: Visual corruption (blur & occlusion) + 30% random missing modality.
 - Regime 5: Severe compound shift (multi-channel noise + 50% missing modality) + return to clean.
 
-Supported TTA methods:
-- tri_sacta: Tri-Modal Spectral-Aligned Continual TTA (Ours)
-- tent: Test Entropy Minimization (LayerNorm adaptation)
-- sar: Sharpness-Aware Reliable TTA
-- read: Multimodal TTA baseline (READ / AV-CTTA style)
-- source_only: No adaptation
-
-Supported Conformal Methods:
-- online_aci: Mask-and-Disagreement-Driven Online ACI (Ours)
-- static_cp: Split Conformal Prediction
-- mccf: Mask-Conditional Static Conformal Prediction
-- none: No conformal prediction
+Key scientific improvements:
+1. Strict fail-closed checkpoint/data verification (AUD-10).
+2. Safe baseline shift-velocity check (AUD-15).
+3. Cross-modal disagreement passed to Online ACI (AUD-07).
+4. Delayed feedback with immutable prediction sets (AUD-08).
+5. Explicit data_mode and delay in output filenames (AUD-19, AUD-24).
 """
 
 from __future__ import annotations
 
 import os
 import sys
+import copy
 import argparse
 import logging
 import json
@@ -67,6 +62,7 @@ def main():
     parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only"])
     parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "static_cp", "mccf", "none"])
     parser.add_argument("--delay", type=int, default=0, help="Delayed feedback steps (0, 10, 50)")
+    parser.add_argument("--data-mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output_dir", type=str, default="results")
     args = parser.parse_args()
@@ -74,7 +70,7 @@ def main():
     with open(args.config, "r") as f:
         config = yaml.safe_load(f)
 
-    # Set seed
+    # Deterministic seeding
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
     np.random.seed(args.seed)
@@ -87,7 +83,7 @@ def main():
 
     # 1. Dataloaders
     batch_size = config.get("tta", {}).get("batch_size", 32)
-    dataloaders = get_dataloaders(config, batch_size=batch_size, seed=args.seed)
+    dataloaders = get_dataloaders(config, batch_size=batch_size, seed=args.seed, data_mode=args.data_mode)
     test_loader = dataloaders["test"]
     cal_loader = dataloaders["cal"]
 
@@ -96,14 +92,26 @@ def main():
     num_classes = config.get("model", {}).get("num_classes", 7)
     target_alpha = config.get("conformal", {}).get("alpha", 0.10)
 
-    # Load checkpoint if provided
-    ckpt_path = args.checkpoint or f"checkpoints/source_model_seed{args.seed}.pt"
-    if os.path.exists(ckpt_path):
+    # Resolve checkpoint
+    ckpt_path = args.checkpoint
+    if not ckpt_path:
+        candidate_paths = [
+            f"checkpoints/source_model_{args.data_mode}_seed{args.seed}.pt",
+            f"checkpoints/source_model_seed{args.seed}.pt",
+        ]
+        for cp in candidate_paths:
+            if os.path.exists(cp):
+                ckpt_path = cp
+                break
+
+    if ckpt_path and os.path.exists(ckpt_path):
         state_dict = torch.load(ckpt_path, map_location=device)
         model.load_state_dict(state_dict)
         logger.info(f"Loaded source checkpoint from {ckpt_path}")
     else:
-        logger.warning(f"Checkpoint not found at {ckpt_path}. Using current model weights.")
+        if args.data_mode == "real":
+            raise FileNotFoundError(f"Checkpoint not found for real data mode! Please train source first.")
+        logger.warning(f"No trained checkpoint found at {ckpt_path}. Using current model weights for debug.")
 
     # 3. Spectral detector setup
     detector = None
@@ -120,8 +128,19 @@ def main():
             gamma=config.get("tta", {}).get("gamma_eig", 1.0),
             top_k=config.get("tta", {}).get("top_k_eig", 32),
         )
-        stats_path = args.spectral_stats or f"checkpoints/source_spectral_stats_seed{args.seed}.pt"
-        if os.path.exists(stats_path):
+
+        stats_path = args.spectral_stats
+        if not stats_path:
+            cand_stats = [
+                f"checkpoints/source_spectral_stats_{args.data_mode}_seed{args.seed}.pt",
+                f"checkpoints/source_spectral_stats_seed{args.seed}.pt",
+            ]
+            for cs in cand_stats:
+                if os.path.exists(cs):
+                    stats_path = cs
+                    break
+
+        if stats_path and os.path.exists(stats_path):
             detector.load_source_stats(stats_path)
             logger.info(f"Loaded source anchor statistics from {stats_path}")
         else:
@@ -150,12 +169,11 @@ def main():
     # 5. Initialize Conformal Predictor
     conformal_predictor = None
     if args.conformal == "online_aci":
-        conf_cfg = copy_cfg = dict(config.get("conformal", {}))
+        conf_cfg = dict(config.get("conformal", {}))
         conf_cfg["delay"] = args.delay
         conformal_predictor = OnlineACI(num_classes=num_classes, alpha=target_alpha, config=conf_cfg)
     elif args.conformal == "static_cp":
         conformal_predictor = SplitConformalPredictor(num_classes=num_classes, alpha=target_alpha)
-        # Calibrate on cal set
         cal_logits, cal_labels = [], []
         model.eval()
         with torch.no_grad():
@@ -191,11 +209,11 @@ def main():
         "shift_velocity": [],
         "cross_modal_disagreement": [],
         "alpha_t": [],
-        "rolling_coverage": [],
+        "coverage_hits": [],
         "prediction_set_sizes": [],
     }
 
-    logger.info(f"Starting Continual Compound Shift Stream benchmark ({args.method} + {args.conformal})...")
+    logger.info(f"Starting Continual Compound Shift Stream benchmark ({args.method} + {args.conformal} | mode: {args.data_mode} | delay: {args.delay})...")
     vram.reset_peak()
 
     for regime_info in regimes:
@@ -206,7 +224,6 @@ def main():
 
         total_batches = len(test_loader)
         for step, raw_batch in enumerate(test_loader):
-            # Apply deterministic continual shift for current regime
             batch = shift_gen.apply_regime(raw_batch, regime_idx=reg_idx, step_in_regime=step, total_steps_in_regime=total_batches)
 
             features = {k: v.to(device) for k, v in batch["features"].items()}
@@ -220,13 +237,14 @@ def main():
             if tta_method is not None:
                 step_res = tta_method.adapt_step(features, mod_mask)
                 logits = step_res["logits"]
-                shift_vel = tta_method.get_shift_velocity()
+                # Safe shift velocity check (AUD-15)
+                shift_vel = tta_method.get_shift_velocity() if hasattr(tta_method, "get_shift_velocity") else {}
                 avg_shift_vel = float(np.mean(list(shift_vel.values()))) if shift_vel else 0.0
+                # Cross-modal disagreement (AUD-07)
                 disagree = step_res.get("cross_modal_disagreement", 0.0)
                 if isinstance(disagree, torch.Tensor):
                     disagree = float(disagree.item())
             else:
-                # Source-only forward pass
                 with torch.no_grad():
                     out = model(features, modality_mask=mod_mask)
                     logits = out["logits"]
@@ -242,9 +260,13 @@ def main():
                     sample_logits = logits[i : i + 1]
 
                     if args.conformal == "online_aci":
-                        p_set = conformal_predictor.predict_set(sample_logits, m_key)[0]
+                        p_set = conformal_predictor.predict_set(
+                            sample_logits,
+                            m_key,
+                            shift_velocity=avg_shift_vel,
+                            disagreement=disagree,
+                        )[0]
                         pred_sets.append(p_set)
-                        # Online update with delayed buffer support
                         conformal_predictor.update(
                             sample_logits,
                             labels[i : i + 1],
@@ -286,12 +308,13 @@ def main():
     vram_stats = vram.snapshot()
     avg_latency = latency.average_latency_per_sample()
 
-    time_series_data["rolling_coverage"] = overall_tracker.coverage_binary_stream
+    time_series_data["coverage_hits"] = overall_tracker.coverage_binary_stream
 
     final_results = {
         "dataset": config.get("dataset", {}).get("name", "mosei"),
         "method": args.method,
         "conformal": args.conformal,
+        "data_mode": args.data_mode,
         "seed": args.seed,
         "delay": args.delay,
         "overall_metrics": overall_metrics,
@@ -303,7 +326,11 @@ def main():
         "time_series": time_series_data,
     }
 
-    out_file = os.path.join(args.output_dir, f"{args.method}_{args.conformal}_{config['dataset']['name']}_seed{args.seed}.json")
+    delay_tag = f"_delay{args.delay}" if args.delay > 0 else ""
+    out_file = os.path.join(
+        args.output_dir,
+        f"{args.method}_{args.conformal}_{config['dataset']['name']}_{args.data_mode}{delay_tag}_seed{args.seed}.json"
+    )
     with open(out_file, "w") as f:
         json.dump(final_results, f, indent=2)
 

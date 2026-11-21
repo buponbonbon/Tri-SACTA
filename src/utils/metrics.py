@@ -32,42 +32,61 @@ def compute_accuracy(preds: np.ndarray, labels: np.ndarray) -> float:
 
 
 def compute_macro_f1(preds: np.ndarray, labels: np.ndarray, num_classes: int = 7) -> float:
-    """Compute unweighted Macro-F1 score."""
-    return float(f1_score(labels, preds, average="macro", zero_division=0))
+    """Compute unweighted Macro-F1 score with fixed class support list (AUD-20)."""
+    if len(labels) == 0:
+        return 0.0
+    all_classes = list(range(num_classes))
+    return float(f1_score(labels, preds, labels=all_classes, average="macro", zero_division=0))
 
 
 def compute_weighted_f1(preds: np.ndarray, labels: np.ndarray, num_classes: int = 7) -> float:
-    """Compute support-weighted F1 score."""
-    return float(f1_score(labels, preds, average="weighted", zero_division=0))
+    """Compute support-weighted F1 score with fixed class support list (AUD-20)."""
+    if len(labels) == 0:
+        return 0.0
+    all_classes = list(range(num_classes))
+    return float(f1_score(labels, preds, labels=all_classes, average="weighted", zero_division=0))
 
 
 def compute_nll(logits: torch.Tensor, labels: torch.Tensor) -> float:
-    """Compute Negative Log-Likelihood."""
-    return float(F.cross_entropy(logits, labels).item())
+    """Compute Negative Log-Likelihood strictly in FP32 precision (AUD-20)."""
+    if logits.numel() == 0:
+        return 0.0
+    # Ensure FP32 calculation to prevent AMP underflow/overflow
+    logits_fp32 = logits.float()
+    return float(F.cross_entropy(logits_fp32, labels).item())
 
 
 def compute_brier_score(probs: np.ndarray, labels: np.ndarray, num_classes: int = 7) -> float:
-    """Compute multi-class Brier score."""
-    one_hot = np.eye(num_classes)[labels]
-    return float(np.mean(np.sum((probs - one_hot) ** 2, axis=1)))
+    """Compute multi-class Brier score strictly in float64 precision (AUD-20)."""
+    if len(labels) == 0:
+        return 0.0
+    one_hot = np.eye(num_classes, dtype=np.float64)[labels]
+    probs_f64 = probs.astype(np.float64)
+    return float(np.mean(np.sum((probs_f64 - one_hot) ** 2, axis=1)))
 
 
 def compute_ece(probs: np.ndarray, labels: np.ndarray, n_bins: int = 15) -> float:
-    """Compute Expected Calibration Error (ECE) with equal-width bins."""
+    """Compute Expected Calibration Error (ECE) with equal-width bins and boundary guards (AUD-20)."""
+    if len(labels) == 0:
+        return 0.0
     confidences = np.max(probs, axis=1)
     predictions = np.argmax(probs, axis=1)
     accuracies = (predictions == labels)
 
-    bin_boundaries = np.linspace(0, 1, n_bins + 1)
+    bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
     ece = 0.0
     n_samples = len(labels)
 
     for i in range(n_bins):
         bin_lower = bin_boundaries[i]
         bin_upper = bin_boundaries[i + 1]
-        in_bin = (confidences > bin_lower) & (confidences <= bin_upper)
-        prop_in_bin = np.mean(in_bin)
+        # Include lower boundary on first bin to catch zero confidence
+        if i == 0:
+            in_bin = (confidences >= bin_lower) & (confidences <= bin_upper)
+        else:
+            in_bin = (confidences > bin_lower) & (confidences <= bin_upper)
 
+        prop_in_bin = np.mean(in_bin)
         if prop_in_bin > 0:
             accuracy_in_bin = np.mean(accuracies[in_bin])
             avg_confidence_in_bin = np.mean(confidences[in_bin])
@@ -177,23 +196,42 @@ class MetricsTracker:
 # ---------------------------------------------------------------------------
 
 class VRAMProfiler:
-    """Tracks peak and current GPU VRAM usage in MegaBytes."""
+    """Tracks peak and current GPU VRAM usage and hardware footprint in MegaBytes (AUD-23)."""
 
     def __init__(self, device: Optional[torch.device] = None):
+        self.device = device
         self.is_cuda = torch.cuda.is_available() and (device is None or device.type == "cuda")
         self.reset_peak()
 
     def reset_peak(self):
         if self.is_cuda:
-            torch.cuda.reset_peak_memory_stats()
+            torch.cuda.reset_peak_memory_stats(self.device)
 
-    def snapshot(self) -> Dict[str, float]:
+    def snapshot(self) -> Dict[str, Any]:
         if not self.is_cuda:
-            return {"allocated_mb": 0.0, "reserved_mb": 0.0, "peak_mb": 0.0}
+            return {
+                "allocated_mb": 0.0,
+                "reserved_mb": 0.0,
+                "peak_allocated_mb": 0.0,
+                "peak_reserved_mb": 0.0,
+                "peak_mb": 0.0,
+                "device_name": "CPU",
+                "total_vram_mb": 0.0,
+            }
+
+        dev = self.device if self.device is not None else torch.cuda.current_device()
+        props = torch.cuda.get_device_properties(dev)
+        peak_alloc = float(torch.cuda.max_memory_allocated(dev) / (1024 ** 2))
+        peak_res = float(torch.cuda.max_memory_reserved(dev) / (1024 ** 2))
+
         return {
-            "allocated_mb": float(torch.cuda.memory_allocated() / (1024 ** 2)),
-            "reserved_mb": float(torch.cuda.memory_reserved() / (1024 ** 2)),
-            "peak_mb": float(torch.cuda.max_memory_allocated() / (1024 ** 2)),
+            "allocated_mb": float(torch.cuda.memory_allocated(dev) / (1024 ** 2)),
+            "reserved_mb": float(torch.cuda.memory_reserved(dev) / (1024 ** 2)),
+            "peak_allocated_mb": peak_alloc,
+            "peak_reserved_mb": peak_res,
+            "peak_mb": peak_alloc,
+            "device_name": props.name,
+            "total_vram_mb": float(props.total_memory / (1024 ** 2)),
         }
 
 

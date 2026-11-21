@@ -160,10 +160,15 @@ class SplitConformalPredictor:
         probs = _softmax_np(logits_np)
         self._cal_scores = self._score_fn(probs, labels_np)  # (N_cal,)
 
-        # Finite-sample corrected quantile: ceil((n+1)(1−α)) / n
-        level = np.ceil((n_cal + 1) * (1.0 - self.alpha)) / n_cal
-        level = min(level, 1.0)
-        self.q_hat = float(np.quantile(self._cal_scores, level))
+        # Exact finite-sample order statistic: k = ceil((n + 1)(1 - alpha)) (AUD-09)
+        scores_sorted = np.sort(self._cal_scores)
+        k = int(np.ceil((n_cal + 1) * (1.0 - self.alpha)))
+        if k > n_cal:
+            self.q_hat = 1.0
+        elif k < 1:
+            self.q_hat = float(scores_sorted[0])
+        else:
+            self.q_hat = float(scores_sorted[k - 1])
         return self.q_hat
 
     # ------------------------------------------------------------------ #
@@ -336,9 +341,14 @@ class MaskConditionalCP:
             raise ValueError(
                 f"Calibration set too small ({n_total} samples)."
             )
-        level_marginal = np.ceil((n_total + 1) * (1.0 - self.alpha)) / n_total
-        level_marginal = min(level_marginal, 1.0)
-        self.q_hat_marginal = float(np.quantile(all_scores, level_marginal))
+        scores_sorted = np.sort(all_scores)
+        k_marginal = int(np.ceil((n_total + 1) * (1.0 - self.alpha)))
+        if k_marginal > n_total:
+            self.q_hat_marginal = 1.0
+        elif k_marginal < 1:
+            self.q_hat_marginal = float(scores_sorted[0])
+        else:
+            self.q_hat_marginal = float(scores_sorted[k_marginal - 1])
 
         # Group by mask pattern
         mask_groups: Dict[str, List[int]] = defaultdict(list)
@@ -356,10 +366,14 @@ class MaskConditionalCP:
                 self.q_hats[mk] = self.q_hat_marginal
                 continue
 
-            scores_mk = all_scores[np.array(indices)]
-            level = np.ceil((n_mk + 1) * (1.0 - self.alpha)) / n_mk
-            level = min(level, 1.0)
-            self.q_hats[mk] = float(np.quantile(scores_mk, level))
+            scores_mk = np.sort(all_scores[np.array(indices)])
+            k_mk = int(np.ceil((n_mk + 1) * (1.0 - self.alpha)))
+            if k_mk > n_mk:
+                self.q_hats[mk] = 1.0
+            elif k_mk < 1:
+                self.q_hats[mk] = float(scores_mk[0])
+            else:
+                self.q_hats[mk] = float(scores_mk[k_mk - 1])
 
         result = dict(self.q_hats)
         result["__marginal__"] = self.q_hat_marginal

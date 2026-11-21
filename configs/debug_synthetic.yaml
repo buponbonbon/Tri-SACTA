@@ -1,0 +1,54 @@
+# =============================================================================
+# Tri-SACTA Configuration: Fast Synthetic Debug Mode (AUD-10)
+# =============================================================================
+dataset:
+  name: synthetic_mosei
+  root: cache/synthetic
+  num_classes: 7
+  label_type: sentiment_7
+
+features:
+  visual_dim: 512
+  audio_dim: 768
+  text_dim: 768
+  prosody_dim: 88
+  cache_dir: cache/synthetic/
+
+model:
+  fusion_dim: 256
+  num_heads: 4
+  num_layers: 2
+  adapter_rank: 8
+  dropout: 0.1
+  num_classes: 7
+
+tta:
+  tau: 1.0
+  theta_high: 0.7
+  theta_low: 0.3
+  lambda_align: 0.5
+  lambda_reg: 0.01
+  lr: 1.0e-4
+  gamma_eig: 1.0
+  top_k_eig: 32
+  batch_size: 32
+
+conformal:
+  alpha: 0.1
+  eta_0: 0.01
+  beta_1: 0.5
+  beta_2: 0.5
+  eta_min: 0.001
+  eta_max: 0.10
+  min_mask_support: 10
+  window_size: 200
+  delay: 0
+  score_fn: aps
+
+training:
+  epochs: 10
+  lr: 1.0e-3
+  batch_size: 32
+  patience: 5
+  seeds: [42, 100, 2026, 777, 999]
+  num_workers: 0

@@ -2,15 +2,18 @@
 Multimodal Dataset and Data Loaders for Tri-SACTA.
 
 Features:
-- Supports cached feature loading (.pt or .h5) for Visual, Audio, Text, Prosody.
-- Strict speaker-disjoint / video-disjoint splits to guarantee zero data leakage.
-- Fallback synthetic generator for testing/MVP execution without raw multi-GB datasets.
-- Custom collator returning padded batches and modality masks.
+- Strict fail-closed real feature loading (.pt or .h5) when data_mode='real' (AUD-10).
+- Deterministic synthetic debug generator using cryptographic hashing (hashlib) instead of
+  Python's randomized built-in hash() (AUD-14).
+- True per-sample MultimodalCollator: single-sample missingness does NOT discard
+  the modality for present samples in the batch (AUD-12).
+- Strict speaker-disjoint / video-disjoint split validation (AUD-11).
 """
 
 from __future__ import annotations
 
 import os
+import hashlib
 import logging
 from typing import Dict, List, Optional, Tuple, Any
 
@@ -25,9 +28,9 @@ MODALITY_NAMES = ["visual", "audio", "text", "prosody"]
 
 class MultimodalDataset(Dataset):
     """Dataset loading pre-extracted multimodal features.
-    
-    If cache files do not exist at `features_dir`, generates deterministic synthetic 
-    features conforming to config feature dimensions for seamless local testing & verification.
+
+    When data_mode='real', strictly requires pre-extracted feature files and fails closed.
+    When data_mode='synthetic', generates deterministic synthetic features for debug/testing.
     """
 
     def __init__(
@@ -37,11 +40,13 @@ class MultimodalDataset(Dataset):
         config: Dict[str, Any],
         num_samples: int = 500,
         seed: int = 42,
+        data_mode: str = "synthetic",
     ):
         super().__init__()
         self.features_dir = features_dir
         self.split = split
         self.config = config
+        self.data_mode = data_mode.lower()
         self.num_classes = config.get("model", {}).get("num_classes", 7)
         self.seed = seed
 
@@ -54,43 +59,53 @@ class MultimodalDataset(Dataset):
         }
 
         self.samples: List[Dict[str, Any]] = []
-        self._load_or_generate_data(num_samples)
+        self._load_data(num_samples)
 
-    def _load_or_generate_data(self, num_samples: int):
+    def _load_data(self, num_samples: int):
         split_dir = os.path.join(self.features_dir, self.split)
-        loaded_successfully = False
 
-        if os.path.exists(split_dir):
-            try:
-                mod_data = {}
+        if self.data_mode == "real":
+            if not os.path.exists(split_dir):
+                raise FileNotFoundError(
+                    f"Real data mode requested, but cache directory does not exist: {split_dir}\n"
+                    f"Please extract or download real features first, or pass --data-mode synthetic for debug."
+                )
+
+            mod_data = {}
+            for mod in MODALITY_NAMES:
+                mod_path = os.path.join(split_dir, f"{mod}.pt")
+                if os.path.exists(mod_path):
+                    mod_data[mod] = torch.load(mod_path, map_location="cpu")
+
+            labels_path = os.path.join(split_dir, "labels.pt")
+            meta_path = os.path.join(split_dir, "meta.pt")
+            if not os.path.exists(labels_path):
+                raise FileNotFoundError(f"Missing labels.pt in {split_dir} for real data mode.")
+
+            labels = torch.load(labels_path, map_location="cpu")
+            meta = torch.load(meta_path, map_location="cpu") if os.path.exists(meta_path) else None
+            n = len(labels)
+
+            for i in range(n):
+                sample = {
+                    "label": int(labels[i]),
+                    "segment_id": meta[i]["segment_id"] if meta else f"{self.split}_{i}",
+                    "speaker_id": meta[i]["speaker_id"] if meta else f"spk_{i % 20}",
+                }
                 for mod in MODALITY_NAMES:
-                    mod_path = os.path.join(split_dir, f"{mod}.pt")
-                    if os.path.exists(mod_path):
-                        mod_data[mod] = torch.load(mod_path, map_location="cpu")
+                    if mod in mod_data:
+                        sample[mod] = mod_data[mod][i].half()
+                        sample[f"{mod}_available"] = True
+                    else:
+                        sample[mod] = torch.zeros(self.dims[mod], dtype=torch.float16)
+                        sample[f"{mod}_available"] = False
+                self.samples.append(sample)
+            logger.info(f"Successfully loaded {len(self.samples)} real cached samples from {split_dir}")
 
-                labels_path = os.path.join(split_dir, "labels.pt")
-                meta_path = os.path.join(split_dir, "meta.pt")
-                if labels_path in mod_data or os.path.exists(labels_path):
-                    labels = torch.load(labels_path, map_location="cpu")
-                    meta = torch.load(meta_path, map_location="cpu") if os.path.exists(meta_path) else None
-                    n = len(labels)
-                    for i in range(n):
-                        sample = {
-                            "label": int(labels[i]),
-                            "segment_id": meta[i]["segment_id"] if meta else f"{self.split}_{i}",
-                            "speaker_id": meta[i]["speaker_id"] if meta else f"spk_{i % 20}",
-                        }
-                        for mod in MODALITY_NAMES:
-                            sample[mod] = mod_data[mod][i].half() if mod in mod_data else torch.zeros(self.dims[mod], dtype=torch.float16)
-                        self.samples.append(sample)
-                    loaded_successfully = True
-                    logger.info(f"Loaded {len(self.samples)} cached samples from {split_dir}")
-            except Exception as e:
-                logger.warning(f"Failed to load from {split_dir}: {e}. Falling back to synthetic generation.")
-
-        if not loaded_successfully:
-            # Deterministic synthetic data generator representing clustered multimodal representations
-            rng = np.random.RandomState(self.seed + (hash(self.split) % 10000))
+        else:
+            # Deterministic synthetic debug generator (AUD-14: stable hash independent of PYTHONHASHSEED)
+            split_digest = int(hashlib.md5(self.split.encode("utf-8")).hexdigest()[:8], 16) % 100000
+            rng = np.random.RandomState(self.seed + split_digest)
             n_speakers = 25
             speakers = [f"spk_{self.split}_{i:03d}" for i in range(n_speakers)]
 
@@ -104,16 +119,17 @@ class MultimodalDataset(Dataset):
                     "segment_id": seg_id,
                     "speaker_id": spk,
                 }
-                # Create class-conditioned feature embeddings with noise
+                # Class-conditioned feature embeddings
                 for mod in MODALITY_NAMES:
                     dim = self.dims[mod]
                     class_center = rng.randn(dim) * 0.5 + (label * 0.1)
                     noise = rng.randn(dim) * 0.8
                     feat = torch.tensor(class_center + noise, dtype=torch.float16)
                     sample[mod] = feat
+                    sample[f"{mod}_available"] = True
 
                 self.samples.append(sample)
-            logger.info(f"Generated {num_samples} synthetic multimodal samples for split '{self.split}'")
+            logger.info(f"[SYNTHETIC_DEBUG] Generated {num_samples} synthetic multimodal samples for split '{self.split}'")
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -123,32 +139,42 @@ class MultimodalDataset(Dataset):
 
 
 class MultimodalCollator:
-    """Collate function that stacks features and constructs modality masks."""
+    """Collate function that stacks features with per-sample independent modality masks (AUD-12)."""
 
     def __init__(self, expected_modalities: Optional[List[str]] = None):
         self.expected_modalities = expected_modalities or MODALITY_NAMES
 
     def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, Any]:
+        B = len(batch)
         collated = {
             "features": {},
             "modality_mask": {},
             "labels": torch.tensor([b["label"] for b in batch], dtype=torch.long),
-            "segment_ids": [b["segment_id"] for b in batch],
+            "segment_ids": [b.get("segment_id", "") for b in batch],
             "speaker_ids": [b.get("speaker_id", "") for b in batch],
         }
 
-        batch_size = len(batch)
         for mod in self.expected_modalities:
-            tensors = [b[mod] for b in batch if mod in b]
-            if len(tensors) == batch_size:
-                collated["features"][mod] = torch.stack(tensors, dim=0).float()
-                # 1 if modality present and non-zero, else 0
-                collated["modality_mask"][mod] = torch.ones(batch_size, dtype=torch.bool)
-            else:
-                # Modality completely absent
-                sample_dim = batch[0][mod].shape[-1] if mod in batch[0] else 512
-                collated["features"][mod] = torch.zeros(batch_size, sample_dim, dtype=torch.float32)
-                collated["modality_mask"][mod] = torch.zeros(batch_size, dtype=torch.bool)
+            # Determine feature dimension
+            sample_dim = 512
+            for b in batch:
+                if mod in b and isinstance(b[mod], torch.Tensor) and b[mod].ndim > 0:
+                    sample_dim = b[mod].shape[-1]
+                    break
+
+            mod_tensors = []
+            mod_masks = []
+            for b in batch:
+                if mod in b and isinstance(b[mod], torch.Tensor):
+                    is_avail = b.get(f"{mod}_available", True)
+                    mod_tensors.append(b[mod].float())
+                    mod_masks.append(is_avail)
+                else:
+                    mod_tensors.append(torch.zeros(sample_dim, dtype=torch.float32))
+                    mod_masks.append(False)
+
+            collated["features"][mod] = torch.stack(mod_tensors, dim=0)
+            collated["modality_mask"][mod] = torch.tensor(mod_masks, dtype=torch.bool)
 
         return collated
 
@@ -160,13 +186,8 @@ def create_speaker_disjoint_splits(
     cal_ratio: float = 0.15,
     seed: int = 42,
 ) -> Dict[str, List[str]]:
-    """Partition speaker IDs into mutually exclusive sets for train/val/cal/test.
-    
-    Guarantees strict 0% speaker/video leakage across all splits.
-    """
+    """Partition speaker IDs into mutually exclusive sets for train/val/cal/test."""
     rng = np.random.RandomState(seed)
-    
-    # Representative speaker IDs
     num_total_speakers = 80
     all_speakers = [f"spk_{i:03d}" for i in range(num_total_speakers)]
     rng.shuffle(all_speakers)
@@ -182,8 +203,7 @@ def create_speaker_disjoint_splits(
         "cal": all_speakers[n_train + n_val : n_train + n_val + n_cal],
         "test": all_speakers[n_train + n_val + n_cal :],
     }
-    
-    # Assert disjointness
+
     s_train, s_val = set(splits["train"]), set(splits["val"])
     s_cal, s_test = set(splits["cal"]), set(splits["test"])
     assert s_train.isdisjoint(s_val), "Train and Val speakers overlap!"
@@ -191,10 +211,6 @@ def create_speaker_disjoint_splits(
     assert s_train.isdisjoint(s_test), "Train and Test speakers overlap!"
     assert s_cal.isdisjoint(s_test), "Cal and Test speakers overlap!"
 
-    logger.info(
-        f"Created speaker-disjoint splits: Train={len(splits['train'])}, "
-        f"Val={len(splits['val'])}, Cal={len(splits['cal'])}, Test={len(splits['test'])} speakers."
-    )
     return splits
 
 
@@ -203,8 +219,9 @@ def get_dataloaders(
     batch_size: int = 32,
     num_workers: int = 0,
     seed: int = 42,
+    data_mode: str = "synthetic",
 ) -> Dict[str, DataLoader]:
-    """Factory creating DataLoaders for train, val, cal, and test splits."""
+    """Factory creating DataLoaders with explicit data_mode."""
     feats_dir = config.get("features", {}).get("cache_dir", "features_cache/mosei")
     collator = MultimodalCollator()
 
@@ -219,6 +236,7 @@ def get_dataloaders(
             config=config,
             num_samples=sample_counts[split],
             seed=seed,
+            data_mode=data_mode,
         )
         dataloaders[split] = DataLoader(
             ds,
