@@ -1,29 +1,27 @@
 """
 01_train_source.py: Source Model Training & Spectral Anchor Statistics Extraction.
 
-Steps:
-1. Load configuration and initialize deterministic seed.
-2. Build lightweight MultimodalFusionModel (<2M parameters).
-3. Train with Cross-Entropy loss and PyTorch AMP (FP16) on speaker-disjoint source data.
-4. Early stopping on validation split Macro-F1.
-5. Compute and freeze source anchor statistics (mean & covariance eigenvalues) via SpectralShiftDetector.
-6. Calibrate static conformal baseline on validation/calibration split.
-7. Save source checkpoints & spectral anchor stats for streaming test-time adaptation.
+Key scientific improvements:
+1. Supervised auxiliary unimodal classifiers during source training (AUD-06),
+   guaranteeing anchor heads produce meaningful supervisory predictions.
+2. Immutable deepcopy of best weights (AUD-13) to prevent state mutation.
+3. Explicit data_mode flag (--data-mode synthetic/real) (AUD-10).
+4. Modern torch.amp syntax avoiding deprecated warnings.
 """
 
 from __future__ import annotations
 
 import os
 import sys
+import copy
 import argparse
 import logging
 import yaml
 import torch
 import torch.nn as nn
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 import numpy as np
 
-# Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.data.dataset import get_dataloaders
@@ -44,20 +42,31 @@ def set_seed(seed: int):
     torch.backends.cudnn.benchmark = False
 
 
-def train_one_epoch(model, loader, optimizer, scaler, criterion, device):
+def train_one_epoch(model, loader, optimizer, scaler, criterion, device, aux_weight: float = 0.3):
     model.train()
     total_loss = 0.0
+    device_type = "cuda" if device.type == "cuda" else "cpu"
+
     for batch in loader:
         features = {k: v.to(device) for k, v in batch["features"].items()}
         mask = {k: v.to(device) for k, v in batch["modality_mask"].items()}
         labels = batch["labels"].to(device)
 
         optimizer.zero_grad()
-        with autocast(enabled=torch.cuda.is_available()):
+        with autocast(device_type, enabled=(device_type == "cuda")):
             outputs = model(features, modality_mask=mask)
-            loss = criterion(outputs["logits"], labels)
+            loss_fused = criterion(outputs["logits"], labels)
 
-        if torch.cuda.is_available():
+            # Supervised auxiliary unimodal heads (AUD-06)
+            aux_losses = []
+            for m, m_logits in outputs.get("per_modality_logits", {}).items():
+                m_mask = mask.get(m, torch.ones_like(labels, dtype=torch.bool))
+                if m_mask.any():
+                    aux_losses.append(criterion(m_logits[m_mask], labels[m_mask]))
+            loss_aux = torch.stack(aux_losses).mean() if aux_losses else torch.tensor(0.0, device=device)
+            loss = loss_fused + aux_weight * loss_aux
+
+        if device_type == "cuda":
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -74,12 +83,14 @@ def train_one_epoch(model, loader, optimizer, scaler, criterion, device):
 def evaluate(model, loader, num_classes, device):
     model.eval()
     tracker = MetricsTracker(num_classes=num_classes)
+    device_type = "cuda" if device.type == "cuda" else "cpu"
+
     for batch in loader:
         features = {k: v.to(device) for k, v in batch["features"].items()}
         mask = {k: v.to(device) for k, v in batch["modality_mask"].items()}
         labels = batch["labels"].to(device)
 
-        with autocast(enabled=torch.cuda.is_available()):
+        with autocast(device_type, enabled=(device_type == "cuda")):
             outputs = model(features, modality_mask=mask)
 
         tracker.update(outputs["logits"], labels)
@@ -93,6 +104,7 @@ def main():
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--epochs", type=int, default=None, help="Override epochs from config")
+    parser.add_argument("--data-mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
     parser.add_argument("--output_dir", type=str, default="checkpoints")
     args = parser.parse_args()
 
@@ -104,11 +116,11 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
 
     vram = VRAMProfiler(device)
-    logger.info(f"Using device: {device} | Random seed: {args.seed}")
+    logger.info(f"Using device: {device} | Random seed: {args.seed} | Data mode: {args.data_mode}")
 
     # 1. Dataloaders
     batch_size = config.get("training", {}).get("batch_size", 32)
-    dataloaders = get_dataloaders(config, batch_size=batch_size, seed=args.seed)
+    dataloaders = get_dataloaders(config, batch_size=batch_size, seed=args.seed, data_mode=args.data_mode)
 
     # 2. Build model
     model = MultimodalFusionModel(config).to(device)
@@ -120,7 +132,9 @@ def main():
     epochs = args.epochs or config.get("training", {}).get("epochs", 30)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
-    scaler = GradScaler(enabled=torch.cuda.is_available())
+
+    device_type = "cuda" if device.type == "cuda" else "cpu"
+    scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
     criterion = nn.CrossEntropyLoss()
 
     num_classes = config.get("model", {}).get("num_classes", 7)
@@ -143,7 +157,8 @@ def main():
 
         if val_f1 > best_val_f1:
             best_val_f1 = val_f1
-            best_weights = model.state_dict()
+            # Deepcopy to prevent in-place mutation (AUD-13)
+            best_weights = copy.deepcopy(model.state_dict())
             patience_cnt = 0
         else:
             patience_cnt += 1
@@ -153,7 +168,7 @@ def main():
 
     # Load best weights
     model.load_state_dict(best_weights)
-    ckpt_path = os.path.join(args.output_dir, f"source_model_seed{args.seed}.pt")
+    ckpt_path = os.path.join(args.output_dir, f"source_model_{args.data_mode}_seed{args.seed}.pt")
     torch.save(best_weights, ckpt_path)
     logger.info(f"Saved best source model to {ckpt_path}")
 
@@ -169,7 +184,7 @@ def main():
 
     stacked_features = {m: torch.cat(tensors, dim=0) for m, tensors in all_train_features.items() if tensors}
     feature_dims = {m: stacked_features[m].shape[1] for m in stacked_features}
-    
+
     detector = SpectralShiftDetector(
         feature_dims=feature_dims,
         gamma=config.get("tta", {}).get("gamma_eig", 1.0),
@@ -177,7 +192,7 @@ def main():
     )
     detector.register_source_stats(stacked_features)
 
-    stats_path = os.path.join(args.output_dir, f"source_spectral_stats_seed{args.seed}.pt")
+    stats_path = os.path.join(args.output_dir, f"source_spectral_stats_{args.data_mode}_seed{args.seed}.pt")
     detector.save_source_stats(stats_path)
     logger.info(f"Saved spectral anchor statistics to {stats_path}")
 

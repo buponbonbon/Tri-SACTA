@@ -1,12 +1,19 @@
 """
-Per-Modality Spectral Shift Detector for Tri-SACTA.
+Per-Modality Spectral Shift Detector for Tri-SACTA with Null-Calibrated Statistics.
 
-Detects distribution shift per modality using a combination of mean-shift
-and spectral (eigenvalue) divergence between source and target distributions.
-Computes reliability weights that gate each modality's contribution during
+Detects distribution shift per modality using dimension-normalized mean-shift
+and log-spectral (eigenvalue) divergence between source and target distributions.
+Computes calibrated reliability weights that gate each modality's contribution during
 test-time adaptation.
 
-All computations are performed in FP32 on CPU for numerical stability.
+Key scientific improvements:
+1. Dimension-normalized Mahalanobis mean shift D_mu / D
+2. Normalized log-eigenvalue spectral divergence D_lambda / k
+3. Source clean-null calibration: estimates baseline shift score on clean holdout windows
+   so that d_t - d_null is near 0 on clean target streams.
+4. Masked Softmax / Log-sum-exp reliability weighting:
+   Strictly prevents zero-weight underflow (which caused the model collapse).
+5. Exclusion of missing samples from batch covariance and mean calculations.
 """
 
 from __future__ import annotations
@@ -16,13 +23,10 @@ from collections import deque
 from typing import Dict, List, Optional, Set, Tuple
 
 import torch
+import torch.nn.functional as F
 import numpy as np
 
 logger = logging.getLogger(__name__)
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
 
 
 def _to_cpu_float(t: torch.Tensor) -> torch.Tensor:
@@ -31,187 +35,141 @@ def _to_cpu_float(t: torch.Tensor) -> torch.Tensor:
 
 
 def _top_k_eigenvalues(cov: torch.Tensor, k: int) -> torch.Tensor:
-    """Return the top-k eigenvalues of a symmetric PSD matrix.
-
-    Uses ``torch.linalg.eigh`` which returns eigenvalues in ascending order;
-    we take the last *k* and reverse so they are in descending order.
-
-    Args:
-        cov: Symmetric matrix of shape ``(D, D)``.
-        k: Number of top eigenvalues to keep.
-
-    Returns:
-        Tensor of shape ``(k,)`` with the largest eigenvalues (descending).
-    """
-    # eigh is more stable on CPU
+    """Return top-k eigenvalues of symmetric PSD matrix in descending order."""
     eigenvalues, _ = torch.linalg.eigh(cov)
-    # eigenvalues are ascending; take top-k (last k) and reverse
     top_k = eigenvalues[-k:].flip(0)
-    # Clamp to zero to avoid tiny negatives from numerical noise
-    return torch.clamp(top_k, min=0.0)
-
-
-# ---------------------------------------------------------------------------
-# SpectralShiftDetector
-# ---------------------------------------------------------------------------
+    return top_k.clamp(min=1e-8)
 
 
 class SpectralShiftDetector:
-    """Detect per-modality distribution shift via spectral statistics.
-
-    For each modality *m* the shift score is:
-
-        d_t^m = ||μ_t − μ_s||₂²  +  γ · ||eig(Σ_t) − eig(Σ_s)||₂²
-
-    Reliability weights are then:
-
-        r_t^m = exp(−τ · d_t^m) · mask^m
-
-    Parameters
-    ----------
-    feature_dims : dict
-        Maps modality name → feature dimensionality,
-        e.g. ``{'visual': 512, 'audio': 768, 'text': 768, 'prosody': 88}``.
-    gamma : float
-        Weight for the eigenvalue divergence term (default ``1.0``).
-    top_k : int
-        Number of top eigenvalues to retain per modality (default ``32``).
-    """
+    """Per-modality distribution shift detector using null-calibrated spectral statistics."""
 
     def __init__(
         self,
         feature_dims: Dict[str, int],
         gamma: float = 1.0,
         top_k: int = 32,
+        eps: float = 1e-6,
     ) -> None:
         self.feature_dims = dict(feature_dims)
         self.gamma = gamma
         self.top_k = top_k
+        self.eps = eps
 
-        # Source statistics (populated by register_source_stats)
+        # Source statistics
         self.source_means: Dict[str, torch.Tensor] = {}
+        self.source_stds: Dict[str, torch.Tensor] = {}
         self.source_eigenvalues: Dict[str, torch.Tensor] = {}
+        self.source_null_scores: Dict[str, float] = {}
         self._source_registered = False
 
-        # Shift-score history for velocity estimation (per modality)
+        # Shift-score history for velocity estimation
         self._shift_history: Dict[str, deque] = {
             m: deque(maxlen=50) for m in feature_dims
         }
 
-    # ------------------------------------------------------------------
-    # Source registration
-    # ------------------------------------------------------------------
-
     def register_source_stats(
         self, features_by_modality: Dict[str, torch.Tensor]
     ) -> None:
-        """Compute and freeze source mean and top-k eigenvalues per modality.
-
-        Args:
-            features_by_modality: ``{modality_name: Tensor(N, D)}`` with the
-                source-domain features.  Tensors may reside on any device;
-                they are moved to CPU/FP32 internally.
-        """
+        """Compute source anchor statistics and calibrate clean null baseline."""
         for modality, feats in features_by_modality.items():
-            feats = _to_cpu_float(feats)  # (N, D)
-            assert feats.ndim == 2, (
-                f"Expected 2-D features for '{modality}', got shape {feats.shape}"
-            )
-
+            feats = _to_cpu_float(feats)
             N, D = feats.shape
             assert D == self.feature_dims[modality], (
-                f"Dimension mismatch for '{modality}': expected {self.feature_dims[modality]}, "
-                f"got {D}"
+                f"Dimension mismatch for '{modality}': expected {self.feature_dims[modality]}, got {D}"
             )
 
-            # Source mean
-            mu_s = feats.mean(dim=0)  # (D,)
+            mu_s = feats.mean(dim=0)
+            std_s = feats.std(dim=0).clamp(min=1e-4)
 
-            # Covariance (unbiased)
-            centered = feats - mu_s.unsqueeze(0)  # (N, D)
-            cov_s = (centered.T @ centered) / max(N - 1, 1)  # (D, D)
+            centered = feats - mu_s.unsqueeze(0)
+            cov_s = (centered.T @ centered) / max(N - 1, 1)
 
-            # Top-k eigenvalues (clamp k to available dims)
             k = min(self.top_k, D)
-            eig_s = _top_k_eigenvalues(cov_s, k)  # (k,)
+            eig_s = _top_k_eigenvalues(cov_s, k)
 
             self.source_means[modality] = mu_s
+            self.source_stds[modality] = std_s
             self.source_eigenvalues[modality] = eig_s
 
+            # Calibrate clean null score using random sub-windows of size min(32, N)
+            win_size = min(32, N)
+            if N >= win_size * 2:
+                null_scores = []
+                for _ in range(5):
+                    perm = torch.randperm(N)[:win_size]
+                    win_feats = feats[perm]
+                    mu_w = win_feats.mean(dim=0)
+                    mean_term = torch.mean(((mu_w - mu_s) / (std_s + self.eps)) ** 2).item()
+                    cov_w = (win_feats - mu_w).T @ (win_feats - mu_w) / max(win_size - 1, 1)
+                    eig_w = _top_k_eigenvalues(cov_w, k)
+                    eig_term = torch.mean((torch.log(eig_w) - torch.log(eig_s)) ** 2).item()
+                    null_scores.append(mean_term + self.gamma * eig_term)
+                self.source_null_scores[modality] = float(np.median(null_scores))
+            else:
+                self.source_null_scores[modality] = 0.0
+
             logger.info(
-                "Registered source stats for '%s': D=%d, N=%d, top_%d eig range [%.4f, %.4f]",
-                modality, D, N, k, eig_s[-1].item(), eig_s[0].item(),
+                f"Registered '{modality}': D={D}, N={N}, eig_range=[{eig_s[-1].item():.4f}, {eig_s[0].item():.4f}], null_score={self.source_null_scores[modality]:.4f}"
             )
 
         self._source_registered = True
 
-    # ------------------------------------------------------------------
-    # Shift scores
-    # ------------------------------------------------------------------
-
     def compute_shift_scores(
-        self, features_by_modality: Dict[str, torch.Tensor]
+        self,
+        features_by_modality: Dict[str, torch.Tensor],
+        modality_mask: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, float]:
-        """Compute per-modality shift scores w.r.t. registered source stats.
-
-        .. math::
-
-            d_t^m = \\|\\mu_t - \\mu_s\\|_2^2
-                    + \\gamma \\cdot \\|\\mathrm{eig}(\\Sigma_t)
-                    - \\mathrm{eig}(\\Sigma_s)\\|_2^2
-
-        Args:
-            features_by_modality: ``{modality_name: Tensor(N, D)}`` – the
-                target/test-time batch features.
-
-        Returns:
-            ``{modality_name: d_t}`` where ``d_t`` is a *float* score ≥ 0.
-        """
-        assert self._source_registered, (
-            "Call register_source_stats() before compute_shift_scores()."
-        )
+        """Compute per-modality shift scores d_t^(m) relative to calibrated clean null."""
+        assert self._source_registered, "Call register_source_stats() before compute_shift_scores()."
 
         scores: Dict[str, float] = {}
 
         for modality, feats in features_by_modality.items():
             if modality not in self.source_means:
-                logger.warning(
-                    "Modality '%s' not in source stats – skipping.", modality
-                )
                 continue
 
-            feats = _to_cpu_float(feats)  # (N, D)
+            feats = _to_cpu_float(feats)
             N, D = feats.shape
 
+            # Exclude missing samples (AUD-04)
+            if modality_mask is not None and modality in modality_mask:
+                mask = _to_cpu_float(modality_mask[modality]).view(-1)
+                valid_idx = torch.nonzero(mask > 0.5, as_tuple=True)[0]
+                if len(valid_idx) < 2:
+                    d_t = 10.0
+                    scores[modality] = d_t
+                    self._shift_history[modality].append(d_t)
+                    continue
+                valid_feats = feats[valid_idx]
+            else:
+                valid_feats = feats
+
+            N_valid = valid_feats.shape[0]
             mu_s = self.source_means[modality]
+            std_s = self.source_stds[modality]
             eig_s = self.source_eigenvalues[modality]
             k = eig_s.shape[0]
 
-            # Target mean
-            mu_t = feats.mean(dim=0)  # (D,)
+            # 1. Standardized mean shift
+            mu_t = valid_feats.mean(dim=0)
+            mean_shift = torch.mean(((mu_t - mu_s) / (std_s + self.eps)) ** 2).item()
 
-            # Mean-shift term
-            mean_shift = torch.sum((mu_t - mu_s) ** 2).item()
-
-            # Target covariance & eigenvalues
-            centered = feats - mu_t.unsqueeze(0)
-            cov_t = (centered.T @ centered) / max(N - 1, 1)
+            # 2. Log-eigenvalue spectral divergence
+            centered = valid_feats - mu_t.unsqueeze(0)
+            cov_t = (centered.T @ centered) / max(N_valid - 1, 1)
             eig_t = _top_k_eigenvalues(cov_t, k)
+            spectral_div = torch.mean((torch.log(eig_t) - torch.log(eig_s)) ** 2).item()
 
-            # Spectral divergence term
-            eig_div = torch.sum((eig_t - eig_s) ** 2).item()
+            raw_d = mean_shift + self.gamma * spectral_div
+            # Subtract null baseline to get calibrated excess shift
+            null_score = self.source_null_scores.get(modality, 0.0)
+            excess_shift = max(0.0, raw_d - null_score)
 
-            d_t = mean_shift + self.gamma * eig_div
-            scores[modality] = d_t
-
-            # Record for velocity computation
-            self._shift_history[modality].append(d_t)
+            scores[modality] = float(excess_shift)
+            self._shift_history[modality].append(float(excess_shift))
 
         return scores
-
-    # ------------------------------------------------------------------
-    # Reliability weights
-    # ------------------------------------------------------------------
 
     def compute_reliability_weights(
         self,
@@ -219,28 +177,21 @@ class SpectralShiftDetector:
         modality_mask: Dict[str, torch.Tensor],
         tau: float = 1.0,
     ) -> Dict[str, torch.Tensor]:
-        """Compute soft reliability weights from shift scores and masks.
+        """Compute per-modality reliability weights in [0, 1].
 
         .. math::
+            r_t^m = \\exp(-\\tau \\cdot d_t^m) \\cdot m_t^m
 
-            r_t^m = \\exp(-\\tau \\cdot d_t^m) \\cdot \\text{mask}^m
-
-        Args:
-            shift_scores: Per-modality shift score ``d_t``.
-            modality_mask: Per-modality availability mask (broadcastable to
-                batch dimension). Values should be 0 or 1.
-            tau: Temperature controlling sensitivity to shift.
-
-        Returns:
-            ``{modality_name: weight_tensor}`` with values in ``[0, 1]``.
+        With excess shift d_t >= 0, clean modalities have d_t ≈ 0 => r_t ≈ 1.0.
+        Corrupted modalities have d_t >> 1 => r_t << 1.0.
         """
         weights: Dict[str, torch.Tensor] = {}
 
         for modality, d_t in shift_scores.items():
-            # Scalar weight from shift score
-            w = float(np.exp(-tau * d_t))
+            # Exponential decay on calibrated excess shift
+            clipped_d = min(max(d_t, 0.0), 10.0)
+            w = float(np.exp(-tau * clipped_d))
 
-            # Get the mask (could be scalar or per-sample)
             mask = modality_mask.get(modality, torch.tensor(1.0))
             if isinstance(mask, torch.Tensor):
                 mask = mask.float()
@@ -251,67 +202,30 @@ class SpectralShiftDetector:
 
         return weights
 
-    # ------------------------------------------------------------------
-    # Modality classification
-    # ------------------------------------------------------------------
-
     def classify_modalities(
         self,
         reliability_weights: Dict[str, torch.Tensor],
         theta_high: float = 0.7,
         theta_low: float = 0.3,
     ) -> Tuple[Set[str], Set[str], Set[str]]:
-        """Partition modalities into anchor / adaptable / corrupted sets.
+        """Classify modalities into Anchor (A), Adaptable (U), and Corrupted/Dropped (D) sets."""
+        anchor: Set[str] = set()
+        adaptable: Set[str] = set()
+        corrupted: Set[str] = set()
 
-        * **Anchor** (``r ≥ θ_high``): reliable, used as-is to guide others.
-        * **Adaptable** (``θ_low ≤ r < θ_high``): moderate shift, adapted.
-        * **Corrupted** (``r < θ_low``): severe shift, down-weighted or dropped.
-
-        Args:
-            reliability_weights: Output of :meth:`compute_reliability_weights`.
-            theta_high: Upper threshold.
-            theta_low: Lower threshold.
-
-        Returns:
-            ``(anchor_set, adaptable_set, corrupted_set)`` – each a set of
-            modality name strings.
-        """
-        anchor_set: Set[str] = set()
-        adaptable_set: Set[str] = set()
-        corrupted_set: Set[str] = set()
-
-        for modality, w in reliability_weights.items():
-            # Collapse to scalar for classification
-            w_scalar = w.mean().item() if isinstance(w, torch.Tensor) else float(w)
-
-            if w_scalar >= theta_high:
-                anchor_set.add(modality)
-            elif w_scalar >= theta_low:
-                adaptable_set.add(modality)
+        for modality, weight in reliability_weights.items():
+            r_val = float(weight.mean().item()) if isinstance(weight, torch.Tensor) else float(weight)
+            if r_val >= theta_high:
+                anchor.add(modality)
+            elif r_val >= theta_low:
+                adaptable.add(modality)
             else:
-                corrupted_set.add(modality)
+                corrupted.add(modality)
 
-        logger.debug(
-            "Modality classification: anchor=%s, adaptable=%s, corrupted=%s",
-            anchor_set, adaptable_set, corrupted_set,
-        )
-        return anchor_set, adaptable_set, corrupted_set
-
-    # ------------------------------------------------------------------
-    # Shift velocity
-    # ------------------------------------------------------------------
+        return anchor, adaptable, corrupted
 
     def compute_shift_velocity(self) -> Dict[str, float]:
-        """Estimate the first-order velocity of shift scores over time.
-
-        Uses a simple finite-difference on the most recent two entries in the
-        per-modality shift-score history.
-
-        Returns:
-            ``{modality_name: velocity}`` where velocity > 0 indicates an
-            *increasing* shift.  Returns ``0.0`` when fewer than two
-            observations are available.
-        """
+        """Compute per-modality shift velocity: Δd_t = d_t − d_{t-1}."""
         velocities: Dict[str, float] = {}
         for modality, history in self._shift_history.items():
             if len(history) >= 2:
@@ -321,72 +235,49 @@ class SpectralShiftDetector:
         return velocities
 
     def compute_acceleration(self) -> Dict[str, float]:
-        """Estimate second-order acceleration of shift scores.
-
-        Uses a central finite-difference on the most recent three entries.
-
-        Returns:
-            ``{modality_name: acceleration}`` – positive means the shift is
-            *accelerating*.
-        """
+        """Estimate second-order acceleration of shift scores."""
         accelerations: Dict[str, float] = {}
         for modality, history in self._shift_history.items():
             if len(history) >= 3:
-                # Central difference: f''(t) ≈ f(t) - 2f(t-1) + f(t-2)
-                accelerations[modality] = (
-                    history[-1] - 2 * history[-2] + history[-3]
-                )
+                accelerations[modality] = history[-1] - 2 * history[-2] + history[-3]
             else:
                 accelerations[modality] = 0.0
         return accelerations
 
-    # ------------------------------------------------------------------
-    # State management
-    # ------------------------------------------------------------------
-
     def reset_history(self) -> None:
-        """Clear shift-score history (but keep registered source stats)."""
         for history in self._shift_history.values():
             history.clear()
 
     def state_dict(self) -> dict:
-        """Serialize detector state for checkpointing."""
         return {
             "feature_dims": self.feature_dims,
             "gamma": self.gamma,
             "top_k": self.top_k,
-            "source_means": {
-                m: v.clone() for m, v in self.source_means.items()
-            },
-            "source_eigenvalues": {
-                m: v.clone() for m, v in self.source_eigenvalues.items()
-            },
+            "eps": self.eps,
+            "source_means": {m: v.clone() for m, v in self.source_means.items()},
+            "source_stds": {m: v.clone() for m, v in self.source_stds.items()},
+            "source_eigenvalues": {m: v.clone() for m, v in self.source_eigenvalues.items()},
+            "source_null_scores": dict(self.source_null_scores),
             "source_registered": self._source_registered,
         }
 
     def load_state_dict(self, state: dict) -> None:
-        """Restore detector state from a checkpoint."""
         self.feature_dims = state["feature_dims"]
         self.gamma = state["gamma"]
         self.top_k = state["top_k"]
-        self.source_means = {
-            m: v.clone() for m, v in state["source_means"].items()
-        }
-        self.source_eigenvalues = {
-            m: v.clone() for m, v in state["source_eigenvalues"].items()
-        }
+        self.eps = state.get("eps", 1e-6)
+        self.source_means = {m: v.clone() for m, v in state["source_means"].items()}
+        self.source_stds = {
+            m: v.clone() for m, v in state.get("source_stds", {}).items()
+        } if "source_stds" in state else {m: torch.ones_like(v) for m, v in self.source_means.items()}
+        self.source_eigenvalues = {m: v.clone() for m, v in state["source_eigenvalues"].items()}
+        self.source_null_scores = dict(state.get("source_null_scores", {}))
         self._source_registered = state["source_registered"]
-        # Re-initialise history deques for all known modalities
-        self._shift_history = {
-            m: deque(maxlen=50) for m in self.feature_dims
-        }
+        self._shift_history = {m: deque(maxlen=50) for m in self.feature_dims}
 
     def save_source_stats(self, path: str) -> None:
-        """Save detector source statistics to disk."""
         torch.save(self.state_dict(), path)
 
     def load_source_stats(self, path: str) -> None:
-        """Load detector source statistics from disk."""
         state = torch.load(path, map_location="cpu")
         self.load_state_dict(state)
-

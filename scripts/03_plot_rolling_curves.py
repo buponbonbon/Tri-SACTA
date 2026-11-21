@@ -78,7 +78,7 @@ def plot_rolling_coverage(
 
     max_len = 0
     for key, res in results_by_method.items():
-        stream = res.get("time_series", {}).get("rolling_coverage", [])
+        stream = res.get("time_series", {}).get("coverage_hits") or res.get("time_series", {}).get("rolling_coverage", [])
         if not stream:
             continue
         rolling = compute_rolling_coverage(stream, window_size=window_size)
@@ -146,6 +146,42 @@ def plot_regime_f1_bars(results_by_method: Dict[str, Dict[str, Any]], output_dir
     logger.info(f"Saved Macro-F1 regime bar chart to {out_path}")
 
 
+def plot_delayed_feedback_analysis(delay_results: Dict[int, Dict[str, Any]], output_dir: str):
+    """Plot impact of label delay delta on empirical coverage and prediction set size."""
+    sorted_delays = sorted(delay_results.keys())
+    coverages = [delay_results[d].get("overall_metrics", {}).get("coverage", 0.0) for d in sorted_delays]
+    set_sizes = [delay_results[d].get("overall_metrics", {}).get("average_set_size", 0.0) for d in sorted_delays]
+
+    fig, ax1 = plt.subplots(figsize=(7, 4.5))
+
+    color = "#1f77b4"
+    ax1.set_xlabel("Feedback Delay $\\delta$ (Steps)")
+    ax1.set_ylabel("Empirical Coverage", color=color)
+    line1 = ax1.plot(sorted_delays, coverages, color=color, marker="o", linewidth=2.2, label="Coverage")
+    ax1.axhline(0.90, color="gray", linestyle="--", linewidth=1.5, label="Target (90%)")
+    ax1.tick_params(axis="y", labelcolor=color)
+    ax1.set_ylim(0.80, 0.95)
+
+    ax2 = ax1.twinx()
+    color = "#ff7f0e"
+    ax2.set_ylabel("Average Set Size $|\\mathcal{C}_t|$", color=color)
+    line2 = ax2.plot(sorted_delays, set_sizes, color=color, marker="s", linewidth=2.2, linestyle="-.", label="Avg Set Size")
+    ax2.tick_params(axis="y", labelcolor=color)
+    ax2.set_ylim(2.5, 4.5)
+
+    lines = line1 + [plt.Line2D([0], [0], color="gray", linestyle="--", linewidth=1.5)] + line2
+    labels = ["Coverage", "Target 90%", "Avg Set Size"]
+    ax1.legend(lines, labels, loc="lower left")
+
+    plt.title("Online Conformal Robustness Under Delayed Label Feedback")
+    fig.tight_layout()
+
+    out_path = os.path.join(output_dir, "delayed_feedback_analysis.png")
+    plt.savefig(out_path, dpi=300)
+    plt.close()
+    logger.info(f"Saved delayed feedback analysis plot to {out_path}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Plot Tri-SACTA Rolling Curves & Benchmarks")
     parser.add_argument("--results_dir", type=str, default="results")
@@ -178,14 +214,27 @@ def main():
 
     # Load real results
     results_by_method = {}
+    delay_results = {}
     for fpath in json_files:
         with open(fpath, "r") as f:
             data = json.load(f)
-            key = f"{data.get('method', 'unknown')}_{data.get('conformal', 'unknown')}"
-            results_by_method[key] = data
+            method = data.get("method", "unknown")
+            conformal = data.get("conformal", "unknown")
+            delay = data.get("delay", 0)
+
+            if delay == 0:
+                key = f"{method}_{conformal}"
+                results_by_method[key] = data
+
+            if method == "tri_sacta" and conformal == "online_aci":
+                delay_results[delay] = data
 
     plot_rolling_coverage(results_by_method, args.output_dir)
     plot_regime_f1_bars(results_by_method, args.output_dir)
+
+    if len(delay_results) > 1:
+        plot_delayed_feedback_analysis(delay_results, args.output_dir)
+
     logger.info("All publication figures successfully plotted.")
 
 

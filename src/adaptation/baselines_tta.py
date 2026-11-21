@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.cuda.amp import GradScaler, autocast
+from torch.amp import GradScaler, autocast
 
 try:
     from src.models.fusion_backbone import MultimodalFusionModel
@@ -156,7 +156,8 @@ class TENT:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
 
         logger.info("TENT initialized — lr=%.1e, %d norm params.",
@@ -182,7 +183,8 @@ class TENT:
         self._step_count += 1
         self.optimizer.zero_grad(set_to_none=True)
 
-        with autocast():
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        with autocast(device_type, enabled=(device_type == "cuda")):
             out = self.model(
                 features=batch,
                 modality_mask=modality_mask,
@@ -218,9 +220,14 @@ class TENT:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
         logger.info("TENT reset to source checkpoint.")
+
+    def get_shift_velocity(self) -> Dict[str, float]:
+        """Baseline does not track spectral shift velocity."""
+        return {}
 
 
 # ===========================================================================
@@ -295,7 +302,8 @@ class SAR:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
 
         logger.info(
@@ -332,7 +340,8 @@ class SAR:
         loss_val = 0.0
         num_reliable = 0
 
-        with autocast():
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        with autocast(device_type, enabled=(device_type == "cuda")):
             out = self.model(
                 features=batch,
                 modality_mask=modality_mask,
@@ -400,9 +409,14 @@ class SAR:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
         logger.info("SAR reset to source checkpoint.")
+
+    def get_shift_velocity(self) -> Dict[str, float]:
+        """Baseline does not track spectral shift velocity."""
+        return {}
 
 
 # ===========================================================================
@@ -467,7 +481,8 @@ class MultimodalTTABaseline:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
 
         logger.info(
@@ -500,7 +515,8 @@ class MultimodalTTABaseline:
         self.model.train()
         self.optimizer.zero_grad(set_to_none=True)
 
-        with autocast():
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        with autocast(device_type, enabled=(device_type == "cuda")):
             out = self.model(
                 features=batch,
                 modality_mask=modality_mask,
@@ -615,6 +631,11 @@ class MultimodalTTABaseline:
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
         logger.info("MultimodalTTABaseline reset to source checkpoint.")
+
+    def get_shift_velocity(self) -> Dict[str, float]:
+        """Baseline does not track spectral shift velocity."""
+        return {}

@@ -1,21 +1,24 @@
 """
 Mask-and-Disagreement-Driven Online Adaptive Conformal Inference (OnlineACI).
 
-Implements online conformal prediction with:
-  - Per-mask-pattern adaptive significance levels (alpha_t^m)
-  - Shift-velocity and cross-modal disagreement modulated learning rates
-  - APS (Adaptive Prediction Sets) and LAC (Least Ambiguous Conformity) scores
-  - Sliding-window quantile estimation per modality-mask pattern
-  - Delayed feedback buffering for realistic streaming scenarios
-
-Reference: Gibbs & Candès (2021), "Adaptive Conformal Inference Under
-Distribution Shift", extended with mask-conditional and multi-modal controls.
+Key scientific improvements:
+1. Exact finite-sample order statistic quantile:
+   k = ceil((n + 1) * (1 - alpha_t^m))
+   Strictly valid for conformal calibration without linear interpolation artifacts (AUD-09).
+2. Safe adaptive step size:
+   eta_t = clip(eta_0 * (1 + beta_1 * |delta_d| + beta_2 * max(0, kappa)), eta_min, eta_max)
+   Guaranteed positive and bounded away from zero and infinity (AUD-07).
+3. Immutable PredictionRecord and faithful delayed feedback:
+   Prediction sets emitted at time t are frozen into an immutable record.
+   When delayed feedback arrives at t + delta, miscoverage is evaluated against
+   the emitted prediction set, not re-computed with future weights/thresholds (AUD-08).
 """
 
 from __future__ import annotations
 
 import math
 from collections import defaultdict, deque
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -23,187 +26,107 @@ import torch
 import torch.nn.functional as F
 
 
+@dataclass
+class PredictionRecord:
+    """Immutable record of prediction sets emitted at test time."""
+    record_id: int
+    timestamp: int
+    modality_mask_key: str
+    prediction_sets: List[List[int]]
+    logits: torch.Tensor
+    shift_velocity: float
+    disagreement: float
+
+
 class OnlineACI:
-    """Online Adaptive Conformal Inference with mask-conditional control.
-
-    Maintains per-mask-pattern sliding windows of nonconformity scores and
-    adaptively adjusts the significance level based on:
-      1. Empirical mis-coverage feedback  (standard ACI)
-      2. Distribution shift velocity      (β₁ · δ_d)
-      3. Cross-modal disagreement         (β₂ · κ)
-
-    The effective learning rate is:
-        η_t = η₀ · (1 + β₁ · δ_d + β₂ · κ)
-
-    Args:
-        num_classes: Number of target classes (e.g. 7 for MOSEI sentiment).
-        alpha: Target mis-coverage rate (e.g. 0.1 for 90 % coverage).
-        config: ``config['conformal']`` sub-dict with hyper-parameters.
-    """
-
-    # --------------------------------------------------------------------- #
-    # Construction
-    # --------------------------------------------------------------------- #
+    """Online Adaptive Conformal Inference with mask-conditional control and delayed feedback."""
 
     def __init__(self, num_classes: int, alpha: float, config: Dict[str, Any]):
         self.num_classes = num_classes
         self.alpha = alpha
 
-        # --- hyper-parameters from config -------------------------------- #
-        conf = config.get("conformal", config)  # accept either nested or flat
+        conf = config.get("conformal", config)
         self.eta_0: float = float(conf.get("eta_0", 0.01))
         self.beta_1: float = float(conf.get("beta_1", 0.5))
         self.beta_2: float = float(conf.get("beta_2", 0.5))
+        self.eta_min: float = float(conf.get("eta_min", 0.001))
+        self.eta_max: float = float(conf.get("eta_max", 0.10))
         self.window_size: int = int(conf.get("window_size", 200))
         self.delay: int = int(conf.get("delay", 0))
         self.score_fn_name: str = str(conf.get("score_fn", "aps")).lower()
 
-        # --- per-mask adaptive state ------------------------------------- #
-        # alpha_t^m  for each mask pattern key
+        # Per-mask adaptive state
         self.alphas: Dict[str, float] = defaultdict(lambda: self.alpha)
-        # sliding window of (score, label_hit) tuples per mask
         self.score_windows: Dict[str, deque] = defaultdict(
             lambda: deque(maxlen=self.window_size)
         )
 
-        # --- delayed-feedback buffer ------------------------------------- #
-        # stores (logits, label, mask_key, shift_vel, disagree, t) waiting
+        # Immutable prediction records tracking
+        self.records: Dict[int, PredictionRecord] = {}
         self._delay_buffer: deque = deque()
         self._global_t: int = 0
 
-        # --- rolling metrics --------------------------------------------- #
+        # Rolling telemetry
         self._coverage_history: List[float] = []
         self._set_size_history: List[float] = []
         self._per_mask_coverage: Dict[str, List[float]] = defaultdict(list)
         self._per_mask_set_size: Dict[str, List[float]] = defaultdict(list)
-
-    # --------------------------------------------------------------------- #
-    # Nonconformity scores
-    # --------------------------------------------------------------------- #
 
     def compute_nonconformity_scores(
         self,
         logits: torch.Tensor,
         labels: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """Compute nonconformity scores for a batch.
-
-        Supports two scoring functions:
-
-        **APS** (Adaptive Prediction Sets):
-            Sort softmax probabilities in descending order, compute cumulative
-            sums, and return the cumulative mass at which the true class is
-            included.  For prediction (no ``labels``), returns the full matrix
-            of per-class cumulative scores ``(B, C)``.
-
-        **LAC** (Least Ambiguous Conformity):
-            ``s(x, y) = 1 − p̂(y | x)``.  For prediction, returns
-            ``1 − softmax(logits)`` of shape ``(B, C)``.
-
-        Args:
-            logits: Raw model outputs ``(B, C)``.
-            labels: Ground-truth labels ``(B,)``.  When *None*, per-class
-                scores are returned for prediction-set construction.
-
-        Returns:
-            If ``labels`` is given: ``(B,)`` scalar scores.
-            Otherwise: ``(B, C)`` per-class scores.
-        """
-        # Ensure float32 for numerical stability (AMP safe)
+        """Compute nonconformity scores (APS or LAC) in float32."""
         logits_f = logits.float()
-        probs = F.softmax(logits_f, dim=-1)  # (B, C)
+        probs = F.softmax(logits_f, dim=-1)
 
         if self.score_fn_name == "aps":
             return self._aps_scores(probs, labels)
         elif self.score_fn_name == "lac":
             return self._lac_scores(probs, labels)
         else:
-            raise ValueError(
-                f"Unknown score function: '{self.score_fn_name}'. "
-                "Supported: 'aps', 'lac'."
-            )
-
-    # ---- APS ------------------------------------------------------------ #
+            raise ValueError(f"Unknown score function: '{self.score_fn_name}'")
 
     @staticmethod
-    def _aps_scores(
-        probs: torch.Tensor, labels: Optional[torch.Tensor]
-    ) -> torch.Tensor:
-        """Adaptive Prediction Sets nonconformity scores.
-
-        Sorts softmax probabilities in descending order and computes the
-        cumulative sum.  The score for a class *y* is the cumulative mass up
-        to (and including) *y* in the sorted order.  Smaller scores mean the
-        class is more likely; a prediction set includes all classes whose
-        score ≤ quantile.
-
-        When ``labels`` is None, returns the full ``(B, C)`` matrix so that
-        ``predict_set`` can threshold each class independently.
-        """
-        B, C = probs.shape
-
-        # Sort descending
+    def _aps_scores(probs: torch.Tensor, labels: Optional[torch.Tensor]) -> torch.Tensor:
         sorted_probs, sorted_indices = probs.sort(dim=-1, descending=True)
-        cum_probs = sorted_probs.cumsum(dim=-1)  # (B, C)
+        cum_probs = sorted_probs.cumsum(dim=-1)
 
-        # Map cumulative values back to original class positions
-        # inv_indices[b, sorted_indices[b, j]] = j  →  cum_scores[b, c]
         inv_indices = sorted_indices.argsort(dim=-1)
-        cum_scores = cum_probs.gather(dim=-1, index=inv_indices)  # (B, C)
+        cum_scores = cum_probs.gather(dim=-1, index=inv_indices)
 
         if labels is None:
-            return cum_scores  # (B, C)
-
-        # Gather the score for the true label
-        labels_expanded = labels.long().unsqueeze(-1)  # (B, 1)
-        scores = cum_scores.gather(dim=-1, index=labels_expanded).squeeze(-1)
-        return scores  # (B,)
-
-    # ---- LAC ------------------------------------------------------------ #
-
-    @staticmethod
-    def _lac_scores(
-        probs: torch.Tensor, labels: Optional[torch.Tensor]
-    ) -> torch.Tensor:
-        """Least Ambiguous Conformity scores: ``1 − p̂(y | x)``."""
-        if labels is None:
-            return 1.0 - probs  # (B, C)
+            return cum_scores
 
         labels_expanded = labels.long().unsqueeze(-1)
-        p_true = probs.gather(dim=-1, index=labels_expanded).squeeze(-1)
-        return 1.0 - p_true  # (B,)
+        return cum_scores.gather(dim=-1, index=labels_expanded).squeeze(-1)
 
-    # --------------------------------------------------------------------- #
-    # Prediction sets
-    # --------------------------------------------------------------------- #
+    @staticmethod
+    def _lac_scores(probs: torch.Tensor, labels: Optional[torch.Tensor]) -> torch.Tensor:
+        if labels is None:
+            return 1.0 - probs
+        labels_expanded = labels.long().unsqueeze(-1)
+        p_true = probs.gather(dim=-1, index=labels_expanded).squeeze(-1)
+        return 1.0 - p_true
 
     def predict_set(
-        self, logits: torch.Tensor, modality_mask_key: str
+        self,
+        logits: torch.Tensor,
+        modality_mask_key: str,
+        shift_velocity: float = 0.0,
+        disagreement: float = 0.0,
     ) -> List[List[int]]:
-        """Construct conformal prediction sets for a batch.
+        """Construct conformal prediction sets and record emitted state."""
+        self._global_t += 1
+        record_id = self._global_t
 
-        Uses the sliding-window quantile of past nonconformity scores (for the
-        given mask pattern) to threshold per-class APS / LAC scores.
-
-        Args:
-            logits: ``(B, C)`` raw model outputs.
-            modality_mask_key: String key encoding the active modality pattern,
-                e.g. ``"1110"`` when visual/audio/text are present but prosody
-                is missing.
-
-        Returns:
-            List of length ``B``, each element a sorted list of class indices
-            included in the prediction set.
-        """
-        # Compute per-class nonconformity scores (B, C)
         with torch.no_grad():
             per_class_scores = self.compute_nonconformity_scores(logits, labels=None)
 
-        # Determine the adaptive quantile threshold for this mask
         q_hat = self._get_quantile(modality_mask_key)
+        per_class_np = per_class_scores.detach().cpu().numpy()
 
-        # Build prediction sets
-        per_class_np = per_class_scores.detach().cpu().numpy()  # (B, C)
         prediction_sets: List[List[int]] = []
         for i in range(per_class_np.shape[0]):
             pset = [
@@ -211,16 +134,72 @@ class OnlineACI:
                 for c in range(self.num_classes)
                 if per_class_np[i, c] <= q_hat
             ]
-            # Guarantee non-empty set: include top-1 prediction
+            # Ensure non-empty set
             if len(pset) == 0:
                 top1 = int(logits[i].argmax().item())
                 pset = [top1]
             prediction_sets.append(sorted(pset))
+
+        # Store immutable prediction record (AUD-08)
+        self.records[record_id] = PredictionRecord(
+            record_id=record_id,
+            timestamp=self._global_t,
+            modality_mask_key=modality_mask_key,
+            prediction_sets=prediction_sets,
+            logits=logits.detach().cpu(),
+            shift_velocity=shift_velocity,
+            disagreement=disagreement,
+        )
+
         return prediction_sets
 
-    # --------------------------------------------------------------------- #
-    # Online update
-    # --------------------------------------------------------------------- #
+    def observe(self, record_id: int, labels: torch.Tensor) -> None:
+        """Evaluate coverage of the emitted record and update mask significance level."""
+        if record_id not in self.records:
+            return
+
+        record = self.records.pop(record_id)
+        logits = record.logits
+        mask_key = record.modality_mask_key
+        pred_sets = record.prediction_sets
+        labels_np = labels.detach().cpu().numpy().reshape(-1)
+
+        with torch.no_grad():
+            scores = self.compute_nonconformity_scores(logits, labels.cpu().view(-1))
+        scores_np = scores.numpy()
+
+        # 1. Compute empirical coverage on the ACTUALLY EMITTED prediction sets
+        batch_hits: List[float] = []
+        batch_sizes: List[float] = []
+
+        for i in range(len(labels_np)):
+            true_label = int(labels_np[i])
+            hit = 1.0 if true_label in pred_sets[i] else 0.0
+            batch_hits.append(hit)
+            batch_sizes.append(float(len(pred_sets[i])))
+            self.score_windows[mask_key].append(float(scores_np[i]))
+
+        avg_miss = 1.0 - float(np.mean(batch_hits))
+
+        # 2. Safe adaptive step size (AUD-07)
+        vel_mag = abs(record.shift_velocity)
+        dis_val = max(0.0, record.disagreement)
+        eta_t = self.eta_0 * (1.0 + self.beta_1 * vel_mag + self.beta_2 * dis_val)
+        eta_t = float(np.clip(eta_t, self.eta_min, self.eta_max))
+
+        # 3. Online ACI update
+        alpha_m = self.alphas[mask_key]
+        alpha_new = alpha_m + eta_t * (self.alpha - avg_miss)
+        alpha_new = float(np.clip(alpha_new, 0.01, 0.99))
+        self.alphas[mask_key] = alpha_new
+
+        # 4. Telemetry
+        mean_cov = float(np.mean(batch_hits))
+        mean_sz = float(np.mean(batch_sizes))
+        self._coverage_history.append(mean_cov)
+        self._set_size_history.append(mean_sz)
+        self._per_mask_coverage[mask_key].append(mean_cov)
+        self._per_mask_set_size[mask_key].append(mean_sz)
 
     def update(
         self,
@@ -230,233 +209,61 @@ class OnlineACI:
         shift_velocity: float = 0.0,
         disagreement: float = 0.0,
     ) -> None:
-        """Update adaptive alpha and score window after observing true labels.
+        """Standard batch update with delay queue support (AUD-08)."""
+        current_id = self._global_t
 
-        Implements the mask-and-disagreement-driven ACI update:
-
-        .. math::
-
-            \\alpha_{t+1}^m = \\text{clip}\\bigl(
-                \\alpha_t^m + \\eta_t \\cdot (\\alpha_{\\text{target}}
-                - \\mathbb{1}[y_t \\notin C_t]),\\; 0,\\; 1
-            \\bigr)
-
-        where the step size adapts to shift and disagreement:
-
-        .. math::
-
-            \\eta_t = \\eta_0 \\cdot (1 + \\beta_1 \\cdot \\delta_d
-                      + \\beta_2 \\cdot \\kappa)
-
-        Args:
-            logits: ``(B, C)`` raw model outputs.
-            labels: ``(B,)`` ground-truth class indices.
-            modality_mask_key: Mask pattern string.
-            shift_velocity: ``δ_d`` – rate of change of distribution shift
-                magnitude (from :class:`SpectralShiftDetector`).
-            disagreement: ``κ`` – cross-modal prediction disagreement.
-        """
-        self._global_t += 1
-
-        # If delayed feedback is configured, buffer and process matured items
         if self.delay > 0:
-            self._delay_buffer.append(
-                (logits.detach().cpu(), labels.detach().cpu(),
-                 modality_mask_key, shift_velocity, disagreement,
-                 self._global_t)
-            )
+            # Enqueue to delayed feedback buffer
+            self._delay_buffer.append((current_id, labels.detach().cpu(), self._global_t))
             self._flush_delay_buffer()
-            return
-
-        # Immediate update
-        self._do_update(logits, labels, modality_mask_key,
-                        shift_velocity, disagreement)
-
-    def _do_update(
-        self,
-        logits: torch.Tensor,
-        labels: torch.Tensor,
-        modality_mask_key: str,
-        shift_velocity: float,
-        disagreement: float,
-    ) -> None:
-        """Core ACI update logic (called directly or after delay)."""
-        with torch.no_grad():
-            scores = self.compute_nonconformity_scores(logits, labels)  # (B,)
-
-        scores_np = scores.detach().cpu().numpy()
-        alpha_m = self.alphas[modality_mask_key]
-
-        # Compute adaptive learning rate
-        eta_t = self.eta_0 * (1.0 + self.beta_1 * shift_velocity
-                              + self.beta_2 * disagreement)
-
-        # Build prediction sets to check coverage
-        pred_sets = self.predict_set(logits, modality_mask_key)
-        labels_np = labels.detach().cpu().numpy()
-
-        batch_hits: List[float] = []
-        batch_sizes: List[float] = []
-
-        for i in range(len(labels_np)):
-            true_label = int(labels_np[i])
-            hit = 1.0 if true_label in pred_sets[i] else 0.0
-            miss = 1.0 - hit
-            batch_hits.append(hit)
-            batch_sizes.append(float(len(pred_sets[i])))
-
-            # Append score to per-mask sliding window
-            self.score_windows[modality_mask_key].append(float(scores_np[i]))
-
-        # Average miss indicator over the batch
-        avg_miss = 1.0 - float(np.mean(batch_hits))
-
-        # ACI alpha update: alpha_new = clip(alpha + eta * (alpha_target - miss), 0, 1)
-        alpha_target = self.alpha  # desired mis-coverage
-        alpha_new = alpha_m + eta_t * (alpha_target - avg_miss)
-        alpha_new = float(np.clip(alpha_new, 0.0, 1.0))
-        self.alphas[modality_mask_key] = alpha_new
-
-        # Record metrics
-        mean_coverage = float(np.mean(batch_hits))
-        mean_set_size = float(np.mean(batch_sizes))
-        self._coverage_history.append(mean_coverage)
-        self._set_size_history.append(mean_set_size)
-        self._per_mask_coverage[modality_mask_key].append(mean_coverage)
-        self._per_mask_set_size[modality_mask_key].append(mean_set_size)
-
-    # --------------------------------------------------------------------- #
-    # Delayed feedback
-    # --------------------------------------------------------------------- #
-
-    def update_delayed(self) -> None:
-        """Process any items in the delay buffer whose feedback has matured.
-
-        In realistic streaming settings, ground-truth labels may arrive with
-        a fixed delay ``d``.  This method is called each step to flush entries
-        whose timestamp satisfies ``t_now − t_entry ≥ d``.
-        """
-        self._flush_delay_buffer()
+        else:
+            # Immediate feedback
+            self.observe(current_id, labels)
 
     def _flush_delay_buffer(self) -> None:
-        """Flush matured entries from the delay buffer."""
+        """Process records whose feedback has matured after delay steps."""
         while self._delay_buffer:
-            logits, labels, mask_key, sv, dis, t_entry = self._delay_buffer[0]
+            rec_id, labels, t_entry = self._delay_buffer[0]
             if self._global_t - t_entry >= self.delay:
                 self._delay_buffer.popleft()
-                self._do_update(logits, labels, mask_key, sv, dis)
+                self.observe(rec_id, labels)
             else:
-                break  # entries are in order; stop at first immature one
-
-    # --------------------------------------------------------------------- #
-    # Quantile helpers
-    # --------------------------------------------------------------------- #
+                break
 
     def _get_quantile(self, modality_mask_key: str) -> float:
-        """Compute the ``(1 − α_t^m)``-quantile from the sliding window.
+        """Compute the exact finite-sample order statistic quantile (AUD-09).
 
-        Falls back to ``1 − α`` when the window is empty (cold-start), which
-        produces conservatively large prediction sets.
-
-        Args:
-            modality_mask_key: Mask pattern string.
-
-        Returns:
-            Quantile threshold (scalar).
+        k = ceil((n + 1) * (1 - alpha_t^m))
         """
         window = self.score_windows[modality_mask_key]
         alpha_m = self.alphas[modality_mask_key]
+        n = len(window)
 
-        if len(window) == 0:
-            # Cold start: use a conservative quantile based on score range.
-            # For APS scores ∈ (0, 1], return a high threshold.
-            return 1.0 - alpha_m
+        if n == 0:
+            # Cold-start fallback: conservative full set
+            return 1.0
 
-        scores_arr = np.array(window)
-        # Finite-sample corrected quantile level: (1 − α)(1 + 1/n)
-        n = len(scores_arr)
-        level = (1.0 - alpha_m) * (1.0 + 1.0 / n)
-        level = min(level, 1.0)  # clip to valid range
+        scores_arr = np.sort(np.array(window))
+        # Exact finite-sample order statistic rank
+        k = math.ceil((n + 1) * (1.0 - alpha_m))
 
-        q = float(np.quantile(scores_arr, level))
-        return q
-
-    # --------------------------------------------------------------------- #
-    # Metrics
-    # --------------------------------------------------------------------- #
+        if k > n:
+            return 1.0
+        elif k < 1:
+            return float(scores_arr[0])
+        else:
+            return float(scores_arr[k - 1])
 
     def get_metrics(self) -> Dict[str, Any]:
-        """Return current conformal metrics.
-
-        Returns:
-            Dictionary with keys:
-
-            - ``coverage``: Overall empirical marginal coverage.
-            - ``gap``: ``|coverage − (1 − alpha)|`` (should → 0).
-            - ``avg_set_size``: Mean prediction-set cardinality.
-            - ``coverage_history``: Full rolling list of per-step coverages.
-            - ``set_size_history``: Full rolling list of per-step set sizes.
-            - ``per_mask_coverage``: ``{mask_key: mean_coverage}``.
-            - ``per_mask_set_size``: ``{mask_key: mean_set_size}``.
-            - ``current_alphas``: ``{mask_key: alpha_t^m}``.
-            - ``window_sizes``: ``{mask_key: len(window)}``.
-        """
-        # Overall metrics
-        if self._coverage_history:
-            coverage = float(np.mean(self._coverage_history))
-            avg_set = float(np.mean(self._set_size_history))
-        else:
-            coverage = 0.0
-            avg_set = 0.0
-
-        target_coverage = 1.0 - self.alpha
-        gap = abs(coverage - target_coverage)
-
-        # Per-mask summaries
-        per_mask_cov = {
-            k: float(np.mean(v)) if v else 0.0
-            for k, v in self._per_mask_coverage.items()
-        }
-        per_mask_sz = {
-            k: float(np.mean(v)) if v else 0.0
-            for k, v in self._per_mask_set_size.items()
-        }
-
+        cov = float(np.mean(self._coverage_history)) if self._coverage_history else 0.0
+        sz = float(np.mean(self._set_size_history)) if self._set_size_history else 0.0
         return {
-            "coverage": coverage,
-            "gap": gap,
-            "avg_set_size": avg_set,
+            "coverage": cov,
+            "gap": abs(cov - (1.0 - self.alpha)),
+            "avg_set_size": sz,
             "coverage_history": list(self._coverage_history),
             "set_size_history": list(self._set_size_history),
-            "per_mask_coverage": per_mask_cov,
-            "per_mask_set_size": per_mask_sz,
+            "per_mask_coverage": {k: float(np.mean(v)) for k, v in self._per_mask_coverage.items()},
+            "per_mask_set_size": {k: float(np.mean(v)) for k, v in self._per_mask_set_size.items()},
             "current_alphas": dict(self.alphas),
-            "window_sizes": {
-                k: len(v) for k, v in self.score_windows.items()
-            },
         }
-
-    # --------------------------------------------------------------------- #
-    # Utilities
-    # --------------------------------------------------------------------- #
-
-    def reset(self) -> None:
-        """Reset all adaptive state (for new evaluation runs)."""
-        self.alphas = defaultdict(lambda: self.alpha)
-        self.score_windows = defaultdict(
-            lambda: deque(maxlen=self.window_size)
-        )
-        self._delay_buffer.clear()
-        self._global_t = 0
-        self._coverage_history.clear()
-        self._set_size_history.clear()
-        self._per_mask_coverage.clear()
-        self._per_mask_set_size.clear()
-
-    def __repr__(self) -> str:
-        masks = list(self.alphas.keys())
-        return (
-            f"OnlineACI(alpha={self.alpha}, score_fn={self.score_fn_name}, "
-            f"window={self.window_size}, delay={self.delay}, "
-            f"masks_tracked={len(masks)})"
-        )

@@ -1,58 +1,37 @@
 """
 Tri-SACTA: Anchor-Guided Selective Continual Test-Time Adaptation.
 
-This module implements the core Tri-SACTA algorithm for multimodal
-sentiment analysis under distribution shift. The key idea is to:
-
-1. Use spectral shift detection to classify modalities into three sets:
-   - Anchor (A): Low-shift, reliable modalities used as supervision signal
-   - Adaptable (U): Mid-shift modalities that benefit from adaptation
-   - Corrupted (C): High-shift modalities that are detached/suppressed
-
-2. Perform selective adaptation only on adaptable parameters, guided by:
-   - Entropy minimization on adaptable modality predictions
-   - Cross-modal alignment: KL divergence between adaptable and anchor
-   - Parameter regularization: L2 distance from source checkpoint
-
-3. Track shift velocity and cross-modal disagreement for diagnostics.
-
-Reference:
-    Tri-SACTA: Spectral Anchor-Guided Continual Test-Time Adaptation
-    with Conformal Prediction for Robust Multimodal Sentiment Analysis
+Key scientific improvements:
+1. Classification into Anchor (A), Adaptable (U), and Corrupted (D) sets based on
+   calibrated reliability weights r_t in [0, 1] (AUD-01, AUD-05).
+2. Strict Selective Adaptation:
+   - Freezes Anchor and Corrupted modality streams completely.
+   - Updates ONLY parameters in adaptable_set U (LayerNorm + LowRankAdapters).
+   - Regularization loss L_reg is strictly computed over active adaptable params.
+3. Supervised anchor alignment:
+   - Adaptable predictions are aligned to detached clean anchor predictions.
+4. Shift velocity & cross-modal disagreement (JS divergence) explicitly tracked and returned.
 """
 
 from __future__ import annotations
 
 import copy
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Set
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.cuda.amp import GradScaler, autocast
+from torch.amp import GradScaler, autocast
 
-try:
-    from src.models.spectral_detector import SpectralShiftDetector
-    from src.models.fusion_backbone import MultimodalFusionModel
-except ImportError:
-    from ..models.spectral_detector import SpectralShiftDetector
-    from ..models.fusion_backbone import MultimodalFusionModel
+from src.models.spectral_detector import SpectralShiftDetector
+from src.models.fusion_backbone import MultimodalFusionModel
 
 logger = logging.getLogger(__name__)
 
 
 def _js_divergence(p: torch.Tensor, q: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
-    """Compute Jensen-Shannon divergence between two probability distributions.
-
-    Args:
-        p: Probability distribution of shape (batch, num_classes).
-        q: Probability distribution of shape (batch, num_classes).
-        eps: Small constant for numerical stability.
-
-    Returns:
-        Scalar tensor with the mean JS divergence across the batch.
-    """
+    """Compute Jensen-Shannon divergence between two probability distributions."""
     p = p.clamp(min=eps)
     q = q.clamp(min=eps)
     m = 0.5 * (p + q)
@@ -62,26 +41,9 @@ def _js_divergence(p: torch.Tensor, q: torch.Tensor, eps: float = 1e-8) -> torch
 
 
 class TriSACTA:
-    """Anchor-Guided Selective Continual Test-Time Adaptation.
+    """Anchor-Guided Selective Continual Test-Time Adaptation."""
 
-    At each adaptation step, modalities are classified into anchor (A),
-    adaptable (U), and corrupted (C) sets based on spectral shift scores.
-    Adaptation is performed only when the adaptable set is non-empty,
-    using anchor modalities as a reference signal and suppressing
-    corrupted modalities.
-
-    Attributes:
-        model: The multimodal fusion model to adapt.
-        detector: Spectral shift detector for per-modality shift scores.
-        config: Full experiment config dict.
-        optimizer: AdamW optimizer over adaptable parameters only.
-        scaler: AMP GradScaler for mixed-precision training.
-        source_state: Saved source model checkpoint for reset/regularization.
-        prev_shift_scores: Previous step's shift scores for velocity tracking.
-    """
-
-    # Modality names in canonical order
-    MODALITY_NAMES = ["visual", "audio", "text", "prosody"]
+    MODALITY_NAMES: List[str] = ["visual", "audio", "text", "prosody"]
 
     def __init__(
         self,
@@ -89,139 +51,84 @@ class TriSACTA:
         detector: SpectralShiftDetector,
         config: dict,
     ) -> None:
-        """Initialize Tri-SACTA.
-
-        Saves a deep copy of the model's state dict as the source checkpoint,
-        sets up AdamW optimizer on adaptable parameters only, and initializes
-        the AMP GradScaler.
-
-        Args:
-            model: Pre-trained multimodal fusion model.
-            detector: Spectral shift detector with registered source stats.
-            config: Full experiment configuration dict. Expected keys:
-                - config['tta']['tau']: Temperature for reliability weighting.
-                - config['tta']['theta_high']: Upper threshold → corrupted set.
-                - config['tta']['theta_low']: Lower threshold → anchor set.
-                - config['tta']['lambda_align']: Weight for alignment loss.
-                - config['tta']['lambda_reg']: Weight for regularization loss.
-                - config['tta']['lr']: Learning rate for adaptation.
-                - config['model']['num_classes']: Number of output classes.
-        """
         self.model = model
         self.detector = detector
         self.config = config
 
-        # TTA hyper-parameters
-        tta_cfg = config["tta"]
-        self.tau = tta_cfg["tau"]
-        self.theta_high = tta_cfg["theta_high"]
-        self.theta_low = tta_cfg["theta_low"]
-        self.lambda_align = tta_cfg["lambda_align"]
-        self.lambda_reg = tta_cfg["lambda_reg"]
-        self.lr = tta_cfg["lr"]
+        tta_cfg = config.get("tta", {})
+        self.tau = float(tta_cfg.get("tau", 1.0))
+        self.theta_high = float(tta_cfg.get("theta_high", 0.7))
+        self.theta_low = float(tta_cfg.get("theta_low", 0.3))
+        self.lambda_align = float(tta_cfg.get("lambda_align", 0.5))
+        self.lambda_reg = float(tta_cfg.get("lambda_reg", 0.01))
+        self.lr = float(tta_cfg.get("lr", 1e-4))
 
-        self.num_classes = config["model"]["num_classes"]
+        self.num_classes = config.get("model", {}).get("num_classes", 7)
 
-        # Save source checkpoint for reset and regularization
-        self.source_state: Dict[str, torch.Tensor] = copy.deepcopy(
-            model.state_dict()
-        )
+        # Freeze source state snapshot
+        self.source_state: Dict[str, torch.Tensor] = {
+            k: v.clone().detach().cpu() for k, v in model.state_dict().items()
+        }
 
-        # Set up optimizer on adaptable parameters only
+        # Optimizer on adaptable parameters
         adaptable_params = model.get_adaptable_params()
-        if not adaptable_params:
-            logger.warning(
-                "No adaptable parameters found in the model. "
-                "Adaptation steps will be no-ops."
-            )
         self.optimizer = torch.optim.AdamW(
             adaptable_params if adaptable_params else [torch.zeros(1, requires_grad=True)],
             lr=self.lr,
-            weight_decay=0.0,  # Explicit L2 reg is used instead
+            weight_decay=0.0,
         )
 
-        # AMP scaler for mixed-precision
-        self.scaler = GradScaler()
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
 
-        # Tracking for shift velocity
         self.prev_shift_scores: Optional[Dict[str, float]] = None
-
-        # Step counter
+        self._prev_prev_shift_scores: Optional[Dict[str, float]] = None
         self._step_count: int = 0
 
         logger.info(
-            "TriSACTA initialized — tau=%.2f, θ_high=%.2f, θ_low=%.2f, "
-            "λ_align=%.3f, λ_reg=%.4f, lr=%.1e",
-            self.tau, self.theta_high, self.theta_low,
-            self.lambda_align, self.lambda_reg, self.lr,
+            f"TriSACTA initialized — tau={self.tau:.2f}, theta_high={self.theta_high:.2f}, "
+            f"theta_low={self.theta_low:.2f}, lambda_align={self.lambda_align:.3f}, lambda_reg={self.lambda_reg:.4f}, lr={self.lr:.1e}"
         )
-
-    # ------------------------------------------------------------------
-    # Core adaptation
-    # ------------------------------------------------------------------
 
     def adapt_step(
         self,
         batch: Dict[str, torch.Tensor],
         modality_mask: Dict[str, torch.Tensor],
     ) -> Dict[str, Any]:
-        """Execute one Tri-SACTA adaptation step.
-
-        Pipeline:
-            1. Compute spectral shift scores for each modality.
-            2. Derive reliability weights via softmax weighting.
-            3. Classify modalities into anchor (A) / adaptable (U) / corrupted (C).
-            4. If adaptable set U is non-empty, compute the TTA loss:
-               L_TTA = L_ent(p_t)
-                     + λ_align * Σ_{m∈U, a∈A} KL(p_m || sg(p_a))
-                     + λ_reg  * ||θ − θ_0||²
-               and perform one gradient step on adaptable parameters only.
-            5. Return diagnostics dict.
-
-        Args:
-            batch: Dict with keys per modality → Tensor of shape (B, D_m).
-                   Expected keys: 'visual', 'audio', 'text', 'prosody'.
-            modality_mask: Dict with keys per modality → Tensor of shape (B,)
-                           with 1.0 for available and 0.0 for missing.
-
-        Returns:
-            Dict with:
-                - 'logits': (B, C) final fused logits.
-                - 'shift_scores': {modality: float} spectral shift scores.
-                - 'reliability_weights': {modality: float} per-modality weights.
-                - 'anchor_set': list of anchor modality names.
-                - 'adaptable_set': list of adaptable modality names.
-                - 'corrupted_set': list of corrupted modality names.
-                - 'loss': float total TTA loss (0.0 if no adaptation).
-                - 'loss_ent': float entropy component.
-                - 'loss_align': float alignment component.
-                - 'loss_reg': float regularization component.
-                - 'adapted': bool whether adaptation was performed.
-        """
+        """Execute one Tri-SACTA adaptation step with selective parameter updates."""
         self._step_count += 1
         device = next(self.model.parameters()).device
 
-        # ----- 1. Spectral shift scores -----
-        features_by_modality = self._extract_features(batch)
-        shift_scores = self.detector.compute_shift_scores(features_by_modality)
+        # 1. Compute spectral shift scores excluding missing samples
+        shift_scores = self.detector.compute_shift_scores(batch, modality_mask)
 
-        # ----- 2. Reliability weights -----
+        # 2. Derive reliability weights
         reliability_weights = self.detector.compute_reliability_weights(
             shift_scores, modality_mask, self.tau
         )
 
-        # ----- 3. Classify into A / U / C -----
+        # 3. Classify modalities into Anchor (A), Adaptable (U), Corrupted (D)
         anchor_set, adaptable_set, corrupted_set = self._classify_modalities(
-            shift_scores, modality_mask
+            reliability_weights, modality_mask
         )
 
-        # ----- Prepare result dict (populated progressively) -----
+        # Initial forward pass to compute unimodal outputs and disagreement
+        self.model.eval()
+        with torch.no_grad():
+            init_out = self.model(batch, modality_mask=modality_mask, reliability_weights=reliability_weights)
+            per_mod_logits = init_out["per_modality_logits"]
+
+        # 4. Cross-modal disagreement tracking (AUD-07)
+        available_mods = [m for m in self.MODALITY_NAMES if m in anchor_set or m in adaptable_set]
+        disagreement = self.get_cross_modal_disagreement(per_mod_logits, available_mods)
+
         result: Dict[str, Any] = {
             "shift_scores": shift_scores,
-            "reliability_weights": reliability_weights,
-            "anchor_set": anchor_set,
-            "adaptable_set": adaptable_set,
-            "corrupted_set": corrupted_set,
+            "reliability_weights": {m: float(w.mean().item()) if isinstance(w, torch.Tensor) else float(w) for m, w in reliability_weights.items()},
+            "anchor_set": list(anchor_set),
+            "adaptable_set": list(adaptable_set),
+            "corrupted_set": list(corrupted_set),
+            "cross_modal_disagreement": float(disagreement),
             "loss": 0.0,
             "loss_ent": 0.0,
             "loss_align": 0.0,
@@ -229,393 +136,208 @@ class TriSACTA:
             "adapted": False,
         }
 
-        # Build effective modality mask: zero-out corrupted modalities
-        effective_mask = {}
-        for m in self.MODALITY_NAMES:
-            if m in corrupted_set:
-                # Detach corrupted modalities → zero mask
-                effective_mask[m] = torch.zeros_like(modality_mask.get(
-                    m, torch.zeros(1, device=device)
-                ))
-            else:
-                effective_mask[m] = modality_mask.get(
-                    m, torch.ones(1, device=device)
-                )
-
-        # ----- 4. Adaptation (if adaptable set non-empty) -----
-        if adaptable_set:
+        # 5. Selective Adaptation (if adaptable set non-empty and at least one reliable anchor)
+        if adaptable_set and anchor_set:
             self.model.train()
+
+            # Strictly freeze all non-adaptable parameters (AUD-05)
+            for param in self.model.parameters():
+                param.requires_grad = False
+
+            adaptable_params = self.model.get_adaptable_params(active_modalities=list(adaptable_set))
+            for p in adaptable_params:
+                p.requires_grad = True
+
             self.optimizer.zero_grad(set_to_none=True)
 
-            with autocast():
-                # Forward pass with gradient through adaptable params
+            device_type = "cuda" if device.type == "cuda" else "cpu"
+            with autocast(device_type, enabled=(device_type == "cuda")):
                 out = self.model(
                     features=batch,
-                    modality_mask=effective_mask,
+                    modality_mask=modality_mask,
                     reliability_weights=reliability_weights,
                 )
-                logits = out["logits"]  # (B, C)
-                per_modality_logits = out.get("per_modality_logits", {})
+                logits = out["logits"]
+                curr_per_mod_logits = out["per_modality_logits"]
 
-                # --- (a) Entropy loss on fused predictions ---
+                # (a) Entropy minimization on fused prediction
                 loss_ent = self._entropy_loss(logits)
 
-                # --- (b) Cross-modal alignment loss ---
+                # (b) Cross-modal alignment: align adaptable to detached anchor heads
                 loss_align = self._alignment_loss(
-                    per_modality_logits, anchor_set, adaptable_set
+                    curr_per_mod_logits, anchor_set, adaptable_set, modality_mask
                 )
 
-                # --- (c) Parameter regularization loss ---
-                loss_reg = self._regularization_loss()
+                # (c) Parameter regularization: only on active adaptable parameters
+                loss_reg = self._regularization_loss(adaptable_set, device)
 
-                # --- Total TTA loss ---
                 loss_total = (
                     loss_ent
                     + self.lambda_align * loss_align
                     + self.lambda_reg * loss_reg
                 )
 
-            # Backward + optimizer step with AMP scaling
-            self.scaler.scale(loss_total).backward()
-            self.scaler.step(self.optimizer)
-            self.scaler.update()
+            if device_type == "cuda":
+                self.scaler.scale(loss_total).backward()
+                self.scaler.step(self.optimizer)
+                self.scaler.update()
+            else:
+                loss_total.backward()
+                self.optimizer.step()
+
+            # Clean gradients
+            for p in self.model.parameters():
+                p.grad = None
 
             result["logits"] = logits.detach()
-            result["loss"] = loss_total.item()
-            result["loss_ent"] = loss_ent.item()
-            result["loss_align"] = loss_align.item()
-            result["loss_reg"] = loss_reg.item()
+            result["loss"] = float(loss_total.item())
+            result["loss_ent"] = float(loss_ent.item())
+            result["loss_align"] = float(loss_align.item())
+            result["loss_reg"] = float(loss_reg.item())
             result["adapted"] = True
-
         else:
-            # No adaptation — inference only
-            self.model.eval()
-            with torch.no_grad(), autocast():
-                out = self.model(
-                    features=batch,
-                    modality_mask=effective_mask,
-                    reliability_weights=reliability_weights,
-                )
-            result["logits"] = out["logits"]
+            # Inference only (no reliable anchor or no adaptable modality)
+            result["logits"] = init_out["logits"].detach()
 
-        # Update shift velocity tracking
+        # Update shift history for velocity calculation
+        self._prev_prev_shift_scores = self.prev_shift_scores
         self.prev_shift_scores = {m: float(v) for m, v in shift_scores.items()}
 
         return result
 
-    # ------------------------------------------------------------------
-    # Reset
-    # ------------------------------------------------------------------
+    def _classify_modalities(
+        self,
+        reliability_weights: Dict[str, torch.Tensor],
+        modality_mask: Dict[str, torch.Tensor],
+    ) -> Tuple[Set[str], Set[str], Set[str]]:
+        """Classify modalities using calibrated reliability weights r_t in [0, 1]."""
+        anchor: Set[str] = set()
+        adaptable: Set[str] = set()
+        corrupted: Set[str] = set()
+
+        for m in self.MODALITY_NAMES:
+            mask_val = modality_mask.get(m, None)
+            if mask_val is None or (isinstance(mask_val, torch.Tensor) and mask_val.sum().item() == 0):
+                corrupted.add(m)
+                continue
+
+            rw = reliability_weights.get(m, 0.0)
+            r_val = float(rw.mean().item()) if isinstance(rw, torch.Tensor) else float(rw)
+
+            if r_val >= self.theta_high:
+                anchor.add(m)
+            elif r_val >= self.theta_low:
+                adaptable.add(m)
+            else:
+                corrupted.add(m)
+
+        # Fallback: if no anchor exists, promote highest reliability modality if >= theta_low
+        if not anchor and adaptable:
+            best_mod = max(adaptable, key=lambda m: float(reliability_weights[m].mean().item() if isinstance(reliability_weights[m], torch.Tensor) else reliability_weights[m]))
+            anchor.add(best_mod)
+            adaptable.remove(best_mod)
+
+        return anchor, adaptable, corrupted
+
+    def _entropy_loss(self, logits: torch.Tensor) -> torch.Tensor:
+        probs = F.softmax(logits, dim=-1)
+        log_probs = F.log_softmax(logits, dim=-1)
+        entropy = -(probs * log_probs).sum(dim=-1).mean()
+        return entropy
+
+    def _alignment_loss(
+        self,
+        per_modality_logits: Dict[str, torch.Tensor],
+        anchor_set: Set[str],
+        adaptable_set: Set[str],
+        modality_mask: Dict[str, torch.Tensor],
+    ) -> torch.Tensor:
+        """Align adaptable predictions to stop-gradient anchor predictions."""
+        device = next(self.model.parameters()).device
+        loss = torch.tensor(0.0, device=device)
+        num_pairs = 0
+
+        for a in anchor_set:
+            if a not in per_modality_logits:
+                continue
+            # Stop gradient on anchor teacher
+            p_a = F.softmax(per_modality_logits[a].detach(), dim=-1)
+            a_mask = modality_mask.get(a, torch.ones(p_a.size(0), device=device)).bool().view(-1)
+
+            for u in adaptable_set:
+                if u not in per_modality_logits:
+                    continue
+                p_u_log = F.log_softmax(per_modality_logits[u], dim=-1)
+                u_mask = modality_mask.get(u, torch.ones(p_u_log.size(0), device=device)).bool().view(-1)
+
+                valid_pair_mask = a_mask & u_mask
+                if valid_pair_mask.any():
+                    # KL(p_u || sg(p_a))
+                    kl = F.kl_div(
+                        p_u_log[valid_pair_mask],
+                        p_a[valid_pair_mask],
+                        reduction="batchmean",
+                        log_target=False,
+                    )
+                    loss = loss + kl
+                    num_pairs += 1
+
+        return loss / max(num_pairs, 1)
+
+    def _regularization_loss(self, adaptable_set: Set[str], device: torch.device) -> torch.Tensor:
+        """Compute L2 regularization only over active adaptable parameters."""
+        reg_loss = torch.tensor(0.0, device=device)
+        for m in adaptable_set:
+            if m in self.model.projections:
+                for name, p in self.model.projections[m].norm.named_parameters():
+                    full_name = f"projections.{m}.norm.{name}"
+                    if full_name in self.source_state:
+                        reg_loss = reg_loss + (p - self.source_state[full_name].to(device)).pow(2).sum()
+            if m in self.model.adapters:
+                for name, p in self.model.adapters[m].named_parameters():
+                    full_name = f"adapters.{m}.{name}"
+                    if full_name in self.source_state:
+                        reg_loss = reg_loss + (p - self.source_state[full_name].to(device)).pow(2).sum()
+        return reg_loss
+
+    def get_shift_velocity(self) -> Dict[str, float]:
+        """Compute per-modality shift velocity Δd_t."""
+        return self.detector.compute_shift_velocity()
+
+    def get_cross_modal_disagreement(
+        self,
+        per_modality_logits: Dict[str, torch.Tensor],
+        available_modalities: List[str],
+    ) -> float:
+        """Compute pairwise JS divergence across available unimodal predictions."""
+        valid_mods = [m for m in available_modalities if m in per_modality_logits]
+        M = len(valid_mods)
+        if M < 2:
+            return 0.0
+
+        probs = {m: F.softmax(per_modality_logits[m], dim=-1) for m in valid_mods}
+        js_total = 0.0
+        pairs = 0
+
+        for i in range(M):
+            for j in range(i + 1, M):
+                m_i, m_j = valid_mods[i], valid_mods[j]
+                js = _js_divergence(probs[m_i], probs[m_j])
+                js_total += float(js.item())
+                pairs += 1
+
+        return float(js_total / max(pairs, 1))
 
     def reset(self) -> None:
-        """Reset the model to the saved source checkpoint.
-
-        Restores model weights, re-creates the optimizer, resets the
-        GradScaler, and clears internal tracking state.
-        """
+        """Reset model parameters to source checkpoint."""
         self.model.load_state_dict(copy.deepcopy(self.source_state))
-
         adaptable_params = self.model.get_adaptable_params()
         self.optimizer = torch.optim.AdamW(
             adaptable_params if adaptable_params else [torch.zeros(1, requires_grad=True)],
             lr=self.lr,
             weight_decay=0.0,
         )
-        self.scaler = GradScaler()
         self.prev_shift_scores = None
+        self._prev_prev_shift_scores = None
+        self.detector.reset_history()
         self._step_count = 0
-
-        logger.info("TriSACTA reset to source checkpoint.")
-
-    # ------------------------------------------------------------------
-    # Diagnostic metrics
-    # ------------------------------------------------------------------
-
-    def get_shift_velocity(self) -> Optional[Dict[str, float]]:
-        """Compute per-modality shift velocity Δd_t.
-
-        The shift velocity is the difference between the current and
-        previous shift scores: Δd_t^m = d_t^m − d_{t-1}^m.
-
-        Returns:
-            Dict mapping modality name → Δd_t, or None if fewer than
-            two steps have been taken.
-        """
-        if self.prev_shift_scores is None:
-            return None
-        # We need the current shift scores — but after adapt_step
-        # prev_shift_scores already has the most recent scores.
-        # Velocity is computed between consecutive calls, so we
-        # cache a secondary buffer.
-        if not hasattr(self, "_prev_prev_shift_scores") or self._prev_prev_shift_scores is None:
-            return None
-        velocity = {}
-        for m in self.MODALITY_NAMES:
-            cur = self.prev_shift_scores.get(m, 0.0)
-            prev = self._prev_prev_shift_scores.get(m, 0.0)
-            velocity[m] = cur - prev
-        return velocity
-
-    def get_cross_modal_disagreement(
-        self,
-        per_modality_logits: Dict[str, torch.Tensor],
-    ) -> torch.Tensor:
-        """Compute cross-modal disagreement κ_t via pairwise JS divergence.
-
-        κ_t = (2 / M(M-1)) Σ_{i<j} JS(p_i || p_j)
-
-        where the sum is over all pairs of available modality predictions.
-
-        Args:
-            per_modality_logits: Dict mapping modality name → (B, C) logits.
-
-        Returns:
-            Scalar tensor with the mean pairwise JS divergence.
-        """
-        modalities = [m for m in self.MODALITY_NAMES if m in per_modality_logits]
-        if len(modalities) < 2:
-            return torch.tensor(0.0)
-
-        probs = {m: F.softmax(per_modality_logits[m], dim=-1) for m in modalities}
-
-        js_sum = torch.tensor(0.0, device=next(iter(probs.values())).device)
-        num_pairs = 0
-        for i in range(len(modalities)):
-            for j in range(i + 1, len(modalities)):
-                js_sum = js_sum + _js_divergence(probs[modalities[i]], probs[modalities[j]])
-                num_pairs += 1
-
-        return js_sum / max(num_pairs, 1)
-
-    # ------------------------------------------------------------------
-    # Private helpers
-    # ------------------------------------------------------------------
-
-    def _extract_features(
-        self, batch: Dict[str, torch.Tensor]
-    ) -> Dict[str, torch.Tensor]:
-        """Extract features from batch for spectral shift detection.
-
-        Args:
-            batch: Dict with modality name → Tensor of shape (B, D_m).
-
-        Returns:
-            Dict with modality name → Tensor suitable for the detector.
-        """
-        features: Dict[str, torch.Tensor] = {}
-        for m in self.MODALITY_NAMES:
-            if m in batch and batch[m] is not None:
-                feat = batch[m]
-                # Ensure 2D: (B, D)
-                if feat.ndim > 2:
-                    feat = feat.reshape(feat.shape[0], -1)
-                features[m] = feat.detach()
-        return features
-
-    def _classify_modalities(
-        self,
-        shift_scores: Dict[str, float],
-        modality_mask: Dict[str, torch.Tensor],
-    ) -> Tuple[List[str], List[str], List[str]]:
-        """Classify modalities into anchor, adaptable, and corrupted sets.
-
-        Classification rules:
-            - Anchor (A): d_t^m ≤ θ_low   AND modality is available
-            - Corrupted (C): d_t^m ≥ θ_high  OR modality is unavailable
-            - Adaptable (U): everything else (θ_low < d_t^m < θ_high)
-
-        If all available modalities are corrupted, the least-shifted one
-        is promoted to anchor to ensure at least one reference signal.
-
-        Args:
-            shift_scores: Per-modality spectral shift scores.
-            modality_mask: Per-modality availability masks.
-
-        Returns:
-            Tuple of (anchor_set, adaptable_set, corrupted_set) lists.
-        """
-        # Cache previous scores for velocity computation
-        if self.prev_shift_scores is not None:
-            self._prev_prev_shift_scores = dict(self.prev_shift_scores)
-        else:
-            self._prev_prev_shift_scores = None
-
-        anchor: List[str] = []
-        adaptable: List[str] = []
-        corrupted: List[str] = []
-
-        for m in self.MODALITY_NAMES:
-            # Check availability: mask might be batch tensor or scalar
-            mask_val = modality_mask.get(m, None)
-            if mask_val is None:
-                corrupted.append(m)
-                continue
-
-            # Modality is available if any sample has it
-            if isinstance(mask_val, torch.Tensor):
-                is_available = mask_val.sum().item() > 0
-            else:
-                is_available = float(mask_val) > 0
-
-            if not is_available:
-                corrupted.append(m)
-                continue
-
-            score = float(shift_scores.get(m, 0.0))
-
-            if score <= self.theta_low:
-                anchor.append(m)
-            elif score >= self.theta_high:
-                corrupted.append(m)
-            else:
-                adaptable.append(m)
-
-        # Safety: if no anchor and there are non-corrupted modalities,
-        # promote the least-shifted adaptable modality to anchor.
-        if not anchor and adaptable:
-            adaptable_scores = {m: float(shift_scores.get(m, 0.0)) for m in adaptable}
-            best = min(adaptable_scores, key=adaptable_scores.get)
-            anchor.append(best)
-            adaptable.remove(best)
-            logger.debug(
-                "No anchor found — promoted '%s' (score=%.4f) to anchor.",
-                best, adaptable_scores[best],
-            )
-
-        # If everything is corrupted, promote the least-shifted one
-        if not anchor and not adaptable and corrupted:
-            available_corrupted = [
-                m for m in corrupted
-                if m in shift_scores
-            ]
-            if available_corrupted:
-                scores_c = {m: float(shift_scores[m]) for m in available_corrupted}
-                best = min(scores_c, key=scores_c.get)
-                anchor.append(best)
-                corrupted.remove(best)
-                logger.debug(
-                    "All corrupted — promoted '%s' (score=%.4f) to anchor.",
-                    best, scores_c[best],
-                )
-
-        logger.debug(
-            "Step %d sets — A=%s, U=%s, C=%s",
-            self._step_count, anchor, adaptable, corrupted,
-        )
-
-        return anchor, adaptable, corrupted
-
-    @staticmethod
-    def _entropy_loss(logits: torch.Tensor) -> torch.Tensor:
-        """Compute entropy minimization loss on fused predictions.
-
-        L_ent = -Σ_c p_c log(p_c)  averaged over the batch.
-
-        Args:
-            logits: Tensor of shape (B, C) — unnormalized class scores.
-
-        Returns:
-            Scalar entropy loss tensor.
-        """
-        probs = F.softmax(logits, dim=-1)
-        log_probs = F.log_softmax(logits, dim=-1)
-        entropy = -(probs * log_probs).sum(dim=-1)  # (B,)
-        return entropy.mean()
-
-    def _alignment_loss(
-        self,
-        per_modality_logits: Dict[str, torch.Tensor],
-        anchor_set: List[str],
-        adaptable_set: List[str],
-    ) -> torch.Tensor:
-        """Compute cross-modal alignment loss between adaptable and anchor.
-
-        L_align = Σ_{m∈U} Σ_{a∈A} KL(p_m || sg(p_a))
-
-        where sg(·) denotes stop-gradient (anchor predictions are detached).
-
-        Args:
-            per_modality_logits: Dict modality name → (B, C) logits.
-            anchor_set: List of anchor modality names.
-            adaptable_set: List of adaptable modality names.
-
-        Returns:
-            Scalar alignment loss tensor.
-        """
-        if not anchor_set or not adaptable_set:
-            return torch.tensor(0.0, device=next(self.model.parameters()).device)
-
-        loss = torch.tensor(0.0, device=next(self.model.parameters()).device)
-        num_pairs = 0
-
-        for m in adaptable_set:
-            if m not in per_modality_logits:
-                continue
-            log_probs_m = F.log_softmax(per_modality_logits[m], dim=-1)
-
-            for a in anchor_set:
-                if a not in per_modality_logits:
-                    continue
-                # Stop-gradient on anchor probabilities
-                probs_a = F.softmax(per_modality_logits[a].detach(), dim=-1)
-                # KL(p_m || sg(p_a)) = Σ p_m * (log p_m - log sg(p_a))
-                kl = F.kl_div(
-                    log_probs_m, probs_a,
-                    reduction="batchmean", log_target=False,
-                )
-                loss = loss + kl
-                num_pairs += 1
-
-        return loss / max(num_pairs, 1)
-
-    def _regularization_loss(self) -> torch.Tensor:
-        """Compute L2 regularization loss: ||θ − θ_0||².
-
-        Only computed over adaptable parameters to match the optimizer scope.
-
-        Returns:
-            Scalar regularization loss tensor.
-        """
-        device = next(self.model.parameters()).device
-        reg_loss = torch.tensor(0.0, device=device)
-
-        current_state = self.model.state_dict()
-        for name, param in self.model.named_parameters():
-            if param.requires_grad and name in self.source_state:
-                source_param = self.source_state[name].to(device)
-                reg_loss = reg_loss + (param - source_param).pow(2).sum()
-
-        return reg_loss
-
-    # ------------------------------------------------------------------
-    # Serialization helpers
-    # ------------------------------------------------------------------
-
-    def state_dict(self) -> Dict[str, Any]:
-        """Return serializable state for checkpointing.
-
-        Returns:
-            Dict with model state, optimizer state, scaler state, and
-            internal tracking variables.
-        """
-        return {
-            "model_state_dict": self.model.state_dict(),
-            "optimizer_state_dict": self.optimizer.state_dict(),
-            "scaler_state_dict": self.scaler.state_dict(),
-            "source_state": self.source_state,
-            "prev_shift_scores": self.prev_shift_scores,
-            "step_count": self._step_count,
-        }
-
-    def load_state_dict(self, state: Dict[str, Any]) -> None:
-        """Load state from a checkpoint.
-
-        Args:
-            state: Dict produced by :meth:`state_dict`.
-        """
-        self.model.load_state_dict(state["model_state_dict"])
-        self.optimizer.load_state_dict(state["optimizer_state_dict"])
-        self.scaler.load_state_dict(state["scaler_state_dict"])
-        self.source_state = state["source_state"]
-        self.prev_shift_scores = state.get("prev_shift_scores")
-        self._step_count = state.get("step_count", 0)
