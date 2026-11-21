@@ -4,7 +4,10 @@ __pycache__/
 *$py.class
 
 # PyTorch checkpoints and features cache
+checkpoints/**/*.pt
 checkpoints/*.pt
+data/**/*.pt
+data/**/*.pth
 features_cache/
 *.h5
 !checkpoints/.gitkeep

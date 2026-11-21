@@ -36,42 +36,19 @@ Let $\alpha_{t} \in [0, 1]$ be the adaptive miscoverage level at step $t$. Upon 
 $$\alpha_{t+1} = \alpha_t + \eta_t \cdot (\alpha - \text{err}_t)$$
 where $\text{err}_t = \mathbb{I}\{y_t \notin \mathcal{C}_t(x_t)\} \in \{0, 1\}$ and $\eta_t > 0$ is the dynamic step size.
 
-### 2.2. Asymptotic Long-Run Coverage Theorem
+### 2.2. Mathematical Status & V3 Retraction Notice
 
-**Theorem 2 (Long-Run Asymptotic Validity of Online ACI):**
-Let $\eta_t \in [\eta_{\text{min}}, \eta_{\text{max}}]$ with $0 < \eta_{\text{min}} \le \eta_{\text{max}} < \infty$ for all $t \ge 1$. If the sequence of target miscoverage levels $\alpha_t$ remains bounded in an open interval $(0, 1)$ without unconstrained saturation at boundary points $\{0, 1\}$, then the long-run average miscoverage converges to the nominal level $\alpha$:
-$$\lim_{T \to \infty} \frac{1}{T} \sum_{t=1}^T \text{err}_t = \alpha + \mathcal{O}\left(\frac{1}{T \cdot \eta_{\text{min}}}\right)$$
-
-*Proof:*
-By the ACI update equation:
-$$\frac{\alpha_{t+1} - \alpha_t}{\eta_t} = \alpha - \text{err}_t$$
-Summing over $t = 1, \dots, T$:
-$$\sum_{t=1}^T (\alpha - \text{err}_t) = \sum_{t=1}^T \frac{\alpha_{t+1} - \alpha_t}{\eta_t}$$
-Using summation by parts and the lower bound $\eta_t \ge \eta_{\text{min}} > 0$:
-$$\left|\sum_{t=1}^T (\alpha - \text{err}_t)\right| \le \frac{1}{\eta_{\text{min}}} \left( |\alpha_{T+1} - \alpha_1| + \sum_{t=1}^{T-1} |\alpha_{t+1} - \alpha_t| \cdot \frac{|\eta_{t+1} - \eta_t|}{\eta_{t+1}} \right)$$
-Since $\alpha_t \in [0, 1]$, $|\alpha_{T+1} - \alpha_1| \le 1$. Dividing both sides by $T$:
-$$\left|\alpha - \frac{1}{T}\sum_{t=1}^T \text{err}_t\right| \le \frac{1}{T \cdot \eta_{\text{min}}} + \mathcal{O}\left(\frac{\Delta \eta}{T}\right)$$
-Taking the limit as $T \to \infty$:
-$$\lim_{T \to \infty} \left|\frac{1}{T}\sum_{t=1}^T \text{err}_t - \alpha\right| = 0$$
-$$\blacksquare$$
-
----
-
-## 3. Dynamic Step Size & Non-Divergence Bound
-
-### 3.1. Formulation
-Standard ACI utilizes a constant step size $\eta_0$, which adapts too sluggishly during abrupt distribution shifts (e.g., transition from Regime 1 clean to Regime 4 severe occlusion).
-Tri-SACTA introduces a state-dependent step size:
-$$\eta_t = \text{clip}\Big(\eta_0 \cdot \big(1 + \beta_1 |\Delta d_t| + \beta_2 \kappa_t\big), \; \eta_{\text{min}}, \; \eta_{\text{max}}\Big)$$
-where:
-- $|\Delta d_t| = \|\mathbf{d}_t - \mathbf{d}_{t-1}\|_1 / M$ is the average spectral shift velocity.
-- $\kappa_t = \frac{1}{|\mathcal{A}_t \cup \mathcal{U}_t|}\sum_{m} D_{\text{JS}}\big(p_t^{(m)} \,\|\, \bar{p}_t\big) \in [0, \log 2]$ is cross-modal disagreement.
-
-### 3.2. Stability Guarantee
-**Proposition 1:**
-For any arbitrary spectral shift trajectory $\{\mathbf{d}_t\}_{t=1}^T$ and any predictive distribution sequence $\{p_t^{(m)}\}_{t=1}^T$, the sequence of step sizes satisfies:
-$$0 < \eta_{\text{min}} \le \eta_t \le \eta_{\text{max}} < 1.0$$
-*Significance:* This strictly precludes step size explosion ($\eta_t \to \infty$) and step size freezing ($\eta_t \to 0$), guaranteeing that the telescoping stability of Theorem 2 is unconditionally preserved.
+> [!WARNING] V2 Theorem 2 & Proposition 1 Retracted
+> As demonstrated in `tests/test_aci_counterexample.py` and documented in `docs/THEORY_V3.md`, Theorem 2 of V2 (which claimed that any bounded variable step size $\eta_t \in [\eta_{\text{min}}, \eta_{\text{max}}]$ guarantees asymptotic convergence to nominal $\alpha$) is mathematically invalid.
+> Under alternating step sizes (e.g. $\eta_{\text{odd}}=0.01, \eta_{\text{even}}=0.09, \alpha=0.10$), the unweighted empirical miscoverage converges to $0.50 \ne 0.10$.
+>
+> Please refer to the updated canonical theoretical specification:
+> **[THEORY_V3.md](file:///c:/Users/ASUS/Desktop/Tri-SACTA/docs/THEORY_V3.md)**
+> for:
+> 1. The exact Clipping Residual and Summation-by-Parts Identity.
+> 2. The Fixed-Step Mask-Conditional ACI Reference Controller with exact telescoping bound:
+>    $$\left|\frac{1}{n_g}\sum_{i=1}^{n_g} e_{i, g} - \alpha\right| \le \frac{1 + \eta}{\eta \cdot n_g}$$
+> 3. Framing of the dynamic step size $\eta_t$ as a state-dependent empirical tracking heuristic.
 
 ---
 

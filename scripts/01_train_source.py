@@ -168,33 +168,67 @@ def main():
 
     # Load best weights
     model.load_state_dict(best_weights)
-    ckpt_path = os.path.join(args.output_dir, f"source_model_{args.data_mode}_seed{args.seed}.pt")
-    torch.save(best_weights, ckpt_path)
-    logger.info(f"Saved best source model to {ckpt_path}")
+    dataset_name = config.get("dataset", {}).get("name", "mosei")
+    namespaced_dir = os.path.join(args.output_dir, dataset_name, args.data_mode, f"seed{args.seed}")
+    os.makedirs(namespaced_dir, exist_ok=True)
 
-    # 4. Extract and register source anchor statistics via SpectralShiftDetector
-    logger.info("Computing source anchor statistics on training set...")
+    ckpt_payload = {
+        "schema_version": 3,
+        "dataset": dataset_name,
+        "data_mode": args.data_mode,
+        "seed": args.seed,
+        "model_state_dict": best_weights,
+        "best_val_f1": float(best_val_f1),
+        "config": config,
+    }
+    namespaced_ckpt = os.path.join(namespaced_dir, "source_model.pt")
+    torch.save(ckpt_payload, namespaced_ckpt)
+
+    # Legacy compatibility copy
+    legacy_ckpt = os.path.join(args.output_dir, f"source_model_{args.data_mode}_seed{args.seed}.pt")
+    torch.save(best_weights, legacy_ckpt)
+    logger.info(f"Saved namespaced checkpoint to {namespaced_ckpt} (and legacy to {legacy_ckpt})")
+
+    # 4. Extract and register source anchor statistics on VALID ROWS ONLY (R3-08)
+    logger.info("Computing source anchor statistics on training valid rows...")
     model.eval()
     all_train_features = {m: [] for m in ["visual", "audio", "text", "prosody"]}
+    all_val_features = {m: [] for m in ["visual", "audio", "text", "prosody"]}
+
     with torch.no_grad():
         for batch in dataloaders["train"]:
+            mask = batch["modality_mask"]
             for m in all_train_features:
                 if m in batch["features"]:
-                    all_train_features[m].append(batch["features"][m].cpu())
+                    valid_idx = torch.nonzero(mask[m].view(-1) > 0.5, as_tuple=True)[0]
+                    if len(valid_idx) > 0:
+                        all_train_features[m].append(batch["features"][m][valid_idx].cpu())
 
-    stacked_features = {m: torch.cat(tensors, dim=0) for m, tensors in all_train_features.items() if tensors}
-    feature_dims = {m: stacked_features[m].shape[1] for m in stacked_features}
+        for batch in dataloaders["val"]:
+            mask = batch["modality_mask"]
+            for m in all_val_features:
+                if m in batch["features"]:
+                    valid_idx = torch.nonzero(mask[m].view(-1) > 0.5, as_tuple=True)[0]
+                    if len(valid_idx) > 0:
+                        all_val_features[m].append(batch["features"][m][valid_idx].cpu())
+
+    stacked_train = {m: torch.cat(tensors, dim=0) for m, tensors in all_train_features.items() if tensors}
+    stacked_val = {m: torch.cat(tensors, dim=0) for m, tensors in all_val_features.items() if tensors}
+    feature_dims = {m: stacked_train[m].shape[1] for m in stacked_train}
 
     detector = SpectralShiftDetector(
         feature_dims=feature_dims,
         gamma=config.get("tta", {}).get("gamma_eig", 1.0),
         top_k=config.get("tta", {}).get("top_k_eig", 32),
     )
-    detector.register_source_stats(stacked_features)
+    # Calibrate null baseline on holdout validation data (R3-08)
+    detector.register_source_stats(stacked_train, val_features_by_modality=stacked_val)
 
-    stats_path = os.path.join(args.output_dir, f"source_spectral_stats_{args.data_mode}_seed{args.seed}.pt")
-    detector.save_source_stats(stats_path)
-    logger.info(f"Saved spectral anchor statistics to {stats_path}")
+    namespaced_stats = os.path.join(namespaced_dir, "source_spectral_stats.pt")
+    detector.save_source_stats(namespaced_stats)
+    legacy_stats = os.path.join(args.output_dir, f"source_spectral_stats_{args.data_mode}_seed{args.seed}.pt")
+    detector.save_source_stats(legacy_stats)
+    logger.info(f"Saved spectral anchor statistics to {namespaced_stats} (and legacy to {legacy_stats})")
 
     # 5. Check Conformal Calibration baseline
     cal_metrics = evaluate(model, dataloaders["cal"], num_classes, device)
