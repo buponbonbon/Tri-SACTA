@@ -80,17 +80,34 @@ class MultimodalDataset(Dataset):
             labels_path = os.path.join(split_dir, "labels.pt")
             meta_path = os.path.join(split_dir, "meta.pt")
             if not os.path.exists(labels_path):
-                raise FileNotFoundError(f"Missing labels.pt in {split_dir} for real data mode.")
+                raise FileNotFoundError(f"[FAIL-CLOSED] Missing labels.pt in {split_dir} for real data mode (R3-04).")
+            if not os.path.exists(meta_path):
+                raise FileNotFoundError(
+                    f"[FAIL-CLOSED] Missing meta.pt in {split_dir} for real data mode (R3-04).\n"
+                    f"Refusing to invent synthetic IDs or assume unverified speaker provenance."
+                )
 
             labels = torch.load(labels_path, map_location="cpu")
-            meta = torch.load(meta_path, map_location="cpu") if os.path.exists(meta_path) else None
+            meta = torch.load(meta_path, map_location="cpu")
             n = len(labels)
+            if len(meta) != n:
+                raise ValueError(f"Mismatch between labels count ({n}) and meta count ({len(meta)}) in {split_dir}")
 
             for i in range(n):
+                lbl = int(labels[i])
+                if not (0 <= lbl < self.num_classes):
+                    raise ValueError(f"Label {lbl} out of range [0, {self.num_classes - 1}] in sample {i} of {split_dir}")
+
+                sample_meta = meta[i] if isinstance(meta, (list, tuple)) else meta[str(i)]
+                seg_id = sample_meta.get("segment_id", f"{self.split}_{i}")
+                spk_id = sample_meta.get("speaker_id")
+                if not spk_id:
+                    raise ValueError(f"Missing speaker_id in metadata for sample {i} of {split_dir}")
+
                 sample = {
-                    "label": int(labels[i]),
-                    "segment_id": meta[i]["segment_id"] if meta else f"{self.split}_{i}",
-                    "speaker_id": meta[i]["speaker_id"] if meta else f"spk_{i % 20}",
+                    "label": lbl,
+                    "segment_id": seg_id,
+                    "speaker_id": spk_id,
                 }
                 for mod in MODALITY_NAMES:
                     if mod in mod_data:
@@ -100,7 +117,7 @@ class MultimodalDataset(Dataset):
                         sample[mod] = torch.zeros(self.dims[mod], dtype=torch.float16)
                         sample[f"{mod}_available"] = False
                 self.samples.append(sample)
-            logger.info(f"Successfully loaded {len(self.samples)} real cached samples from {split_dir}")
+            logger.info(f"Successfully loaded {len(self.samples)} real verified samples from {split_dir}")
 
         else:
             # Deterministic synthetic debug generator (AUD-14: stable hash independent of PYTHONHASHSEED)
@@ -221,7 +238,21 @@ def get_dataloaders(
     seed: int = 42,
     data_mode: str = "synthetic",
 ) -> Dict[str, DataLoader]:
-    """Factory creating DataLoaders with explicit data_mode."""
+    """Factory creating DataLoaders with explicit data_mode and mandatory manifest validation."""
+    if data_mode == "real":
+        manifest_path = config.get("dataset", {}).get("manifest_path")
+        if not manifest_path or not os.path.exists(manifest_path):
+            raise FileNotFoundError(
+                f"[FAIL-CLOSED] Real data mode requires a verified manifest file at '{manifest_path}' (R3-04).\n"
+                f"Please run feature extraction with --manifest or run scripts/00_validate_data.py."
+            )
+        from src.data.manifest import DataManifest
+        manifest = DataManifest.load_json(manifest_path)
+        report = manifest.validate_split_integrity(num_classes=config.get("dataset", {}).get("num_classes", 7))
+        if not report["is_valid"]:
+            raise ValueError(f"[FAIL-CLOSED] Data manifest integrity validation failed: {report['errors']}")
+        logger.info(f"Verified manifest {manifest_path} (hash: {report['manifest_hash'][:12]}) for real data mode.")
+
     feats_dir = config.get("features", {}).get("cache_dir", "features_cache/mosei")
     collator = MultimodalCollator()
 

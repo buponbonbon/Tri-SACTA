@@ -1,10 +1,17 @@
 """
-05_aggregate_results.py: Multi-Seed Statistical Aggregation and Q1 Table Generator.
+05_aggregate_results.py: Multi-Seed Statistical Aggregation and Q1 Table Generator — V3 (R3-11).
 
-Aggregates experiment results across seeds to produce:
-1. Mean ± Std tables (Macro-F1, Accuracy, Coverage, Coverage Gap, Set Size, Peak VRAM, Latency).
-2. Paired t-test and Wilcoxon signed-rank test p-values against baselines.
-3. Publication-ready Markdown and LaTeX table outputs.
+Key scientific improvements in V3:
+1. Strict Schema Grouping:
+   Groups exclusively by (dataset, data_mode, protocol, method, conformal, delay).
+   Prevents cross-dataset or cross-mode pollution.
+2. Unique Seed Deduplication:
+   Rejects or de-duplicates repeated runs for the same seed; reports true unique seed count.
+3. Rigorous Uncertainty Reporting:
+   When n=1: reports 'mean (n=1)' with NA variance, eliminating misleading '± 0.0000'.
+   When n>=2: reports sample standard deviation (ddof=1) and paired statistical tests.
+4. Independent Tables for Real vs Synthetic:
+   Strictly separates synthetic pilot results from real dataset benchmarks.
 """
 
 from __future__ import annotations
@@ -16,7 +23,7 @@ import json
 import argparse
 import logging
 from collections import defaultdict
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 
 import numpy as np
 from scipy import stats
@@ -25,36 +32,56 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 
-def load_runs(input_dir: str, target_data_mode: Optional[str] = None) -> Dict[str, List[Dict[str, Any]]]:
-    """Load and group run results by configuration key, strictly filtering by data_mode (AUD-10)."""
-    grouped = defaultdict(list)
-    files = glob.glob(os.path.join(input_dir, "*.json"))
+def load_runs(input_dir: str, target_data_mode: Optional[str] = None) -> Dict[Tuple[str, str, str, str, str, int], Dict[int, Dict[str, Any]]]:
+    """Load and group runs by (dataset, data_mode, protocol, method, conformal, delay) with unique seed mapping."""
+    grouped: Dict[Tuple[str, str, str, str, str, int], Dict[int, Dict[str, Any]]] = defaultdict(dict)
+    
+    files = glob.glob(os.path.join(input_dir, "**", "*.json"), recursive=True)
+    if not files:
+        files = glob.glob(os.path.join(input_dir, "*.json"))
 
     for fpath in files:
-        # Ignore legacy runs preserved in results/legacy/ or un-tagged legacy files
-        if "legacy" in fpath or "_mosei_seed42.json" in fpath:
+        if "legacy" in fpath or "summary" in fpath or "_mosei_seed42.json" in fpath:
             continue
-        with open(fpath, "r") as f:
-            data = json.load(f)
+        try:
+            with open(fpath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            continue
 
+        if not isinstance(data, dict) or "overall_metrics" not in data:
+            continue
+
+        dataset = data.get("dataset", "mosei")
         data_mode = data.get("data_mode", "synthetic")
+        protocol = data.get("protocol", "prequential")
+        method = data.get("method", "unknown")
+        conformal = data.get("conformal", "unknown")
+        delay = int(data.get("delay", 0))
+        seed = int(data.get("seed", 42))
+
         if target_data_mode and data_mode != target_data_mode:
             continue
 
-        method = data.get("method", "unknown")
-        conformal = data.get("conformal", "unknown")
-        delay = data.get("delay", 0)
-        key = f"{method}_{conformal}_d{delay}"
-        grouped[key].append(data)
+        group_key = (dataset, data_mode, protocol, method, conformal, delay)
+        # Store by seed to ensure uniqueness (R3-11)
+        grouped[group_key][seed] = data
 
     return grouped
 
 
-def format_mean_std(values: List[float], scale: float = 1.0, is_pct: bool = False) -> str:
-    """Format list of floats as 'Mean ± Std'."""
+def format_stat(values: List[float], scale: float = 1.0, is_pct: bool = False) -> str:
+    """Format list of floats as 'Mean ± Std' for n>=2, or 'Mean (n=1)' for n=1 (R3-11)."""
+    if len(values) == 0:
+        return "N/A"
     arr = np.array(values) * scale
     mean = np.mean(arr)
-    std = np.std(arr, ddof=1) if len(arr) > 1 else 0.0
+    if len(arr) == 1:
+        if is_pct:
+            return f"{mean:.2f}% (n=1)"
+        return f"{mean:.4f} (n=1)"
+    
+    std = np.std(arr, ddof=1)
     if is_pct:
         return f"{mean:.2f} ± {std:.2f}%"
     return f"{mean:.4f} ± {std:.4f}"
@@ -69,10 +96,7 @@ def run_statistical_tests(ours_values: List[float], baseline_values: List[float]
     if np.all(diff == 0.0):
         return 1.0, 1.0
 
-    # Paired t-test
     _, t_pval = stats.ttest_rel(ours_values, baseline_values)
-
-    # Wilcoxon signed-rank test
     try:
         _, w_pval = stats.wilcoxon(ours_values, baseline_values)
     except Exception:
@@ -81,95 +105,90 @@ def run_statistical_tests(ours_values: List[float], baseline_values: List[float]
     return float(t_pval), float(w_pval)
 
 
-def generate_tables(grouped: Dict[str, List[Dict[str, Any]]], output_dir: str):
+def generate_tables(grouped: Dict[Tuple[str, str, str, str, str, int], Dict[int, Dict[str, Any]]], output_dir: str):
     os.makedirs(output_dir, exist_ok=True)
 
-    summary_rows = []
-    ours_key = "tri_sacta_online_aci_d0"
-    ours_runs = grouped.get(ours_key, [])
-    ours_seeds = {r["seed"]: r for r in ours_runs}
+    # Separate tables by (dataset, data_mode, protocol)
+    contexts = set((k[0], k[1], k[2]) for k in grouped.keys())
 
-    for key, runs in sorted(grouped.items()):
-        seeds = [r["seed"] for r in runs]
-        n_seeds = len(runs)
-        f1s = [r["overall_metrics"]["macro_f1"] for r in runs]
-        accs = [r["overall_metrics"]["accuracy"] for r in runs]
-        covs = [r["overall_metrics"]["empirical_coverage"] for r in runs]
-        gaps = [r["overall_metrics"]["coverage_gap"] for r in runs]
-        sizes = [r["overall_metrics"]["avg_set_size"] for r in runs]
-        vrams = [r["efficiency"]["peak_vram_mb"] for r in runs]
-        lats = [r["efficiency"]["avg_latency_ms_per_sample"] for r in runs]
+    for dataset, data_mode, protocol in sorted(contexts):
+        summary_rows = []
+        ours_key = (dataset, data_mode, protocol, "tri_sacta", "online_aci", 0)
+        ours_runs_by_seed = grouped.get(ours_key, {})
 
-        # Calculate p-value against ours on matched seeds
-        t_pval_str = "-"
-        if key != ours_key and len(runs) > 1:
-            matched_ours = []
-            matched_base = []
-            for r in runs:
-                s = r["seed"]
-                if s in ours_seeds:
-                    matched_base.append(r["overall_metrics"]["macro_f1"])
-                    matched_ours.append(ours_seeds[s]["overall_metrics"]["macro_f1"])
-            if len(matched_ours) >= 2:
-                tp, wp = run_statistical_tests(matched_ours, matched_base)
-                t_pval_str = f"p={tp:.3f}"
+        matching_keys = [k for k in grouped.keys() if k[0] == dataset and k[1] == data_mode and k[2] == protocol]
+        for key in sorted(matching_keys):
+            _, _, _, method, conformal, delay = key
+            runs_by_seed = grouped[key]
+            unique_seeds = sorted(list(runs_by_seed.keys()))
+            n_seeds = len(unique_seeds)
+            runs = [runs_by_seed[s] for s in unique_seeds]
 
-        row = {
-            "key": key,
-            "seeds": n_seeds,
-            "macro_f1": format_mean_std(f1s),
-            "acc": format_mean_std(accs, scale=100.0, is_pct=True),
-            "coverage": format_mean_std(covs, scale=100.0, is_pct=True),
-            "gap": format_mean_std(gaps, scale=100.0, is_pct=True),
-            "set_size": f"{np.mean(sizes):.2f} ± {np.std(sizes, ddof=1) if len(sizes)>1 else 0.0:.2f}",
-            "vram_mb": f"{np.mean(vrams):.1f} MB",
-            "latency_ms": f"{np.mean(lats):.2f} ms",
-            "stat_pval": t_pval_str,
-        }
-        summary_rows.append(row)
+            f1s = [r["overall_metrics"]["macro_f1"] for r in runs]
+            accs = [r["overall_metrics"]["accuracy"] for r in runs]
+            covs = [r["overall_metrics"]["empirical_coverage"] for r in runs]
+            gaps = [r["overall_metrics"]["coverage_gap"] for r in runs]
+            sizes = [r["overall_metrics"]["avg_set_size"] for r in runs]
+            vrams = [r["efficiency"]["peak_vram_mb"] for r in runs]
+            latencies = [r["efficiency"]["avg_latency_ms_per_sample"] for r in runs]
 
-    # 1. Output Markdown Table
-    md_path = os.path.join(output_dir, "multi_seed_statistical_summary.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write("# Tri-SACTA Multi-Seed Benchmark Summary (Mean ± Std)\n\n")
-        f.write("| Method / Model | Seeds | Macro-F1 | Accuracy | Coverage (90%) | Coverage Gap | Set Size | Peak VRAM | Latency | Paired t-test |\n")
-        f.write("|---|---|---|---|---|---|---|---|---|---|\n")
-        for r in summary_rows:
-            f.write(f"| `{r['key']}` | {r['seeds']} | **{r['macro_f1']}** | {r['acc']} | **{r['coverage']}** | {r['gap']} | {r['set_size']} | {r['vram_mb']} | {r['latency_ms']} | {r['stat_pval']} |\n")
+            # Paired significance vs Tri-SACTA
+            paired_f1_ours = []
+            paired_f1_base = []
+            for s in unique_seeds:
+                if s in ours_runs_by_seed:
+                    paired_f1_ours.append(ours_runs_by_seed[s]["overall_metrics"]["macro_f1"])
+                    paired_f1_base.append(runs_by_seed[s]["overall_metrics"]["macro_f1"])
 
-    # 2. Output LaTeX Table
-    tex_path = os.path.join(output_dir, "table_q1_publication.tex")
-    with open(tex_path, "w", encoding="utf-8") as f:
-        f.write("% Tri-SACTA Q1 Journal Publication Table\n")
-        f.write("\\begin{table*}[t]\n\\centering\n\\small\n")
-        f.write("\\caption{Continual Test-Time Adaptation and Online Conformal Prediction performance across compound distribution shift regimes (Mean $\\pm$ Std over seeds).}\n")
-        f.write("\\label{tab:main_benchmark}\n")
-        f.write("\\begin{tabular}{lcccccccc}\n\\toprule\n")
-        f.write("Method & Macro-F1 $\\uparrow$ & Acc (\\%) $\\uparrow$ & Coverage (\\%) & Cov. Gap (\\%) $\\downarrow$ & $|\\mathcal{C}_t| \\downarrow$ & Peak VRAM & Latency & $p$-val \\\\\n\\midrule\n")
-        for r in summary_rows:
-            escaped_key = r['key'].replace('_', r'\_')
-            f.write(f"{escaped_key} & {r['macro_f1']} & {r['acc']} & {r['coverage']} & {r['gap']} & {r['set_size']} & {r['vram_mb']} & {r['latency_ms']} & {r['stat_pval']} \\\\\n")
-        f.write("\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+            t_p, w_p = run_statistical_tests(paired_f1_ours, paired_f1_base)
 
-    logger.info(f"Generated Markdown table: {md_path}")
-    logger.info(f"Generated LaTeX publication table: {tex_path}")
+            row_name = f"{method} + {conformal}"
+            if delay > 0:
+                row_name += f" (Delay={delay})"
+
+            summary_rows.append({
+                "Method": row_name,
+                "Seeds": str(n_seeds),
+                "Macro-F1": format_stat(f1s),
+                "Accuracy": format_stat(accs, scale=100.0, is_pct=True),
+                "Coverage": format_stat(covs, scale=100.0, is_pct=True),
+                "Coverage Gap": format_stat(gaps, scale=100.0, is_pct=True),
+                "Set Size": format_stat(sizes),
+                "Peak VRAM": f"{np.mean(vrams):.1f} MB" if vrams else "N/A",
+                "Latency": f"{np.mean(latencies):.2f} ms" if latencies else "N/A",
+                "p-val (t)": f"{t_p:.4f}" if n_seeds >= 2 and method != "tri_sacta" else "—",
+                "p-val (W)": f"{w_p:.4f}" if n_seeds >= 2 and method != "tri_sacta" else "—",
+            })
+
+        # Generate Markdown table
+        md_path = os.path.join(output_dir, f"summary_{dataset}_{data_mode}_{protocol}.md")
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(f"# Multi-Seed Benchmark Summary: {dataset.upper()} ({data_mode.upper()}, {protocol})\n\n")
+            f.write(f"Generated from verified runs across unique random seeds.\n\n")
+            headers = ["Method", "Seeds", "Macro-F1", "Accuracy", "Coverage", "Coverage Gap", "Set Size", "Peak VRAM", "Latency", "p-val (t)", "p-val (W)"]
+            f.write("| " + " | ".join(headers) + " |\n")
+            f.write("| " + " | ".join(["---"] * len(headers)) + " |\n")
+            for r in summary_rows:
+                f.write("| " + " | ".join([r[h] for h in headers]) + " |\n")
+
+        logger.info(f"Saved summary table to {md_path}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Aggregate Multi-Seed Benchmark Results")
-    parser.add_argument("--input_dir", type=str, default="results")
-    parser.add_argument("--output_dir", type=str, default="results/summary")
-    parser.add_argument("--data-mode", type=str, default="synthetic", choices=["synthetic", "real", "all"])
+    parser = argparse.ArgumentParser(description="Aggregate Multi-Seed Results (V3)")
+    parser.add_argument("--input-dir", type=str, default="results")
+    parser.add_argument("--output-dir", type=str, default="results/summary")
+    parser.add_argument("--data-mode", type=str, default=None, choices=["synthetic", "real"])
     args = parser.parse_args()
 
-    mode_filter = None if args.data_mode == "all" else args.data_mode
-    grouped = load_runs(args.input_dir, target_data_mode=mode_filter)
+    grouped = load_runs(args.input_dir, target_data_mode=args.data_mode)
     if not grouped:
-        logger.warning(f"No result runs found in {args.input_dir} for data-mode {args.data_mode}")
+        logger.warning(f"No valid run results found in {args.input_dir}.")
         return
 
+    logger.info(f"Loaded {len(grouped)} distinct experiment groups.")
     generate_tables(grouped, args.output_dir)
-    logger.info("Statistical aggregation completed successfully.")
+    logger.info("Summary tables generated successfully.")
 
 
 if __name__ == "__main__":

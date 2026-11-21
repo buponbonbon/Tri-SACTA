@@ -194,8 +194,9 @@ class MultimodalFusionModel(nn.Module):
         features: Dict[str, torch.Tensor],
         modality_mask: Dict[str, torch.Tensor],
         reliability_weights: Optional[Dict[str, torch.Tensor]] = None,
+        effective_mask: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, Any]:
-        """Forward pass with strict mask gating and non-underflowing reliability fusion."""
+        """Forward pass with strict mask gating and hard effective mask isolation (R3-07)."""
         device = next(self.parameters()).device
         present_mods = [m for m in MODALITY_ORDER if m in features]
         B = features[present_mods[0]].size(0)
@@ -219,28 +220,43 @@ class MultimodalFusionModel(nn.Module):
                 adapted[m] = torch.zeros(B, self.fusion_dim, device=device)
                 per_modality_logits[m] = torch.zeros(B, self.num_classes, device=device)
 
-        # 2. Build modality token sequence (B, M, D) and mask (B, M)
+        # 2. Build modality token sequence (B, M, D) and attention mask (B, M)
         token_list = []
-        mask_list = []
+        presence_mask_list = []
+        attn_mask_list = []
+        active_mask_source = effective_mask if effective_mask is not None else modality_mask
+
         for m in MODALITY_ORDER:
             token_list.append(adapted[m])
             if m in modality_mask:
-                m_mask = modality_mask[m].to(device).bool().view(B)
+                p_mask = modality_mask[m].to(device).bool().view(B)
             else:
-                m_mask = torch.ones(B, dtype=torch.bool, device=device) if m in features else torch.zeros(B, dtype=torch.bool, device=device)
-            mask_list.append(m_mask)
+                p_mask = torch.ones(B, dtype=torch.bool, device=device) if m in features else torch.zeros(B, dtype=torch.bool, device=device)
+            presence_mask_list.append(p_mask)
 
-        tokens = torch.stack(token_list, dim=1)  # (B, M, D)
-        mask = torch.stack(mask_list, dim=1)    # (B, M) bool
+            # Hard gating mask (R3-07): isolates corrupted and missing tokens from attention
+            if m in active_mask_source:
+                a_mask = active_mask_source[m].to(device).bool().view(B)
+            else:
+                a_mask = p_mask
+            attn_mask_list.append(a_mask)
 
-        # Zero out missing tokens initially
-        tokens = tokens * mask.unsqueeze(-1).float()
+        tokens = torch.stack(token_list, dim=1)           # (B, M, D)
+        presence_mask = torch.stack(presence_mask_list, dim=1) # (B, M) bool
+        attn_mask = torch.stack(attn_mask_list, dim=1)         # (B, M) bool
 
-        # 3. Cross-modal transformer layers
+        # If all modalities are masked out by effective_mask for a sample, fall back to presence_mask
+        all_attn_masked = (~attn_mask).all(dim=1, keepdim=True)
+        attn_mask = torch.where(all_attn_masked, presence_mask, attn_mask)
+
+        # Zero out inactive tokens initially
+        tokens = tokens * attn_mask.unsqueeze(-1).float()
+
+        # 3. Cross-modal transformer layers with effective attention mask
         for layer in self.transformer_layers:
-            tokens = layer(tokens, mask)
+            tokens = layer(tokens, attn_mask)
 
-        # 4. Safe reliability-weighted pooling (AUD-01, AUD-03)
+        # 4. Safe reliability-weighted pooling (AUD-01, AUD-03, R3-07)
         raw_weights_list = []
         for i, m in enumerate(MODALITY_ORDER):
             if reliability_weights is not None and m in reliability_weights:
@@ -250,21 +266,18 @@ class MultimodalFusionModel(nn.Module):
                 else:
                     w = w.to(device).float().view(B)
             else:
-                # Default uniform weight for present modalities
                 w = torch.ones(B, device=device)
 
-            # Gate by modality presence
-            w = w * mask[:, i].float()
+            # Gate by effective attention mask
+            w = w * attn_mask[:, i].float()
             raw_weights_list.append(w)
 
         raw_weights = torch.stack(raw_weights_list, dim=1)  # (B, M)
         weight_sum = raw_weights.sum(dim=1, keepdim=True)    # (B, 1)
 
-        # Safe normalization: prevent divide-by-zero or all-zero underflow
         has_weight = weight_sum > 1e-7
-        # Fallback to uniform over available if weights vanished or zero
-        avail_count = mask.float().sum(dim=1, keepdim=True).clamp(min=1.0)
-        uniform_weights = mask.float() / avail_count
+        avail_count = attn_mask.float().sum(dim=1, keepdim=True).clamp(min=1.0)
+        uniform_weights = attn_mask.float() / avail_count
 
         norm_weights = torch.where(has_weight, raw_weights / weight_sum.clamp(min=1e-7), uniform_weights)
 

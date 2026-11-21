@@ -112,15 +112,27 @@ class TriSACTA:
             reliability_weights, modality_mask
         )
 
+        # Build effective mask isolating corrupted channels from attention (R3-07)
+        effective_mask = {}
+        for m in self.MODALITY_NAMES:
+            p_mask = modality_mask[m].to(device).float() if m in modality_mask else torch.zeros(1, device=device)
+            is_active = 1.0 if m not in corrupted_set else 0.0
+            effective_mask[m] = p_mask * is_active
+
         # Initial forward pass to compute unimodal outputs and disagreement
         self.model.eval()
         with torch.no_grad():
-            init_out = self.model(batch, modality_mask=modality_mask, reliability_weights=reliability_weights)
+            init_out = self.model(
+                batch,
+                modality_mask=modality_mask,
+                reliability_weights=reliability_weights,
+                effective_mask=effective_mask,
+            )
             per_mod_logits = init_out["per_modality_logits"]
 
-        # 4. Cross-modal disagreement tracking (AUD-07)
+        # 4. Cross-modal disagreement tracking on pairwise valid samples (R3-07)
         available_mods = [m for m in self.MODALITY_NAMES if m in anchor_set or m in adaptable_set]
-        disagreement = self.get_cross_modal_disagreement(per_mod_logits, available_mods)
+        disagreement = self.get_cross_modal_disagreement(per_mod_logits, available_mods, modality_mask=modality_mask)
 
         result: Dict[str, Any] = {
             "shift_scores": shift_scores,
@@ -136,7 +148,7 @@ class TriSACTA:
             "adapted": False,
         }
 
-        # 5. Selective Adaptation (if adaptable set non-empty and at least one reliable anchor)
+        # 5. Selective Adaptation (strictly requires clean anchor, R3-07)
         if adaptable_set and anchor_set:
             self.model.train()
 
@@ -156,6 +168,7 @@ class TriSACTA:
                     features=batch,
                     modality_mask=modality_mask,
                     reliability_weights=reliability_weights,
+                    effective_mask=effective_mask,
                 )
                 logits = out["logits"]
                 curr_per_mod_logits = out["per_modality_logits"]
@@ -239,12 +252,8 @@ class TriSACTA:
             else:
                 corrupted.add(m)
 
-        # Fallback: if no anchor exists, promote highest reliability modality if >= theta_low
-        if not anchor and adaptable:
-            best_mod = max(adaptable, key=lambda m: float(reliability_weights[m].mean().item() if isinstance(reliability_weights[m], torch.Tensor) else reliability_weights[m]))
-            anchor.add(best_mod)
-            adaptable.remove(best_mod)
-
+        # Strict no-anchor policy (R3-07): do NOT promote adaptable modalities to clean anchors.
+        # If no clean anchor exists, anchor remains empty, safely skipping adaptation.
         return anchor, adaptable, corrupted
 
     def _entropy_loss(self, logits: torch.Tensor) -> torch.Tensor:
@@ -316,8 +325,9 @@ class TriSACTA:
         self,
         per_modality_logits: Dict[str, torch.Tensor],
         available_modalities: List[str],
+        modality_mask: Optional[Dict[str, torch.Tensor]] = None,
     ) -> float:
-        """Compute pairwise JS divergence across available unimodal predictions."""
+        """Compute pairwise JS divergence strictly on valid sample intersections (R3-07)."""
         valid_mods = [m for m in available_modalities if m in per_modality_logits]
         M = len(valid_mods)
         if M < 2:
@@ -330,7 +340,19 @@ class TriSACTA:
         for i in range(M):
             for j in range(i + 1, M):
                 m_i, m_j = valid_mods[i], valid_mods[j]
-                js = _js_divergence(probs[m_i], probs[m_j])
+                if modality_mask is not None and m_i in modality_mask and m_j in modality_mask:
+                    mask_i = modality_mask[m_i].view(-1) > 0.5
+                    mask_j = modality_mask[m_j].view(-1) > 0.5
+                    valid_inter = mask_i & mask_j
+                    if valid_inter.sum() == 0:
+                        continue
+                    p_i = probs[m_i][valid_inter]
+                    p_j = probs[m_j][valid_inter]
+                else:
+                    p_i = probs[m_i]
+                    p_j = probs[m_j]
+
+                js = _js_divergence(p_i, p_j)
                 js_total += float(js.item())
                 pairs += 1
 
