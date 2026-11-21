@@ -60,6 +60,9 @@ class OnlineACI:
         self.score_windows: Dict[str, deque] = defaultdict(
             lambda: deque(maxlen=self.window_size)
         )
+        # Global fallback window for rare masks (AUD-18)
+        self.global_score_window: deque = deque(maxlen=self.window_size)
+        self.min_mask_support: int = int(conf.get("min_mask_support", 10))
 
         # Immutable prediction records tracking
         self.records: Dict[int, PredictionRecord] = {}
@@ -177,7 +180,9 @@ class OnlineACI:
             hit = 1.0 if true_label in pred_sets[i] else 0.0
             batch_hits.append(hit)
             batch_sizes.append(float(len(pred_sets[i])))
-            self.score_windows[mask_key].append(float(scores_np[i]))
+            score_val = float(scores_np[i])
+            self.score_windows[mask_key].append(score_val)
+            self.global_score_window.append(score_val)
 
         avg_miss = 1.0 - float(np.mean(batch_hits))
 
@@ -231,7 +236,7 @@ class OnlineACI:
                 break
 
     def _get_quantile(self, modality_mask_key: str) -> float:
-        """Compute the exact finite-sample order statistic quantile (AUD-09).
+        """Compute the exact finite-sample order statistic quantile with rare-mask fallback (AUD-09, AUD-18).
 
         k = ceil((n + 1) * (1 - alpha_t^m))
         """
@@ -239,15 +244,22 @@ class OnlineACI:
         alpha_m = self.alphas[modality_mask_key]
         n = len(window)
 
-        if n == 0:
+        # Fallback to global window for rare/unseen masks (AUD-18)
+        if n < self.min_mask_support and len(self.global_score_window) >= self.min_mask_support:
+            window_to_use = list(self.global_score_window)
+            n_eff = len(window_to_use)
+        elif n > 0:
+            window_to_use = list(window)
+            n_eff = n
+        else:
             # Cold-start fallback: conservative full set
             return 1.0
 
-        scores_arr = np.sort(np.array(window))
+        scores_arr = np.sort(np.array(window_to_use))
         # Exact finite-sample order statistic rank
-        k = math.ceil((n + 1) * (1.0 - alpha_m))
+        k = math.ceil((n_eff + 1) * (1.0 - alpha_m))
 
-        if k > n:
+        if k > n_eff:
             return 1.0
         elif k < 1:
             return float(scores_arr[0])

@@ -1,0 +1,60 @@
+# =============================================================================
+# Tri-SACTA Shift Protocol V2 (Section 7.3, AUD-16)
+# =============================================================================
+protocol_name: continual_compound_shifts_v2
+num_regimes: 6
+
+regimes:
+  - idx: 1
+    name: "Regime 1: Clean Baseline"
+    description: "Identical to source distribution (0% missing, 0% corruption)"
+    audio_snr_db: null
+    text_wer_drift: 0.0
+    visual_blur_sigma: 0.0
+    visual_occlusion_rate: 0.0
+    missing_rate: 0.0
+
+  - idx: 2
+    name: "Regime 2: Audio Degradation"
+    description: "Calibrated additive Gaussian noise (SNR ~5dB)"
+    audio_snr_db: 5.0
+    text_wer_drift: 0.0
+    visual_blur_sigma: 0.0
+    visual_occlusion_rate: 0.0
+    missing_rate: 0.0
+
+  - idx: 3
+    name: "Regime 3: ASR Text Drift"
+    description: "Simulated speech recognition WER drift (~35% token/phonetic perturbation)"
+    audio_snr_db: null
+    text_wer_drift: 0.35
+    visual_blur_sigma: 0.0
+    visual_occlusion_rate: 0.0
+    missing_rate: 0.0
+
+  - idx: 4
+    name: "Regime 4: Visual Corruption + 30% Missing"
+    description: "Spatial occlusion, blur + independent 30% sensor dropout"
+    audio_snr_db: null
+    text_wer_drift: 0.0
+    visual_blur_sigma: 1.2
+    visual_occlusion_rate: 0.25
+    missing_rate: 0.30
+
+  - idx: 5
+    name: "Regime 5: Severe Compound Shift"
+    description: "Multi-channel compound noise (SNR 0dB, WER 40%, blur 1.5) + 50% missing"
+    audio_snr_db: 0.0
+    text_wer_drift: 0.40
+    visual_blur_sigma: 1.5
+    visual_occlusion_rate: 0.35
+    missing_rate: 0.50
+
+  - idx: 6
+    name: "Regime 6: Return-to-Clean Recovery"
+    description: "Clean test stream on held-out samples to quantify catastrophic forgetting"
+    audio_snr_db: null
+    text_wer_drift: 0.0
+    visual_blur_sigma: 0.0
+    visual_occlusion_rate: 0.0
+    missing_rate: 0.0

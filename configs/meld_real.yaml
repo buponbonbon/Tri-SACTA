@@ -1,0 +1,57 @@
+# =============================================================================
+# Tri-SACTA Configuration: Official MELD Dialogue Real Dataset (AUD-10, AUD-11)
+# =============================================================================
+dataset:
+  name: meld
+  root: data/meld
+  manifest_path: data/meld/data_manifest.json
+  num_classes: 7               # neutral, surprise, fear, sadness, joy, disgust, anger
+  label_type: emotion_7
+  split_type: dialogue_speaker_disjoint
+
+features:
+  visual_dim: 512              # CLIP ViT-B/16
+  audio_dim: 768               # WavLM-Base
+  text_dim: 768                # DeBERTa-v3-Base
+  prosody_dim: 88              # openSMILE eGeMAPSv02
+  cache_dir: data/meld/features_cache/
+  format: pt
+
+model:
+  fusion_dim: 256
+  num_heads: 4
+  num_layers: 2
+  adapter_rank: 8
+  dropout: 0.1
+  num_classes: 7
+
+tta:
+  tau: 1.0
+  theta_high: 0.7
+  theta_low: 0.3
+  lambda_align: 0.5
+  lambda_reg: 0.01
+  lr: 1.0e-4
+  gamma_eig: 1.0
+  top_k_eig: 32
+  batch_size: 32
+
+conformal:
+  alpha: 0.1
+  eta_0: 0.01
+  beta_1: 0.5
+  beta_2: 0.5
+  eta_min: 0.001
+  eta_max: 0.10
+  min_mask_support: 10
+  window_size: 200
+  delay: 0
+  score_fn: aps
+
+training:
+  epochs: 30
+  lr: 1.0e-3
+  batch_size: 32
+  patience: 7
+  seeds: [42, 100, 2026, 777, 999]
+  num_workers: 2

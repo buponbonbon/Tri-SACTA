@@ -196,8 +196,14 @@ class TENT:
         self.scaler.step(self.optimizer)
         self.scaler.update()
 
+        # Clean post-adaptation evaluation in eval() mode (AUD-25)
+        self.model.eval()
+        with torch.no_grad():
+            post_out = self.model(features=batch, modality_mask=modality_mask)
+        post_logits = post_out["logits"].detach()
+
         return {
-            "logits": logits.detach(),
+            "logits": post_logits,
             "loss": loss.item(),
             "loss_ent": loss.item(),
             "loss_align": 0.0,
@@ -370,8 +376,14 @@ class SAR:
         if self._step_count % self.restore_interval == 0:
             self._restore_parameters()
 
+        # Clean post-adaptation evaluation in eval() mode (AUD-25)
+        self.model.eval()
+        with torch.no_grad():
+            post_out = self.model(features=batch, modality_mask=modality_mask)
+        post_logits = post_out["logits"].detach()
+
         return {
-            "logits": logits.detach(),
+            "logits": post_logits,
             "loss": loss_val,
             "loss_ent": loss_val,
             "loss_align": 0.0,
@@ -544,8 +556,14 @@ class MultimodalTTABaseline:
         self.scaler.step(self.optimizer)
         self.scaler.update()
 
+        # Clean post-adaptation evaluation in eval() mode (AUD-25)
+        self.model.eval()
+        with torch.no_grad():
+            post_out = self.model(features=batch, modality_mask=modality_mask)
+        post_logits = post_out["logits"].detach()
+
         return {
-            "logits": logits.detach(),
+            "logits": post_logits,
             "loss": loss_total.item(),
             "loss_ent": loss_ent.item(),
             "loss_align": loss_consist.item(),  # Mapped to 'loss_align' for interface compat

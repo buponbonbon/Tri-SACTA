@@ -49,6 +49,9 @@ import tests.test_masked_fusion as test_masked_fusion
 import tests.test_selective_adaptation as test_selective_adaptation
 import tests.test_conformal as test_conformal
 import tests.test_data_integrity as test_data_integrity
+import tests.test_metrics_rigor as test_metrics_rigor
+import tests.test_shift_generator as test_shift_generator
+import tests.test_feedback_delay as test_feedback_delay
 
 
 def run_test_module(module, module_name):
@@ -103,6 +106,9 @@ def main():
         (test_selective_adaptation, "Selective Adaptation (AUD-05, AUD-06)"),
         (test_conformal, "Online Conformal Prediction (AUD-07, AUD-08, AUD-09)"),
         (test_data_integrity, "Data Integrity & Collator (AUD-10, AUD-12, AUD-14)"),
+        (test_metrics_rigor, "Metrics Rigor & Footprint (AUD-20, AUD-23)"),
+        (test_shift_generator, "Shift Stream Generator V2 (AUD-16)"),
+        (test_feedback_delay, "Feedback Delay & Rare Mask Isolation (AUD-08, AUD-18)"),
     ]
 
     total_passed = 0

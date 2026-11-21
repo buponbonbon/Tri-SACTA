@@ -1,0 +1,20 @@
+% Tri-SACTA Q1 Journal Publication Table
+\begin{table*}[t]
+\centering
+\small
+\caption{Continual Test-Time Adaptation and Online Conformal Prediction performance across compound distribution shift regimes (Mean $\pm$ Std over seeds).}
+\label{tab:main_benchmark}
+\begin{tabular}{lcccccccc}
+\toprule
+Method & Macro-F1 $\uparrow$ & Acc (\%) $\uparrow$ & Coverage (\%) & Cov. Gap (\%) $\downarrow$ & $|\mathcal{C}_t| \downarrow$ & Peak VRAM & Latency & $p$-val \\
+\midrule
+read\_online\_aci\_d0 & 0.3895 ± 0.0000 & 40.73 ± 0.00% & 90.33 ± 0.00% & 0.33 ± 0.00% & 3.42 ± 0.00 & 49.2 MB & 4.89 ms & - \\
+sar\_online\_aci\_d0 & 0.4248 ± 0.0000 & 43.23 ± 0.00% & 90.13 ± 0.00% & 0.13 ± 0.00% & 3.31 ± 0.00 & 36.8 MB & 2.80 ms & - \\
+source\_only\_static\_cp\_d0 & 0.4220 ± 0.0000 & 42.97 ± 0.00% & 91.73 ± 0.00% & 1.73 ± 0.00% & 3.30 ± 0.00 & 21.6 MB & 0.68 ms & - \\
+tent\_online\_aci\_d0 & 0.4216 ± 0.0000 & 43.03 ± 0.00% & 90.30 ± 0.00% & 0.30 ± 0.00% & 3.33 ± 0.00 & 36.8 MB & 2.84 ms & - \\
+tri\_sacta\_online\_aci\_d0 & 0.4287 ± 0.0000 & 43.53 ± 0.00% & 90.00 ± 0.00% & 0.00 ± 0.00% & 3.27 ± 0.00 & 31.8 MB & 5.54 ms & - \\
+tri\_sacta\_online\_aci\_d10 & 0.4287 ± 0.0000 & 43.53 ± 0.00% & 89.43 ± 0.00% & 0.57 ± 0.00% & 3.21 ± 0.00 & 31.8 MB & 5.42 ms & - \\
+tri\_sacta\_online\_aci\_d50 & 0.4287 ± 0.0000 & 43.53 ± 0.00% & 88.30 ± 0.00% & 1.70 ± 0.00% & 3.29 ± 0.00 & 31.8 MB & 5.81 ms & - \\
+\bottomrule
+\end{tabular}
+\end{table*}

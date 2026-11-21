@@ -189,7 +189,15 @@ class TriSACTA:
             for p in self.model.parameters():
                 p.grad = None
 
-            result["logits"] = logits.detach()
+            # Clean post-adaptation evaluation forward pass in eval() mode (AUD-25)
+            self.model.eval()
+            with torch.no_grad():
+                post_out = self.model(
+                    features=batch,
+                    modality_mask=modality_mask,
+                    reliability_weights=reliability_weights,
+                )
+            result["logits"] = post_out["logits"].detach()
             result["loss"] = float(loss_total.item())
             result["loss_ent"] = float(loss_ent.item())
             result["loss_align"] = float(loss_align.item())
