@@ -1,0 +1,87 @@
+# =============================================================================
+# Tri-SACTA Configuration: MELD
+# =============================================================================
+# Tri-Modal Spectral-Aligned Continual Test-Time Adaptation
+# with Non-Exchangeable Online Conformal Control under Compound Modality Shifts
+# =============================================================================
+
+dataset:
+  name: meld
+  root: data/meld
+  num_classes: 7
+  label_type: emotion_7        # 7-class emotion: anger, disgust, fear, joy, neutral, sadness, surprise
+
+features:
+  visual_dim: 512              # CLIP ViT-B/16 features
+  audio_dim: 768               # WavLM-Base features
+  text_dim: 768                # DeBERTa-v3-Base features
+  prosody_dim: 88              # eGeMAPS features
+  cache_dir: features_cache/meld
+
+model:
+  fusion_dim: 256              # All modalities project to this dimension
+  num_heads: 4                 # Multi-head attention heads
+  num_layers: 2                # Number of cross-attention layers
+  adapter_rank: 8              # Low-rank adapter rank for TTA
+  dropout: 0.1                 # Dropout probability
+  num_classes: 7               # Number of output classes
+
+tta:
+  tau: 1.0                     # Temperature for reliability weighting
+  theta_high: 0.7              # High confidence threshold (pseudo-label)
+  theta_low: 0.3               # Low confidence threshold (filtering)
+  lambda_align: 0.5            # Weight for spectral alignment loss
+  lambda_reg: 0.01             # Weight for regularization loss
+  lr: 1.0e-4                   # TTA learning rate
+  gamma_eig: 1.0               # Spectral shift kernel bandwidth
+  top_k_eig: 32                # Top-k eigenvalues for shift detection
+  batch_size: 32               # TTA batch size
+
+conformal:
+  alpha: 0.1                   # Target miscoverage rate (1 - alpha = 90% coverage)
+  eta_0: 0.01                  # Initial step size for online ACI
+  beta_1: 0.5                  # Forgetting factor for coverage tracking
+  beta_2: 0.5                  # Forgetting factor for step size adaptation
+  window_size: 200             # Window for running coverage estimate
+  delay: 0                     # Feedback delay (0 = immediate)
+  score_fn: aps                # Score function: 'aps' (Adaptive Prediction Sets)
+
+training:
+  epochs: 50                   # Maximum training epochs
+  lr: 1.0e-3                   # Training learning rate
+  batch_size: 32               # Training batch size
+  patience: 10                 # Early stopping patience
+  seeds: [42, 100, 2026, 777, 999]  # Random seeds for replication
+  num_workers: 2               # DataLoader workers
+
+shift_regimes:
+  - name: clean
+    description: "No distribution shift (source-like data)"
+    params: {}
+
+  - name: audio_degradation
+    description: "Gaussian noise + reverberation on audio modality"
+    params:
+      snr_db: 5.0
+      reverb_level: 0.6
+
+  - name: visual_corruption
+    description: "JPEG artifacts + brightness jitter on visual modality"
+    params:
+      jpeg_quality: 15
+      brightness_jitter: 0.4
+
+  - name: compound_shift
+    description: "Simultaneous audio degradation + visual corruption"
+    params:
+      snr_db: 5.0
+      reverb_level: 0.6
+      jpeg_quality: 15
+      brightness_jitter: 0.4
+
+  - name: temporal_drift
+    description: "Gradual covariate shift via feature interpolation"
+    params:
+      drift_rate: 0.05
+      drift_start: 0.0
+      drift_end: 1.0
