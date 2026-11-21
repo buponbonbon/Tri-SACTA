@@ -1,0 +1,82 @@
+# =============================================================================
+# Shift Regime Definitions for Tri-SACTA
+# =============================================================================
+# 5 sequential distribution shift regimes applied during test-time adaptation.
+# Each regime is applied in sequence to simulate real-world compound shifts.
+# =============================================================================
+
+regimes:
+  # ---- Regime 1: Clean / No Shift ----
+  # Baseline regime with no distribution shift. Data is source-like.
+  # Used to verify that TTA does not degrade performance on clean data.
+  - name: clean
+    index: 0
+    description: "No distribution shift (source-like data)"
+    duration_steps: 200
+    affected_modalities: []
+    params: {}
+
+  # ---- Regime 2: Audio Degradation ----
+  # Additive Gaussian noise and synthetic reverberation on audio modality.
+  # Simulates noisy recording environments (e.g., crowded rooms, poor mics).
+  - name: audio_degradation
+    index: 1
+    description: "Gaussian noise injection + reverberation on audio modality"
+    duration_steps: 200
+    affected_modalities: [audio]
+    params:
+      snr_db: 5.0                # Signal-to-noise ratio (dB) for Gaussian noise
+      reverb_level: 0.6          # Reverberation intensity [0, 1]
+      noise_type: gaussian       # Type of additive noise
+
+  # ---- Regime 3: Visual Corruption ----
+  # JPEG compression artifacts and brightness jitter on visual modality.
+  # Simulates poor video quality (e.g., low-bandwidth streams, webcam issues).
+  - name: visual_corruption
+    index: 2
+    description: "JPEG compression artifacts + brightness jitter on visual modality"
+    duration_steps: 200
+    affected_modalities: [visual]
+    params:
+      jpeg_quality: 15           # JPEG quality factor [1, 100] (lower = more artifacts)
+      brightness_jitter: 0.4     # Brightness perturbation magnitude [0, 1]
+      corruption_type: jpeg      # Type of visual corruption
+
+  # ---- Regime 4: Compound Shift ----
+  # Simultaneous audio degradation + visual corruption.
+  # Tests the model's ability to handle multiple concurrent modality failures.
+  - name: compound_shift
+    index: 3
+    description: "Simultaneous audio degradation and visual corruption"
+    duration_steps: 200
+    affected_modalities: [audio, visual]
+    params:
+      # Audio degradation params
+      snr_db: 5.0
+      reverb_level: 0.6
+      noise_type: gaussian
+      # Visual corruption params
+      jpeg_quality: 15
+      brightness_jitter: 0.4
+      corruption_type: jpeg
+
+  # ---- Regime 5: Temporal Drift ----
+  # Gradual covariate shift via feature-space interpolation.
+  # Simulates slow distributional drift over time (e.g., speaker change,
+  # topic shift, lighting change throughout a video).
+  - name: temporal_drift
+    index: 4
+    description: "Gradual covariate shift via feature-space interpolation"
+    duration_steps: 200
+    affected_modalities: [visual, audio, text, prosody]
+    params:
+      drift_rate: 0.05           # Rate of drift per step
+      drift_start: 0.0           # Initial interpolation weight
+      drift_end: 1.0             # Final interpolation weight
+      drift_schedule: linear     # Schedule for interpolation: linear | exponential
+
+# Global settings for shift stream generation
+stream_settings:
+  total_steps: 1000              # Total adaptation steps (5 regimes × 200 steps)
+  transition: abrupt             # Transition type between regimes: abrupt | gradual
+  shuffle_within_regime: true    # Whether to shuffle samples within each regime

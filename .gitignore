@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# PyTorch checkpoints and features cache
+checkpoints/*.pt
+features_cache/
+*.h5
+!checkpoints/.gitkeep
+
+
 # C extensions
 *.so
 
