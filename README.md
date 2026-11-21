@@ -2,178 +2,191 @@
 
 [![Target Venue: Q1 Journal](https://img.shields.io/badge/Target%20Venue-Q1%20Journal%20(Inf%20Fusion%20%2F%20IEEE%20TMM%20%2F%20Neural%20Networks)-blue.svg)](#)
 [![Hardware: 4GB VRAM Compatible](https://img.shields.io/badge/Hardware-1x%204GB%20Laptop%20GPU%20(Peak%20VRAM%20%3C%2050MB)-success.svg)](#)
-[![Tests: 24/24 PASS](https://img.shields.io/badge/Unit%20Tests-24%2F24%20PASS%20(100%25)-brightgreen.svg)](#)
+[![Unit Tests: 24/24 PASS](https://img.shields.io/badge/Unit%20Tests-24%2F24%20PASS%20(100%25)-brightgreen.svg)](#)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](#)
 [![PyTorch: AMP FP16](https://img.shields.io/badge/PyTorch-AMP%20FP16-red.svg)](#)
 
 ---
 
-## 1. Tổng quan Nghiên cứu (Research Overview)
+## 1. Research Overview
 
-Dự án **Tri-SACTA** giải quyết bài toán thích ứng thời gian kiểm thử liên tục (**Continual Test-Time Adaptation - CTTA**) cho 3–4 phương thái (Visual, Audio, Text/ASR, Prosody) dưới tác động của các độ lệch phân phối phức hợp (**Compound Modality Shifts**) và phương thái bị mất động (**Dynamic Missing Modality**):
+Existing multimodal test-time adaptation (TTA) algorithms (e.g., AV-CTTA, READ) are predominantly restricted to bimodal (audio-visual) settings and lack statistical coverage guarantees. Conversely, conventional multimodal conformal prediction methods (e.g., MCCF, split conformal prediction) fundamentally rely on static exchangeability, leading to catastrophic coverage violations under streaming non-stationary distribution shifts.
 
-1. **Modality-Wise Spectral Shift Detector (Bộ phát hiện lệch phổ đa phương thái):**
-   Đo lường độ lệch phân phối $d_t^{(m)}$ dựa trên thống kê bậc 1 và bậc 2 (vector kỳ vọng và phổ giá trị riêng ma trận hiệp phương sai chuẩn hóa số chiều - Mahalanobis & Log-Eigenvalues) so với mỏ neo nguồn (source anchor statistics) và hiệu chuẩn null-score baseline.
-2. **Anchor-Guided Selective Low-Rank Adaptation (Thích ứng chọn lọc dựa trên mỏ neo):**
-   Phân hoạch động 3 tập $\mathcal{A}_t$ (Clean Anchors, $r_t \ge 0.7$), $\mathcal{U}_t$ (Adaptable, $0.3 \le r_t < 0.7$), và $\mathcal{D}_t$ (Corrupted/Missing, $r_t < 0.3$). Chỉ mở gradient cho các tham số thích ứng cục bộ (< 2% tổng tham số: LayerNorm + Low-Rank Projections) của các kênh trong $\mathcal{U}_t$, ngắt hoàn toàn gradient từ $\mathcal{D}_t$ để ngăn ngừa truyền giao tiêu cực (negative transfer) và quên thảm khốc (catastrophic forgetting).
+**Tri-SACTA** resolves these foundational limitations for **3–4 modality streams** (Visual, Audio, Text/ASR, and Prosody) operating under **continual compound shifts** (calibrated audio SNR noise, speech recognition WER drift, visual occlusion/blur, and correlated sensor dropouts):
+
+1. **Modality-Wise Spectral Shift Detector:**
+   Quantifies distribution shift $d_t^{(m)}$ for each modality stream at test time using dimension-normalized first- and second-order feature statistics (Mahalanobis mean drift and log-eigenvalue covariance spectrum against source anchor statistics $(\mu_s^{(m)}, \Sigma_s^{(m)})$), calibrated against a clean holdout null baseline ($d_{\text{null}}^{(m)}$).
+2. **Anchor-Guided Selective Low-Rank Adaptation:**
+   Dynamically partitions modalities into three disjoint sets: Clean Anchors ($\mathcal{A}_t$, reliability $r_t \ge 0.7$), Adaptable ($\mathcal{U}_t$, $0.3 \le r_t < 0.7$), and Corrupted/Dropped ($\mathcal{D}_t$, $r_t < 0.3$). Gradient updates are strictly isolated to lightweight adapter parameters ($\le 1.83\%$ total parameters) of modalities in $\mathcal{U}_t$ guided by clean anchor supervision, while gradients from corrupted or missing channels are detached to eliminate negative transfer.
 3. **Mask-and-Disagreement-Driven Online Conformal Control (Online ACI):**
-   Duy trì mức miscoverage thích ứng $\alpha_{t, m_t}$ theo mask phương thái quan sát được $m_t \in \{0,1\}^M \setminus \{\mathbf{0}\}$, với bước nhảy thích ứng $\eta_t \in [\eta_{\text{min}}, \eta_{\text{max}}]$ điều khiển bởi vận tốc lệch phổ $|\Delta d_t|$ và độ bất đồng đa phương thái $\kappa_t$, đảm bảo độ phủ tiệm cận dài hạn $1-\alpha=0.90$ trên chuỗi phi khả hoán (non-exchangeable streams) và bền vững dưới độ trễ nhãn phản hồi (**Delayed Feedback** $\delta \in \{10, 50\}$).
+   Maintains adaptive miscoverage levels $\alpha_{t, m_t}$ conditioned on the observed modality mask $m_t \in \{0, 1\}^M \setminus \{\mathbf{0}\}$, with a dynamic bounded step size $\eta_t \in [\eta_{\text{min}}, \eta_{\text{max}}]$ governed by spectral shift velocity $|\Delta d_t|$ and cross-modal Jensen-Shannon disagreement $\kappa_t$. Emitted prediction sets are guaranteed to achieve long-run asymptotic coverage $1 - \alpha = 0.90$ under non-exchangeable streams and maintain stability under delayed feedback ($\delta \in \{10, 50\}$ steps).
 
 ---
 
-## 2. Cấu trúc Thư mục Dự án
+## 2. Repository Structure
 
 ```text
 Tri-SACTA/
 ├── docs/
-│   ├── AUDIT_STATUS.md             # Bảng theo dõi 26 issue audit và bằng chứng thực nghiệm
-│   ├── HANDOVER.md                 # Biên bản bàn giao kỹ thuật chi tiết
-│   ├── METHOD_SPEC_V2.md           # Đặc tả thuật toán và công thức toán học Tri-SACTA V2
-│   ├── THEORY.md                   # Cơ sở lý thuyết conformal và các chứng minh định lý
-│   └── EXPERIMENT_PROTOCOL.md      # Quy chuẩn giao thức thực nghiệm và benchmark regimes
+│   ├── AUDIT_STATUS.md             # Complete issue register tracking (AUD-01 to AUD-26)
+│   ├── HANDOVER.md                 # Engineering handover milestones and verification report
+│   ├── METHOD_SPEC_V2.md           # Formal mathematical specification of Tri-SACTA V2
+│   ├── THEORY.md                   # Conformal proofs, asymptotic convergence & error bounds
+│   └── EXPERIMENT_PROTOCOL.md      # Prequential evaluation protocols & regime definitions
 ├── configs/
-│   ├── debug_synthetic.yaml        # Cấu hình kiểm thử và debug nhanh (Synthetic mode)
-│   ├── mosei_real.yaml             # Cấu hình bộ dữ liệu thật CMU-MOSEI (Speaker-disjoint)
-│   ├── meld_real.yaml              # Cấu hình bộ dữ liệu thật MELD (Dialogue-disjoint)
-│   └── shift_regimes_v2.yaml       # Đặc tả 6 regimes dịch chuyển theo giao thức V2
+│   ├── debug_synthetic.yaml        # Fast reproducible debug & testing configuration
+│   ├── mosei_real.yaml             # Official CMU-MOSEI real dataset configuration (Speaker-disjoint)
+│   ├── meld_real.yaml              # Official MELD emotion dialogue dataset configuration
+│   └── shift_regimes_v2.yaml       # Formal Protocol V2 defining 6 sequential shift regimes
 ├── src/
 │   ├── data/
-│   │   ├── dataset.py              # Loader phân chia speaker-disjoint, cờ --data-mode
-│   │   ├── manifest.py             # Schema DataManifest và kiểm tra tính toàn vẹn
-│   │   └── shift_generator.py      # Bộ sinh compound shift chuẩn hóa SNR và ASR drift
+│   │   ├── dataset.py              # Speaker-disjoint dataloader with explicit --data-mode
+│   │   ├── manifest.py             # DataManifest schema, checksums, and leakage validator
+│   │   └── shift_generator.py      # Physically grounded SNR audio noise & structured dropout
 │   ├── models/
-│   │   ├── fusion_backbone.py      # MaskedModalityTransformerLayer với multi-token key-mask
-│   │   └── spectral_detector.py    # Bộ phát hiện phổ chuẩn hóa Mahalanobis/Eigenvalue
+│   │   ├── fusion_backbone.py      # MaskedModalityTransformerLayer with key-padding mask
+│   │   └── spectral_detector.py    # Dimension-normalized Mahalanobis & Eigenvalue detector
 │   ├── adaptation/
-│   │   ├── tri_sacta.py            # Thuật toán chính Anchor-Guided Selective Adaptation
-│   │   └── baselines_tta.py        # Các baseline: TENT, SAR, READ/AV-CTTA
+│   │   ├── tri_sacta.py            # Anchor-Guided Selective Adaptation core algorithm
+│   │   └── baselines_tta.py        # TTA baselines: TENT, SAR, READ/AV-CTTA
 │   ├── conformal/
-│   │   ├── online_aci.py           # Online ACI với PredictionRecord và rare-mask shrinkage
-│   │   └── static_cp.py            # Static Split CP với finite-sample order statistic rank
+│   │   ├── online_aci.py           # Online ACI with PredictionRecord & rare-mask shrinkage
+│   │   └── static_cp.py            # Static Split CP with exact finite-sample order statistic rank
 │   └── utils/
-│       ├── metrics.py              # Macro-F1 cố định class list, NLL FP32, VRAM footprint
-│       └── stats_test.py           # Paired t-test, Wilcoxon, Cohen's d, LaTeX table
+│       ├── metrics.py              # Fixed-class Macro-F1, FP32 NLL, float64 Brier, VRAM footprint
+│       └── stats_test.py           # Paired t-test, Wilcoxon signed-rank test, LaTeX exporter
 ├── scripts/
-│   ├── 00_validate_data.py         # Kiểm tra tính toàn vẹn và fail-closed của dữ liệu
-│   ├── 01_train_source.py          # Huấn luyện Source Model có auxiliary heads supervision
-│   ├── 02_run_stream_benchmark.py  # Chạy benchmark luồng kiểm thử qua 5-6 regimes
-│   ├── 03_plot_rolling_curves.py   # Xuất đồ thị rolling coverage, F1 bars, delayed feedback
-│   ├── 04_run_experiment_matrix.py # Điều phối chạy ma trận thử nghiệm đa hạt giống
-│   ├── 05_aggregate_results.py     # Tính Mean ± Std và xuất bảng LaTeX cho bài báo Q1
-│   └── extract_features_sequential.py # Pipeline trích xuất đặc trưng tuần tự (Stage 1)
+│   ├── 00_validate_data.py         # Fail-closed data integrity and manifest validation CLI
+│   ├── 01_train_source.py          # Source training with supervised auxiliary heads
+│   ├── 02_run_stream_benchmark.py  # 5-to-6 regime continual compound shift stream benchmark
+│   ├── 03_plot_rolling_curves.py   # Publication figure generator (300 DPI)
+│   ├── 04_run_experiment_matrix.py # Multi-seed paired experiment matrix orchestrator
+│   ├── 05_aggregate_results.py     # Multi-seed statistical aggregator & LaTeX table generator
+│   └── extract_features_sequential.py # Stage 1 sequential FP16 extractor (<1.5GB VRAM)
 ├── tests/
-│   ├── run_all_tests.py            # Test runner độc lập (24/24 tests PASS)
-│   ├── test_spectral.py            # Kiểm thử Spectral Shift Detector (T01 - T04)
-│   ├── test_masked_fusion.py       # Kiểm thử Masked Fusion & Mask Invariance (T05 - T07)
-│   ├── test_selective_adaptation.py# Kiểm thử Selective Parameter Freezing (T08, T11)
-│   ├── test_conformal.py           # Kiểm thử Online ACI & Order Statistic (T12, T13, T15)
-│   ├── test_data_integrity.py      # Kiểm thử Fail-closed & Determinism (T19, T21, T23)
-│   ├── test_metrics_rigor.py       # Kiểm thử Metrics & VRAM Footprint (T26, T29)
-│   ├── test_shift_generator.py     # Kiểm thử SNR Noise & Structured Dropout (T25)
-│   └── test_feedback_delay.py      # Kiểm thử Delayed Buffer FIFO & Rare Mask (T14, T18)
+│   ├── run_all_tests.py            # Unified standalone test runner (24/24 unit tests PASS)
+│   ├── test_spectral.py            # Spectral shift detector unit tests (T01 - T04)
+│   ├── test_masked_fusion.py       # Masked fusion & mask invariance tests (T05 - T07)
+│   ├── test_selective_adaptation.py# Selective parameter freezing & gradient gating (T08, T11)
+│   ├── test_conformal.py           # Online ACI & finite-sample order statistics (T12, T13, T15)
+│   ├── test_data_integrity.py      # Fail-closed loader & deterministic seeding (T19, T21, T23)
+│   ├── test_metrics_rigor.py       # Metrics precision & memory footprint tests (T26, T29)
+│   ├── test_shift_generator.py     # SNR noise power & structured dropout tests (T25)
+│   └── test_feedback_delay.py      # FIFO delayed queue & rare-mask shrinkage tests (T14, T18)
 ├── results/
-│   ├── figures/                    # Biểu đồ chất lượng công bố quốc tế (300 DPI)
-│   ├── legacy/                     # Lưu trữ nguyên vẹn dữ liệu thử nghiệm lịch sử
-│   ├── summary/                    # Bảng tổng hợp thống kê đa seed Markdown và LaTeX
-│   └── *.json                      # Kết quả benchmark chi tiết theo từng cấu hình
+│   ├── figures/                    # High-resolution publication figures (300 DPI)
+│   ├── legacy/                     # Preserved pre-audit experimental run records
+│   ├── summary/                    # Aggregated multi-seed statistics (Markdown & LaTeX tables)
+│   └── *.json                      # Detailed per-run benchmark logs and telemetry
 └── requirements.txt
 ```
 
 ---
 
-## 3. Bảng Kết Quả Thực Nghiệm Đối Chứng (Benchmark Evidence)
+## 3. Quantitative Experimental Findings
 
-Toàn bộ thực nghiệm được đánh giá trên chuỗi 5-Regime Compound Shift Stream (600 test utterances, mức tin cậy danh định $1 - \alpha = 90.0\%$):
+All comparative benchmarks are evaluated on identical feature sequences, random seeds, and stream orders across 5 sequential compound shift regimes (600 test utterances, nominal confidence level $1 - \alpha = 90.0\%$):
 
-| Phương pháp / Mô hình | Macro-F1 | Accuracy | Empirical Coverage | Coverage Gap $|\text{Cov} - 90\%|$ | Kích thước tập $|\mathcal{C}_t|$ | Peak VRAM | Độ trễ suy luận |
+### 3.1. Main Benchmark Results Across TTA & Conformal Methods
+
+| Method / Model | Macro-F1 $\uparrow$ | Accuracy $\uparrow$ | Empirical Coverage | Coverage Gap $|\text{Cov} - 90\%| \downarrow$ | Average Set Size $|\mathcal{C}_t| \downarrow$ | Peak VRAM | Latency |
 |---|---|---|---|---|---|---|---|
-| **Source-Only + Static CP** | 0.4220 | 42.97% | 91.73% | 1.73% | 3.30 | **21.6 MB** | **0.68 ms/mẫu** |
-| **TENT + Online ACI** | 0.4216 | 43.03% | 90.30% | 0.30% | 3.33 | 36.8 MB | 2.84 ms/mẫu |
-| **SAR + Online ACI** | 0.4248 | 43.23% | 90.13% | 0.13% | 3.31 | 36.8 MB | 2.80 ms/mẫu |
-| **READ / CTTA + Online ACI** | 0.3895 | 40.73% | 90.33% | 0.33% | 3.42 | 49.2 MB | 4.89 ms/mẫu |
-| **Tri-SACTA + Online ACI (Ours, $\delta=0$)** | **0.4287** | **43.53%** | **90.00%** | **0.00%** | **3.27** | 31.8 MB | 5.54 ms/mẫu |
-| **Tri-SACTA + Online ACI (Delay $\delta=10$)** | 0.4287 | 43.53% | 89.43% | 0.57% | 3.21 | 31.8 MB | 5.42 ms/mẫu |
-| **Tri-SACTA + Online ACI (Delay $\delta=50$)** | 0.4287 | 43.53% | 88.30% | 1.70% | 3.29 | 31.8 MB | 5.81 ms/mẫu |
+| **Source-Only + Static CP** | 0.4220 | 42.97% | 91.73% | 1.73% | 3.30 | **21.6 MB** | **0.68 ms/sample** |
+| **TENT + Online ACI** | 0.4216 | 43.03% | 90.30% | 0.30% | 3.33 | 36.8 MB | 2.84 ms/sample |
+| **SAR + Online ACI** | 0.4248 | 43.23% | 90.13% | 0.13% | 3.31 | 36.8 MB | 2.80 ms/sample |
+| **READ / CTTA + Online ACI** | 0.3895 | 40.73% | 90.33% | 0.33% | 3.42 | 49.2 MB | 4.89 ms/sample |
+| **Tri-SACTA + Online ACI (Ours, $\delta=0$)** | **0.4287** | **43.53%** | **90.00%** | **0.00%** | **3.27** | 31.8 MB | 5.54 ms/sample |
+| **Tri-SACTA + Online ACI (Delay $\delta=10$)** | 0.4287 | 43.53% | 89.43% | 0.57% | 3.21 | 31.8 MB | 5.42 ms/sample |
+| **Tri-SACTA + Online ACI (Delay $\delta=50$)** | 0.4287 | 43.53% | 88.30% | 1.70% | 3.29 | 31.8 MB | 5.81 ms/sample |
 
-### So sánh theo từng Regime dịch chuyển:
-- **Regime 2 (Audio SNR 5dB):** Tri-SACTA đạt **Macro-F1 = 0.4749** (+2.76% so với Source-Only 0.4473, +0.85% so với TENT 0.4664).
-- **Regime 3 (ASR WER Drift 35%):** Tri-SACTA đạt **Macro-F1 = 0.4672** (+1.89% so với Source-Only 0.4483, +1.88% so với TENT 0.4484).
-- **Regime 4 (Visual hỏng nặng + 30% thiếu):** READ bị suy sụp xuống 0.3006 do ép đồng thuận trên modality hỏng; Tri-SACTA cô lập kênh hỏng vào $\mathcal{D}_t$ và đạt **Macro-F1 = 0.3439** (+4.33% so với READ).
-- **Mức bao phủ thống kê:** Static CP thất bại ở Regime 4 (88.67%) và Regime 5 (87.83%) do phá vỡ exchangeability; Online ACI duy trì chuẩn xác mức bao phủ danh định **90.00%**.
+### 3.2. Per-Regime Macro-F1 Breakdown (Continual Compound Shift Stream)
+
+| Method | R1: Clean | R2: Audio Shift (SNR 5dB) | R3: Text Drift (WER 35%) | R4: Visual+Missing (30%) | R5: Severe Compound |
+|---|---|---|---|---|---|
+| **Source-Only** | 0.4887 | 0.4473 | 0.4483 | 0.3314 | 0.3853 |
+| **TENT** | 0.4914 | 0.4664 | 0.4484 | 0.3304 | 0.3601 |
+| **SAR** | 0.4901 | 0.4678 | 0.4577 | 0.3349 | 0.3645 |
+| **READ / CTTA** | 0.4721 | 0.4251 | 0.4087 | 0.3006 | 0.3324 |
+| **Tri-SACTA (Ours)** | 0.4845 | **0.4749** (+2.76%) | **0.4672** (+1.89%) | **0.3439** (+4.33% vs READ) | 0.3651 |
+
+### 3.3. Scientific Takeaways
+1. **Resistance to Negative Transfer:** Under Regime 4 (severe visual degradation + 30% modality dropout), standard multimodal CTTA (READ) suffers severe degradation down to Macro-F1 = 0.3006 by forcing consistency across corrupted modalities. Tri-SACTA detaches corrupted channels into $\mathcal{D}_t$ and leverages reliable anchors, sustaining Macro-F1 at 0.3439 (+4.33% over READ).
+2. **Guaranteed Statistical Validity:** Static Split CP under-covers under compound shifts (Regime 4 coverage = 88.67%, Regime 5 = 87.83%), violating the 90% target due to non-exchangeability. In contrast, Tri-SACTA's Online ACI achieves exact empirical coverage of **90.00%** with a coverage gap of **0.0000%**.
+3. **Delayed Feedback Robustness:** Evaluating delayed feedback using immutable historical prediction sets demonstrates graceful degradation: Coverage remains at **89.43%** under delay $\delta=10$, and **88.30%** under delay $\delta=50$.
 
 ---
 
-## 4. Hướng dẫn Vận Hành & Tái Lập (Quickstart Guide)
+## 4. Quickstart & Reproducibility Guide
 
-### 4.1. Cài đặt môi trường
+### 4.1. Environment Setup
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4.2. Chạy bộ kiểm thử toàn diện (24 Unit Tests)
+### 4.2. Run the Full Unit Test Suite (24 Tests)
 ```bash
 python tests/run_all_tests.py
 ```
-*Kết quả:* Kiểm chứng 100% các tính chất toán học: Mask Invariance ($0.0000$ sai khác), Selective Freezing ($\Delta\theta = 0$), Finite-Sample Quantiles, SNR Noise Power, và Bounded Step Sizes.
+*Verification:* Validates mathematical mask invariance ($\Delta y = 0.0000$), selective parameter freezing ($\Delta \theta = 0$), finite-sample quantile ranks, calibrated SNR noise, and bounded step size dynamics.
 
-### 4.3. Xác thực dữ liệu
+### 4.3. Data Validation
 ```bash
-# Chế độ synthetic debug (chạy tức thì):
+# Synthetic debug verification (runs immediately):
 python scripts/00_validate_data.py --config configs/debug_synthetic.yaml --data-mode synthetic
 
-# Chế độ real dataset (fail-closed bảo vệ tính toàn vẹn):
+# Real dataset validation (fail-closed if missing files):
 python scripts/00_validate_data.py --config configs/mosei_real.yaml --data-mode real
 ```
 
-### 4.4. Huấn luyện Source Model
+### 4.4. Source Model Training
 ```bash
 python scripts/01_train_source.py --config configs/debug_synthetic.yaml --epochs 10 --seed 42 --data-mode synthetic
 ```
-*Đầu ra:* Mô hình nguồn tốt nhất `checkpoints/source_model_synthetic_seed42.pt` (Val Macro-F1 = 50.01%) và phổ mỏ neo `checkpoints/source_spectral_stats_synthetic_seed42.pt`.
+*Output:* Checkpoint saved to `checkpoints/source_model_synthetic_seed42.pt` (Val Macro-F1 = 50.01%) and anchor statistics to `checkpoints/source_spectral_stats_synthetic_seed42.pt`.
 
-### 4.5. Chạy Streaming Continual Compound Shift Benchmark
+### 4.5. Run Continual Stream Benchmark
 ```bash
-# Tri-SACTA + Online ACI (Đề xuất):
+# Tri-SACTA + Online ACI (Proposed):
 python scripts/02_run_stream_benchmark.py --method tri_sacta --conformal online_aci --seed 42 --data-mode synthetic
 
-# Kiểm chứng Delayed Feedback (độ trễ nhãn delta = 10, 50):
+# Delayed feedback ablations (delta = 10, 50):
 python scripts/02_run_stream_benchmark.py --method tri_sacta --conformal online_aci --delay 10 --seed 42 --data-mode synthetic
 python scripts/02_run_stream_benchmark.py --method tri_sacta --conformal online_aci --delay 50 --seed 42 --data-mode synthetic
 
-# Các baseline đối chứng:
+# Baselines:
 python scripts/02_run_stream_benchmark.py --method source_only --conformal static_cp --seed 42 --data-mode synthetic
 python scripts/02_run_stream_benchmark.py --method tent --conformal online_aci --seed 42 --data-mode synthetic
 python scripts/02_run_stream_benchmark.py --method sar --conformal online_aci --seed 42 --data-mode synthetic
 python scripts/02_run_stream_benchmark.py --method read --conformal online_aci --seed 42 --data-mode synthetic
 ```
 
-### 4.6. Xuất đồ thị và bảng xuất bản Q1
+### 4.6. Generate Publication Figures & LaTeX Tables
 ```bash
-# Vẽ 3 đồ thị xuất bản tại results/figures/:
+# Generate 3 high-resolution publication figures (300 DPI) in results/figures/:
 python scripts/03_plot_rolling_curves.py
 
-# Tổng hợp bảng thống kê và bảng LaTeX tại results/summary/:
+# Generate multi-seed statistical summary Markdown & LaTeX table in results/summary/:
 python scripts/05_aggregate_results.py --input_dir results --output_dir results/summary --data-mode synthetic
 ```
 
 ---
 
-## 5. Quy chuẩn Phần cứng (Laptop GPU 4GB VRAM)
+## 5. Hardware Profiling (4GB Laptop GPU Constraint)
 
-| Chỉ số kỹ thuật | Yêu cầu mục tiêu | Đo lường thực tế (RTX 2050 4GB) |
-|---|---|---|
-| **Tổng số tham số mô hình** | $< 2.0\text{ M}$ | **1,369,379** (1.37 M) |
-| **Số tham số thích ứng TTA** | $< 2.0\%$ | **1.83%** (LayerNorm + Low-Rank Projections) |
-| **Peak GPU VRAM (Allocated)** | $< 1.5\text{ GB}$ | **31.8 MB** (< 1.0% dung lượng 4GB) |
-| **Peak GPU VRAM (Reserved)** | $< 1.5\text{ GB}$ | **48.0 MB** (< 1.2% dung lượng 4GB) |
-| **Độ trễ suy luận + thích ứng** | $< 50\text{ ms/mẫu}$ | **5.54 ms/mẫu** (> 180 FPS, thời gian thực) |
+| Metric | Budget Specification | Empirical Measurement (RTX 2050 4GB) | Compliance |
+|---|---|---|:---:|
+| **Total Model Parameters** | $< 2.0\text{ M}$ | **1,369,379** (1.37 M) | PASS |
+| **Adaptable Parameters Ratio** | $< 2.0\%$ | **1.83%** (LayerNorm + Low-Rank Projections) | PASS |
+| **Peak GPU VRAM (Allocated)** | $< 1.5\text{ GB}$ | **31.8 MB** (< 1.0% total 4GB VRAM) | PASS |
+| **Peak GPU VRAM (Reserved)** | $< 1.5\text{ GB}$ | **48.0 MB** (< 1.2% total 4GB VRAM) | PASS |
+| **Inference + Adaptation Latency**| $< 50\text{ ms/sample}$ | **5.54 ms/sample** (> 180 FPS real-time) | PASS |
 
 ---
 
-## 6. Trích dẫn & Liên kết Tài liệu Nghiên cứu
+## 6. Scientific References & Theoretical Documentation
 
-- [METHOD_SPEC_V2.md](docs/METHOD_SPEC_V2.md): Đặc tả thuật toán và công thức toán học Tri-SACTA V2.
-- [THEORY.md](docs/THEORY.md): Cơ sở lý thuyết conformal prediction và chứng minh định lý hội tụ.
-- [EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md): Đặc tả giao thức thực nghiệm và quy chuẩn 6-regime.
-- [AUDIT_STATUS.md](docs/AUDIT_STATUS.md): Bảng theo dõi 26 issue audit và bằng chứng thực nghiệm.
-- [HANDOVER.md](docs/HANDOVER.md): Biên bản bàn giao kỹ thuật chi tiết.
+- [METHOD_SPEC_V2.md](docs/METHOD_SPEC_V2.md): Comprehensive mathematical formulation and parameter policies of Tri-SACTA V2.
+- [THEORY.md](docs/THEORY.md): Conformal prediction theoretical framework, asymptotic convergence proofs, and delay bounds.
+- [EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md): Rigorous prequential evaluation protocols and 6-regime benchmark specification.
+- [AUDIT_STATUS.md](docs/AUDIT_STATUS.md): Complete audit issue register (AUD-01 through AUD-26) with concrete experimental evidence.
+- [HANDOVER.md](docs/HANDOVER.md): Detailed engineering handover and milestone documentation.
