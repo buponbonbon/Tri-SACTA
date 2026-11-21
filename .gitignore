@@ -8,6 +8,7 @@ checkpoints/**/*.pt
 checkpoints/*.pt
 data/**/*.pt
 data/**/*.pth
+data/**/raw/
 features_cache/
 *.h5
 !checkpoints/.gitkeep

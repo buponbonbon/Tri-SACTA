@@ -243,15 +243,20 @@ def get_dataloaders(
         manifest_path = config.get("dataset", {}).get("manifest_path")
         if not manifest_path or not os.path.exists(manifest_path):
             raise FileNotFoundError(
-                f"[FAIL-CLOSED] Real data mode requires a verified manifest file at '{manifest_path}' (R3-04).\n"
-                f"Please run feature extraction with --manifest or run scripts/00_validate_data.py."
+                f"[FAIL-CLOSED] Real data mode requires a verified manifest file at '{manifest_path}' (R3-04, R4-02).\n"
+                f"Please run authentic data acquisition or pass --data-mode synthetic for debug."
             )
         from src.data.manifest import DataManifest
         manifest = DataManifest.load_json(manifest_path)
-        report = manifest.validate_split_integrity(num_classes=config.get("dataset", {}).get("num_classes", 7))
+        manifest_dir = os.path.dirname(os.path.abspath(manifest_path))
+        report = manifest.validate_split_integrity(
+            num_classes=config.get("dataset", {}).get("num_classes", 7),
+            data_mode=data_mode,
+            base_dir=manifest_dir,
+        )
         if not report["is_valid"]:
             raise ValueError(f"[FAIL-CLOSED] Data manifest integrity validation failed: {report['errors']}")
-        logger.info(f"Verified manifest {manifest_path} (hash: {report['manifest_hash'][:12]}) for real data mode.")
+        logger.info(f"Verified authentic manifest {manifest_path} (hash: {report['manifest_hash'][:12]}) for real data mode.")
 
     feats_dir = config.get("features", {}).get("cache_dir", "features_cache/mosei")
     collator = MultimodalCollator()

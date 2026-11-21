@@ -94,13 +94,20 @@ class TriSACTA:
         self,
         batch: Dict[str, torch.Tensor],
         modality_mask: Dict[str, torch.Tensor],
+        precomputed_shift_scores: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """Execute one Tri-SACTA adaptation step with selective parameter updates."""
         self._step_count += 1
         device = next(self.model.parameters()).device
 
-        # 1. Compute spectral shift scores excluding missing samples
-        shift_scores = self.detector.compute_shift_scores(batch, modality_mask)
+        # 1. Compute spectral shift scores excluding missing samples (or reuse precomputed)
+        if precomputed_shift_scores is not None:
+            shift_scores = precomputed_shift_scores
+        else:
+            try:
+                shift_scores = self.detector.compute_shift_scores(batch, modality_mask, update_history=True)
+            except TypeError:
+                shift_scores = self.detector.compute_shift_scores(batch, modality_mask)
 
         # 2. Derive reliability weights
         reliability_weights = self.detector.compute_reliability_weights(
@@ -114,8 +121,9 @@ class TriSACTA:
 
         # Build effective mask isolating corrupted channels from attention (R3-07)
         effective_mask = {}
+        B = next(iter(batch.values())).shape[0] if batch else 1
         for m in self.MODALITY_NAMES:
-            p_mask = modality_mask[m].to(device).float() if m in modality_mask else torch.zeros(1, device=device)
+            p_mask = modality_mask[m].to(device).float().view(-1) if m in modality_mask else torch.zeros(B, device=device)
             is_active = 1.0 if m not in corrupted_set else 0.0
             effective_mask[m] = p_mask * is_active
 
