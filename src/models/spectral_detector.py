@@ -122,6 +122,8 @@ class SpectralShiftDetector:
             # Calibrate clean null scores across multiple batch sample sizes (R3-08)
             eval_source = val_features_by_modality.get(modality, feats) if val_features_by_modality else feats
             eval_source = _to_cpu_float(eval_source)
+            if eval_source.ndim == 1:
+                eval_source = eval_source.unsqueeze(1)
             N_eval = eval_source.shape[0]
 
             self.null_by_sample_size[modality] = {}
@@ -178,6 +180,7 @@ class SpectralShiftDetector:
         self,
         features_by_modality: Dict[str, torch.Tensor],
         modality_mask: Optional[Dict[str, torch.Tensor]] = None,
+        update_history: bool = True,
     ) -> Dict[str, float]:
         """Compute per-modality shift scores with sample-size matched rank truncation (R3-08)."""
         assert self._source_registered, "Call register_source_stats() before compute_shift_scores()."
@@ -197,7 +200,8 @@ class SpectralShiftDetector:
                 valid_idx = torch.nonzero(mask > 0.5, as_tuple=True)[0]
                 if len(valid_idx) == 0:
                     scores[modality] = 0.0
-                    self._shift_history[modality].append(0.0)
+                    if update_history:
+                        self._shift_history[modality].append(0.0)
                     continue
                 valid_feats = feats[valid_idx]
             else:
@@ -229,7 +233,8 @@ class SpectralShiftDetector:
             excess_shift = max(0.0, raw_d - null_score)
 
             scores[modality] = float(excess_shift)
-            self._shift_history[modality].append(float(excess_shift))
+            if update_history:
+                self._shift_history[modality].append(float(excess_shift))
 
         return scores
 

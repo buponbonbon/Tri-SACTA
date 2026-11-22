@@ -258,9 +258,12 @@ def main():
             latency.start()
 
             # Prequential protocol (R3-06): evaluate prediction with theta_t BEFORE adapting
+            precomputed_shift_scores = None
             if args.protocol == "prequential":
                 if tta_method is not None and hasattr(tta_method, "detector"):
-                    shift_scores = tta_method.detector.compute_shift_scores(features, mod_mask)
+                    # Update shift detector history EXACTLY ONCE per batch (R4-07)
+                    shift_scores = tta_method.detector.compute_shift_scores(features, mod_mask, update_history=True)
+                    precomputed_shift_scores = shift_scores
                     rel_weights = tta_method.detector.compute_reliability_weights(shift_scores, mod_mask, tau=tta_method.tau)
                     anchor_s, adaptable_s, corrupted_s = tta_method._classify_modalities(rel_weights, mod_mask)
                     eff_mask = {m: (mod_mask[m] > 0.5) & (m not in corrupted_s) for m in MODALITY_NAMES}
@@ -327,9 +330,12 @@ def main():
                         p_set = conformal_predictor.predict_set(sample_logits, m_key)[0]
                         pred_sets.append(p_set)
 
-            # In prequential protocol: adapt model AFTER prediction sets are emitted (R3-06)
+            # In prequential protocol: adapt model AFTER prediction sets are emitted (R3-06, R4-07)
             if args.protocol == "prequential" and tta_method is not None:
-                _ = tta_method.adapt_step(features, mod_mask)
+                if precomputed_shift_scores is not None and hasattr(tta_method, "adapt_step"):
+                    _ = tta_method.adapt_step(features, mod_mask, precomputed_shift_scores=precomputed_shift_scores)
+                else:
+                    _ = tta_method.adapt_step(features, mod_mask)
 
             latency_ms = latency.stop(num_samples=bsz)
 

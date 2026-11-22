@@ -63,12 +63,12 @@ $$\left|\sum_{t=1}^T (\alpha - e_t)\right| \le \frac{2A}{\eta_{\text{min}}} + A 
 Dividing by $T$ yields the **General Diagnostic Pathwise Bound**:
 $$\left|\bar{e}_T - \alpha\right| \le \frac{2A}{T \cdot \eta_{\text{min}}} + \frac{A}{T} \sum_{t=2}^T \left|\frac{1}{\eta_t} - \frac{1}{\eta_{t-1}}\right| + \frac{1}{T} \sum_{t=1}^T \frac{|c_t|}{\eta_t}$$
 
-> [!IMPORTANT] Critical Theoretical Takeaway
-> The empirical tracking error $|\bar{e}_T - \alpha|$ vanishes as $T \to \infty$ **if and only if**:
+> [!IMPORTANT] Critical Theoretical Takeaway: Sufficient Conditions
+> The empirical tracking error $|\bar{e}_T - \alpha|$ is guaranteed to vanish as $T \to \infty$ under the following **sufficient conditions**:
 > 1. Total variation of the inverse step sizes is sublinear: $\sum_{t=2}^T |1/\eta_t - 1/\eta_{t-1}| = o(T)$.
 > 2. Cumulative clipping residuals are sublinear: $\sum_{t=1}^T |c_t|/\eta_t = o(T)$.
 >
-> If step sizes oscillate with non-vanishing variation, unweighted miscoverage does **not** converge to $\alpha$, even if $\alpha_t$ stays strictly interior.
+> *Note on Mathematical Scope:* Because Eq. (64) is derived via the triangle inequality, these conditions are strictly **sufficient** rather than necessary; non-vanishing variation could theoretically admit path-dependent cancellations, but no universal convergence guarantee can hold without controlling variation and clipping. If step sizes oscillate without sublinear variation (as demonstrated in Section 3.2), unweighted miscoverage fails to converge to $\alpha$.
 
 ---
 
@@ -106,10 +106,10 @@ For each observed modality mask group $g = \mathbf{m} \in \{0, 1\}^M \setminus \
    where $\hat{q}_{t, g}$ is the empirical $\lceil (n_g + 1)(1 - \alpha_{t, g})\rceil$-th order statistic from the local non-conformity calibration window.
    Crucially, **no forced top-1 prediction** is applied when $\alpha_{t, g} \ge 1$.
 
-### 4.2. Pathwise Telescoping Theorem
+### 4.2. Pathwise Telescoping Theorem under Immediate Feedback
 
-**Theorem 1 (Exact Finite-Sample Pathwise Validity under Fixed-Step Mask ACI):**
-For any arbitrary, non-exchangeable, adversarial streaming sequence of inputs and labels, under the fixed-step mask controller with boundary emission policy:
+**Theorem 1 (Exact Finite-Sample Pathwise Validity under Immediate Feedback):**
+For any arbitrary, non-exchangeable, adversarial streaming sequence of inputs and labels, under the fixed-step mask controller with boundary emission policy and immediate label feedback ($\Delta_{\text{delay}} = 0$):
 After $n_g \ge 1$ updates on mask group $g$:
 $$\left| \frac{1}{n_g} \sum_{i=1}^{n_g} e_{i, g} - \alpha \right| \le \frac{1 + \eta}{\eta \cdot n_g}$$
 
@@ -131,6 +131,23 @@ $$\left| \alpha - \frac{1}{n_g} \sum_{i=1}^{n_g} e_{i, g} \right| \le \frac{|\al
 $$\blacksquare$$
 
 **Significance:** As $n_g \to \infty$, the miscoverage error on mask group $g$ converges to $\alpha$ at rate $\mathcal{O}(1 / (\eta \cdot n_g))$, holding for any arbitrary data stream without distribution assumptions.
+
+### 4.3. Feedback Delay Analysis: Immediate Guarantee vs Delayed Implementation
+
+The pathwise telescoping bound of Theorem 1 assumes **immediate label feedback** ($\Delta_{\text{delay}} = 0$), where each true label $y_t$ arrives and updates $\alpha_{t+1, g}$ before prediction set emission at step $t+1$.
+
+In practical streaming deployments with **delayed feedback** ($\Delta_{\text{delay}} > 0$):
+1. Let $T_g$ be the total number of events emitted for mask group $g$.
+2. At time step $T$, let $n_g^{\text{obs}}$ be the number of observed/matured labels received and processed by the controller, and let $K_{\text{pending}, g} = T_g - n_g^{\text{obs}}$ be the number of pending labels currently in the FIFO delay buffer.
+3. Because the maximum buffer capacity is bounded by the delay parameter $\Delta_{\text{delay}}$, we have:
+   $$0 \le K_{\text{pending}, g} \le \min(\Delta_{\text{delay}}, T_g)$$
+4. The cumulative miscoverage over all $T_g$ emitted events satisfies:
+   $$\sum_{i=1}^{T_g} e_{i, g} = \sum_{j=1}^{n_g^{\text{obs}}} e_{j, g} + \sum_{k=1}^{K_{\text{pending}, g}} e_{k, g}$$
+   Applying Theorem 1 to the $n_g^{\text{obs}}$ updated events and bounding pending errors by $K_{\text{pending}, g} \le \Delta_{\text{delay}}$:
+   $$\left| \frac{1}{T_g} \sum_{i=1}^{T_g} e_{i, g} - \alpha \right| \le \frac{1 + \eta}{\eta \cdot T_g} + \frac{\Delta_{\text{delay}}}{T_g}$$
+
+**Implication for Real-World Systems:**
+For any finite, fixed feedback latency $\Delta_{\text{delay}} < \infty$, the asymptotic tracking error still vanishes as $\mathcal{O}((\eta^{-1} + \Delta_{\text{delay}})/T_g) \to 0$. However, during transient phases or short evaluation windows where $T_g \approx \Delta_{\text{delay}}$, pending feedback creates empirical coverage lag. The V4 benchmark protocol explicitly evaluates performance across $\Delta_{\text{delay}} \in \{0, 10, 50\}$ to quantify this transient lag.
 
 ---
 

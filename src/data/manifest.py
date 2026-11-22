@@ -92,8 +92,13 @@ class DataManifest:
             items=items,
         )
 
-    def validate_split_integrity(self, num_classes: Optional[int] = None) -> Dict[str, Any]:
-        """Verify strict schema validity and disjointness properties (R3-04)."""
+    def validate_split_integrity(
+        self,
+        num_classes: Optional[int] = None,
+        data_mode: str = "real",
+        base_dir: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Verify strict schema validity, non-synthetic provenance, and disjointness properties (R3-04, R4-05)."""
         errors: List[str] = []
 
         # 1. Non-empty validation
@@ -105,7 +110,22 @@ class DataManifest:
                 "total_samples": 0,
             }
 
-        # 2. Unique sample IDs
+        # 2. Strict authenticity check: Reject synthetic fixtures in real mode (R4-01, R4-05)
+        if data_mode == "real":
+            if "fixture" in self.dataset_version.lower() or "quarantined" in self.dataset_version.lower():
+                errors.append(f"Synthetic fixture version '{self.dataset_version}' is strictly forbidden in real mode.")
+
+            synthetic_spk_prefixes = ("spk_cmu_mosei_", "spk_meld_", "spk_trn_", "spk_val_")
+            synthetic_vid_prefixes = ("vid_trn_", "vid_val_", "vid_cal_", "vid_tst_")
+            for item in self.items:
+                if item.speaker_id.startswith(synthetic_spk_prefixes):
+                    errors.append(f"Synthetic speaker pattern '{item.speaker_id}' detected in real-mode manifest.")
+                    break
+                if item.video_id.startswith(synthetic_vid_prefixes):
+                    errors.append(f"Synthetic video pattern '{item.video_id}' detected in real-mode manifest.")
+                    break
+
+        # 3. Unique sample IDs
         seen_sample_ids: Set[str] = set()
         duplicate_sample_ids: Set[str] = set()
         for item in self.items:
@@ -116,7 +136,7 @@ class DataManifest:
         if duplicate_sample_ids:
             errors.append(f"Duplicate sample IDs detected: {sorted(list(duplicate_sample_ids))[:10]}")
 
-        # 3. Allowed splits & label ranges
+        # 4. Allowed splits & label ranges
         allowed_splits = {"train", "val", "cal", "test"}
         speakers_by_split: Dict[str, Set[str]] = {}
         videos_by_split: Dict[str, Set[str]] = {}
@@ -137,7 +157,7 @@ class DataManifest:
                 dialogues_by_split.setdefault(s, set()).add(item.dialogue_id)
             counts_by_split[s] = counts_by_split.get(s, 0) + 1
 
-        # 4. Overlap detection
+        # 5. Overlap detection
         splits = list(counts_by_split.keys())
         speaker_overlaps: Dict[str, List[str]] = {}
         video_overlaps: Dict[str, List[str]] = {}
@@ -159,12 +179,33 @@ class DataManifest:
                     if diag_inter:
                         dialogue_overlaps[f"{s1}_vs_{s2}"] = sorted(list(diag_inter))
 
-        if speaker_overlaps:
+        # Overlap rules: MELD allows speaker overlap due to recurring characters across dialogue scenes, but other datasets require speaker-disjoint splits.
+        if self.dataset_name != "meld" and speaker_overlaps:
             errors.append(f"Speaker cross-split leakage: {speaker_overlaps}")
         if video_overlaps:
             errors.append(f"Video cross-split leakage: {video_overlaps}")
         if dialogue_overlaps:
             errors.append(f"Dialogue cross-split leakage: {dialogue_overlaps}")
+
+        # 6. Feature checksum verification if base_dir provided
+        if base_dir and os.path.exists(base_dir) and data_mode == "real":
+            import hashlib
+            for item in self.items[:50]:  # Verify pilot subset
+                for mod, rel_path in item.feature_files.items():
+                    full_p = os.path.join(base_dir, rel_path)
+                    if not os.path.exists(full_p):
+                        errors.append(f"Feature file not found: {full_p}")
+                        break
+                    expected_sha = item.feature_checksums.get(mod)
+                    if expected_sha:
+                        h = hashlib.sha256()
+                        with open(full_p, "rb") as f:
+                            while chunk := f.read(65536):
+                                h.update(chunk)
+                        actual_sha = h.hexdigest()
+                        if actual_sha != expected_sha:
+                            errors.append(f"SHA-256 mismatch for {full_p}: expected {expected_sha[:12]}, got {actual_sha[:12]}")
+                            break
 
         is_valid = (len(errors) == 0)
 
