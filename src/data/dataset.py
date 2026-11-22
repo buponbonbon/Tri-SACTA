@@ -41,6 +41,7 @@ class MultimodalDataset(Dataset):
         num_samples: int = 500,
         seed: int = 42,
         data_mode: str = "synthetic",
+        manifest: Optional[Any] = None,
     ):
         super().__init__()
         self.features_dir = features_dir
@@ -49,6 +50,7 @@ class MultimodalDataset(Dataset):
         self.data_mode = data_mode.lower()
         self.num_classes = config.get("model", {}).get("num_classes", 7)
         self.seed = seed
+        self.manifest = manifest
 
         feats_cfg = config.get("features", {})
         self.dims = {
@@ -93,6 +95,22 @@ class MultimodalDataset(Dataset):
             if len(meta) != n:
                 raise ValueError(f"Mismatch between labels count ({n}) and meta count ({len(meta)}) in {split_dir}")
 
+            # V5-04: Manifest-to-tensor row join and sample alignment validation
+            manifest = self.manifest
+            if manifest is None and self.config.get("dataset", {}).get("manifest_path"):
+                from src.data.manifest import DataManifest
+                m_path = self.config["dataset"]["manifest_path"]
+                if os.path.exists(m_path):
+                    manifest = DataManifest.load_json(m_path)
+
+            if manifest is not None:
+                split_manifest_items = [it for it in manifest.items if it.split == self.split]
+                if len(split_manifest_items) != n:
+                    raise ValueError(
+                        f"[FAIL-CLOSED] Manifest-to-cache row count mismatch in split '{self.split}': "
+                        f"manifest has {len(split_manifest_items)} items, cache has {n} rows in {split_dir}"
+                    )
+
             for i in range(n):
                 lbl = int(labels[i])
                 if not (0 <= lbl < self.num_classes):
@@ -103,6 +121,28 @@ class MultimodalDataset(Dataset):
                 spk_id = sample_meta.get("speaker_id")
                 if not spk_id:
                     raise ValueError(f"Missing speaker_id in metadata for sample {i} of {split_dir}")
+
+                # Reject fixture patterns in real mode
+                if seg_id.startswith("fixture_") or spk_id.startswith(("fixture_spk_", "spk_trn_", "spk_val_")):
+                    raise ValueError(f"Synthetic fixture pattern detected in real cache sample {i}: {seg_id}/{spk_id}")
+
+                if manifest is not None:
+                    m_item = split_manifest_items[i]
+                    if seg_id != m_item.sample_id:
+                        raise ValueError(
+                            f"[FAIL-CLOSED] Utterance ID mismatch at row {i} of split '{self.split}': "
+                            f"cache segment_id='{seg_id}' vs manifest sample_id='{m_item.sample_id}'"
+                        )
+                    if spk_id != m_item.speaker_id:
+                        raise ValueError(
+                            f"[FAIL-CLOSED] Speaker ID mismatch at row {i} of split '{self.split}': "
+                            f"cache speaker_id='{spk_id}' vs manifest speaker_id='{m_item.speaker_id}'"
+                        )
+                    if lbl != m_item.mapped_label:
+                        raise ValueError(
+                            f"[FAIL-CLOSED] Label mismatch at row {i} of split '{self.split}': "
+                            f"cache label={lbl} vs manifest mapped_label={m_item.mapped_label}"
+                        )
 
                 sample = {
                     "label": lbl,
@@ -117,7 +157,7 @@ class MultimodalDataset(Dataset):
                         sample[mod] = torch.zeros(self.dims[mod], dtype=torch.float16)
                         sample[f"{mod}_available"] = False
                 self.samples.append(sample)
-            logger.info(f"Successfully loaded {len(self.samples)} real verified samples from {split_dir}")
+            logger.info(f"Successfully loaded and manifest-verified {len(self.samples)} real samples from {split_dir}")
 
         else:
             # Deterministic synthetic debug generator (AUD-14: stable hash independent of PYTHONHASHSEED)
@@ -239,6 +279,7 @@ def get_dataloaders(
     data_mode: str = "synthetic",
 ) -> Dict[str, DataLoader]:
     """Factory creating DataLoaders with explicit data_mode and mandatory manifest validation."""
+    manifest = None
     if data_mode == "real":
         manifest_path = config.get("dataset", {}).get("manifest_path")
         if not manifest_path or not os.path.exists(manifest_path):
@@ -273,6 +314,7 @@ def get_dataloaders(
             num_samples=sample_counts[split],
             seed=seed,
             data_mode=data_mode,
+            manifest=manifest,
         )
         dataloaders[split] = DataLoader(
             ds,

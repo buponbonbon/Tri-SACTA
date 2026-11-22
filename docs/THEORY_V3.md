@@ -132,22 +132,46 @@ $$\blacksquare$$
 
 **Significance:** As $n_g \to \infty$, the miscoverage error on mask group $g$ converges to $\alpha$ at rate $\mathcal{O}(1 / (\eta \cdot n_g))$, holding for any arbitrary data stream without distribution assumptions.
 
-### 4.3. Feedback Delay Analysis: Immediate Guarantee vs Delayed Implementation
+### 4.3. Feedback Delay Analysis: Exact Accounting Identity and Retraction of Invalid Bound
 
-The pathwise telescoping bound of Theorem 1 assumes **immediate label feedback** ($\Delta_{\text{delay}} = 0$), where each true label $y_t$ arrives and updates $\alpha_{t+1, g}$ before prediction set emission at step $t+1$.
+> [!CAUTION] Mathematical Rectification (V5-06)
+> The previously stated bound $|\bar{e}_{T_g} - \alpha| \le \frac{1 + \eta}{\eta \cdot T_g} + \frac{\Delta_{\text{delay}}}{T_g}$ is **mathematically invalid** for projected controllers under delayed feedback. An independent minimal reproduction (Audit Section 5) demonstrated that for $\eta=0.01, \alpha=0.10, \Delta=10, T=10{,}000$, the empirical tracking error gap is $0.2237$ (exceeding the claimed $0.0111$ by 20x). The invalid claim is formally retracted.
 
-In practical streaming deployments with **delayed feedback** ($\Delta_{\text{delay}} > 0$):
-1. Let $T_g$ be the total number of events emitted for mask group $g$.
-2. At time step $T$, let $n_g^{\text{obs}}$ be the number of observed/matured labels received and processed by the controller, and let $K_{\text{pending}, g} = T_g - n_g^{\text{obs}}$ be the number of pending labels currently in the FIFO delay buffer.
-3. Because the maximum buffer capacity is bounded by the delay parameter $\Delta_{\text{delay}}$, we have:
-   $$0 \le K_{\text{pending}, g} \le \min(\Delta_{\text{delay}}, T_g)$$
-4. The cumulative miscoverage over all $T_g$ emitted events satisfies:
-   $$\sum_{i=1}^{T_g} e_{i, g} = \sum_{j=1}^{n_g^{\text{obs}}} e_{j, g} + \sum_{k=1}^{K_{\text{pending}, g}} e_{k, g}$$
-   Applying Theorem 1 to the $n_g^{\text{obs}}$ updated events and bounding pending errors by $K_{\text{pending}, g} \le \Delta_{\text{delay}}$:
-   $$\left| \frac{1}{T_g} \sum_{i=1}^{T_g} e_{i, g} - \alpha \right| \le \frac{1 + \eta}{\eta \cdot T_g} + \frac{\Delta_{\text{delay}}}{T_g}$$
+#### 1. Exact Accounting Identity with Projection Residuals
+Let $N$ be the total emitted predictions, and let $n$ be the matured/observed labels ($n = N - K$, where $0 \le K \le \Delta$ is the number of pending labels in the FIFO buffer).
+For fixed step $\eta > 0$ and projection $a_j = \Pi_{[-\eta, 1+\eta]}\big(a_{j-1} + \eta(\alpha - e_j)\big)$, let $c_j = a_j - \big(a_{j-1} + \eta(\alpha - e_j)\big)$ denote the signed projection/clipping residual.
 
-**Implication for Real-World Systems:**
-For any finite, fixed feedback latency $\Delta_{\text{delay}} < \infty$, the asymptotic tracking error still vanishes as $\mathcal{O}((\eta^{-1} + \Delta_{\text{delay}})/T_g) \to 0$. However, during transient phases or short evaluation windows where $T_g \approx \Delta_{\text{delay}}$, pending feedback creates empirical coverage lag. The V4 benchmark protocol explicitly evaluates performance across $\Delta_{\text{delay}} \in \{0, 10, 50\}$ to quantify this transient lag.
+Then the exact algebraic identity for each matured step is:
+$$\alpha - e_j = \frac{a_j - a_{j-1}}{\eta} - \frac{c_j}{\eta}$$
+
+Summing over all $n$ observed labels:
+$$\sum_{j=1}^n (\alpha - e_j) = \frac{a_n - a_0}{\eta} - \frac{1}{\eta}\sum_{j=1}^n c_j \implies \sum_{j=1}^n e_j - n\alpha = \frac{a_0 - a_n}{\eta} + \frac{1}{\eta}\sum_{j=1}^n c_j$$
+
+For the full sequence of $N$ emitted predictions, the cumulative error decomposes into observed and pending terms:
+$$\sum_{i=1}^N e_i - N\alpha = \left(\sum_{j=1}^n e_j - n\alpha\right) + \sum_{k=1}^K (e_{n+k} - \alpha) = \frac{a_0 - a_n}{\eta} + \frac{1}{\eta}\sum_{j=1}^n c_j + \sum_{k=1}^K (e_{n+k} - \alpha)$$
+
+Dividing both sides by $N$ and applying the triangle inequality:
+$$\left| \frac{1}{N} \sum_{i=1}^N e_i - \alpha \right| \le \frac{|a_n - a_0|}{\eta N} + \frac{\sum_{j=1}^n |c_j|}{\eta N} + \frac{K}{N}$$
+
+#### 2. Why Delayed Feedback Breaks Boundary Protection
+Under immediate feedback ($\Delta = 0$), $a_t \le 0 \implies \mathcal{C}_t = \mathcal{Y} \implies e_t = 0$, immediately increasing $a_{t+1} = a_t + \eta\alpha > a_t$ on the very next step, guaranteeing $a_t \ge -\eta$ without clipping ($c_j = 0$).
+
+Under delayed feedback ($\Delta > 0$), however, emissions and updates are decoupled:
+1. When $a_t$ reaches the boundary $\le 0$, the controller begins emitting full sets ($e_t = 0$).
+2. However, the feedback arriving at time $t, \dots, t + \Delta$ was generated in the past, where old errors could have been $e_{t-\Delta} = 1$.
+3. These stale errors continue pushing the raw state outward, forcing repeated projection clipping $c_j \ne 0$.
+4. Under persistent drift, the cumulative clipping residual $\sum_{j=1}^n |c_j|$ grows linearly with $N$, creating an irreducible empirical tracking gap.
+
+#### 3. Empirical Verification of the Diagnostic Accounting Identity
+The independent minimal controller reproduction confirms the exactness of the residual term:
+
+| Delay $\Delta$ | Mean Error $\bar{e}$ | Gap $|\bar{e} - 0.1|$ | Old Claimed Bound | Cumulative Clipping Residual $\sum |c_j|$ | Exact Identity Upper Bound |
+|---|---|---|---|---|---|
+| 0 | 0.1010 | 0.0010 | 0.0101 | 0.000 | 0.0101 |
+| 10 | 0.3237 | 0.2237 | 0.0111 (Violated) | 22.276 | 0.2339 |
+| 50 | 0.4609 | 0.3609 | 0.0151 (Violated) | 35.991 | 0.3750 |
+
+**Conclusion:** Both delayed-feedback ACI and dynamic step-size heuristic $\eta_t$ are **empirical tracking algorithms**, not provably valid coverage estimators. In the paper, coverage performance across delays $\Delta \in \{0, 10, 50\}$ is reported as an empirical empirical trade-off under drift, not as an asymptotic guarantee.
 
 ---
 

@@ -325,9 +325,19 @@ class TriSACTA:
                         reg_loss = reg_loss + (p - self.source_state[full_name].to(device)).pow(2).sum()
         return reg_loss
 
-    def get_shift_velocity(self) -> Dict[str, float]:
-        """Compute per-modality shift velocity Δd_t."""
+    def get_shift_velocity(self) -> float:
+        """Compute scalar average shift velocity Δd_t across all modalities (V5-07)."""
         return self.detector.compute_shift_velocity()
+
+    def get_per_modality_shift_velocity(self) -> Dict[str, float]:
+        """Compute per-modality shift velocity Δd_t^(m) for detailed telemetry."""
+        per_mod_vel = {}
+        for m, history in self.detector._shift_history.items():
+            if len(history) >= 2:
+                per_mod_vel[m] = abs(history[-1] - history[-2])
+            else:
+                per_mod_vel[m] = 0.0
+        return per_mod_vel
 
     def get_cross_modal_disagreement(
         self,

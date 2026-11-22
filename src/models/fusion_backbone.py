@@ -186,20 +186,30 @@ class MultimodalFusionModel(nn.Module):
         self.classifier_norm = nn.LayerNorm(self.fusion_dim)
         self.classifier = nn.Linear(self.fusion_dim, self.num_classes)
 
+        # Telemetry counters for fallback / isolation policy (V5-11)
+        self.fallback_count: int = 0
+        self.abstain_count: int = 0
+
         total, trainable = self.get_total_params()
         logger.info(f"MultimodalFusionModel initialized: {total:,} total params, {trainable:,} trainable ({trainable/1e6:.2f} M)")
 
     def forward(
         self,
         features: Dict[str, torch.Tensor],
-        modality_mask: Dict[str, torch.Tensor],
+        modality_mask: Optional[Dict[str, torch.Tensor]] = None,
         reliability_weights: Optional[Dict[str, torch.Tensor]] = None,
         effective_mask: Optional[Dict[str, torch.Tensor]] = None,
+        fallback_to_presence_on_all_rejected: bool = False,
     ) -> Dict[str, Any]:
-        """Forward pass with strict mask gating and hard effective mask isolation (R3-07)."""
+        """Forward pass with strict mask gating and hard effective mask isolation (R3-07, V5-11)."""
         device = next(self.parameters()).device
-        present_mods = [m for m in MODALITY_ORDER if m in features]
-        B = features[present_mods[0]].size(0)
+        # Sanitize input features against NaN / Inf values (V5-11)
+        clean_features = {
+            m: torch.nan_to_num(v.to(device), nan=0.0, posinf=1e4, neginf=-1e4)
+            for m, v in features.items()
+        }
+        present_mods = [m for m in MODALITY_ORDER if m in clean_features]
+        B = clean_features[present_mods[0]].size(0)
 
         # 1. Project and adapt each available modality
         projected: Dict[str, torch.Tensor] = {}
@@ -207,8 +217,8 @@ class MultimodalFusionModel(nn.Module):
         per_modality_logits: Dict[str, torch.Tensor] = {}
 
         for m in MODALITY_ORDER:
-            if m in features:
-                x = features[m].to(device)
+            if m in clean_features:
+                x = clean_features[m]
                 proj = self.projections[m](x)
                 ad = self.adapters[m](proj)
                 projected[m] = proj
@@ -228,14 +238,14 @@ class MultimodalFusionModel(nn.Module):
 
         for m in MODALITY_ORDER:
             token_list.append(adapted[m])
-            if m in modality_mask:
+            if modality_mask is not None and m in modality_mask:
                 p_mask = modality_mask[m].to(device).bool().view(B)
             else:
-                p_mask = torch.ones(B, dtype=torch.bool, device=device) if m in features else torch.zeros(B, dtype=torch.bool, device=device)
+                p_mask = torch.ones(B, dtype=torch.bool, device=device) if m in clean_features else torch.zeros(B, dtype=torch.bool, device=device)
             presence_mask_list.append(p_mask)
 
             # Hard gating mask (R3-07): isolates corrupted and missing tokens from attention
-            if m in active_mask_source:
+            if active_mask_source is not None and m in active_mask_source:
                 a_mask = active_mask_source[m].to(device).bool().view(B)
             else:
                 a_mask = p_mask
@@ -245,9 +255,19 @@ class MultimodalFusionModel(nn.Module):
         presence_mask = torch.stack(presence_mask_list, dim=1) # (B, M) bool
         attn_mask = torch.stack(attn_mask_list, dim=1)         # (B, M) bool
 
-        # If all modalities are masked out by effective_mask for a sample, fall back to presence_mask
+        # V5-11: Explicit Fallback and Abstain Policy
+        # When all modalities are rejected by effective_mask for a sample:
         all_attn_masked = (~attn_mask).all(dim=1, keepdim=True)
-        attn_mask = torch.where(all_attn_masked, presence_mask, attn_mask)
+        fallback_applied = torch.zeros_like(all_attn_masked)
+        if all_attn_masked.any():
+            if fallback_to_presence_on_all_rejected:
+                # Explicit fallback: unmask physical presence and increment fallback counter
+                attn_mask = torch.where(all_attn_masked, presence_mask, attn_mask)
+                fallback_applied = all_attn_masked.clone()
+                self.fallback_count += int(all_attn_masked.sum().item())
+            else:
+                # Strict channel isolation: do not leak corrupted channels; sample is abstained
+                self.abstain_count += int(all_attn_masked.sum().item())
 
         # Zero out inactive tokens initially
         tokens = tokens * attn_mask.unsqueeze(-1).float()
@@ -297,6 +317,8 @@ class MultimodalFusionModel(nn.Module):
             "per_modality_logits": per_modality_logits,
             "per_modality_features": per_modality_features,
             "norm_weights": norm_weights,
+            "all_modalities_rejected": all_attn_masked.squeeze(1),
+            "fallback_applied": fallback_applied.squeeze(1),
         }
 
     def get_adaptable_params(self, active_modalities: Optional[List[str]] = None) -> List[nn.Parameter]:

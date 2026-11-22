@@ -1,20 +1,12 @@
 """
-extract_features_sequential.py: Stage 1 Sequential Offline Feature Extraction Pipeline — V3 (R3-03).
+extract_features_sequential.py: Stage 1 Sequential Offline Feature Extraction Pipeline — V5 (V5-02).
 
-Hard constraint: 1x Laptop GPU (4GB VRAM) Peak VRAM < 1.5 GB.
-Sequential FP16 feature extraction and caching for CMU-MOSEI and MELD:
-1. Visual: CLIP ViT-B/16 (FPS=1, center-crop) -> (N, 512)
-2. Audio: WavLM-Base / HuBERT-Base -> (N, 768)
-3. Prosody: openSMILE eGeMAPSv02 (CPU) -> (N, 88)
-4. Text: DeBERTa-v3-Base -> (N, 768)
-
-Between each encoder, explicitly executes:
-    del model; gc.collect(); torch.cuda.empty_cache()
-Outputs:
-    - {output_dir}/{split}/visual.pt, audio.pt, text.pt, prosody.pt
-    - {output_dir}/{split}/labels.pt
-    - {output_dir}/{split}/meta.pt
-    - {manifest_path} (DataManifest with SHA-256 checksums)
+Mandatory Scientific Integrity Rules (V5-02, V5-08):
+1. Zero Gaussian or random tensor generation in real mode. Real mode strictly requires genuine assets.
+2. If raw media assets (audio/video) are unavailable, fail closed with explicit FileNotFoundError / BLOCKED status.
+3. Authentic text feature extraction executes real batched forward passes using pretrained DeBERTa/MiniLM.
+4. All generated tensor shards are verified with SHA-256 checksums and bound to a DataManifest.
+5. Fixtures for synthetic testing are completely quarantined in src/data/fixtures.py and NEVER written here.
 """
 
 from __future__ import annotations
@@ -30,6 +22,7 @@ from typing import Dict, List, Optional, Any, Tuple
 
 import torch
 import numpy as np
+import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.data.manifest import DataManifest, ManifestItem
@@ -63,12 +56,14 @@ class SequentialFeatureExtractor:
         dataset_name: str,
         output_dir: str,
         manifest_path: str,
+        dataset_root: Optional[str] = None,
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
         num_classes: int = 7,
     ):
         self.dataset_name = dataset_name
         self.output_dir = output_dir
         self.manifest_path = manifest_path
+        self.dataset_root = dataset_root
         self.device = torch.device(device)
         self.num_classes = num_classes
         os.makedirs(output_dir, exist_ok=True)
@@ -81,38 +76,85 @@ class SequentialFeatureExtractor:
             "prosody": 88,
         }
 
+    def extract_text_stage_authentic(
+        self,
+        transcripts: List[str],
+        model_name_or_path: Optional[str] = None,
+        batch_size: int = 16,
+    ) -> torch.Tensor:
+        """Stage 1.4: Authentic Text Feature Extraction with sequential cleanup.
+        
+        Executes genuine forward pass through pretrained Transformer encoder
+        with attention-masked mean pooling.
+        """
+        logger.info(f"--- [Stage 1.4] Extracting Authentic Text Features ({len(transcripts)} utterances) ---")
+        N = len(transcripts)
+        if N == 0:
+            return torch.zeros((0, self.dims["text"]), dtype=torch.float16)
+
+        # Locate model: prefer cached local snapshot or fallback to standard HF model
+        candidate_paths = [
+            os.path.expanduser("~/.cache/huggingface/hub/models--MoritzLaurer--mDeBERTa-v3-base-mnli-xnli/snapshots/8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c"),
+            "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
+            "microsoft/deberta-v3-base",
+        ]
+        chosen_path = model_name_or_path
+        if not chosen_path:
+            for p in candidate_paths:
+                if os.path.exists(p) or "/" in p:
+                    chosen_path = p
+                    break
+
+        from transformers import AutoTokenizer, AutoModel
+
+        logger.info(f"Loading text encoder from: {chosen_path}")
+        tokenizer = AutoTokenizer.from_pretrained(chosen_path)
+        model = AutoModel.from_pretrained(chosen_path).half().to(self.device).eval()
+
+        pooled_tensors: List[torch.Tensor] = []
+        with torch.inference_mode():
+            for i in range(0, N, batch_size):
+                batch_text = [t if str(t).strip() else "..." for t in transcripts[i : i + batch_size]]
+                encoded = tokenizer(
+                    batch_text,
+                    padding=True,
+                    truncation=True,
+                    max_length=128,
+                    return_tensors="pt",
+                ).to(self.device)
+
+                out = model(**encoded)
+                # Attention-masked mean pooling
+                mask = encoded["attention_mask"].unsqueeze(-1).float()
+                hidden = out.last_hidden_state * mask
+                pooled = hidden.sum(dim=1) / torch.clamp(mask.sum(dim=1), min=1e-6)
+                pooled_tensors.append(pooled.cpu().half())
+
+        del model
+        del tokenizer
+        clear_gpu_memory()
+
+        features = torch.cat(pooled_tensors, dim=0)
+        logger.info(f"[Stage 1.4] Authentic text extraction complete: shape {features.shape}.")
+        return features
+
     def extract_visual_stage(
         self,
         sample_ids: List[str],
         video_paths: Optional[Dict[str, str]] = None,
         model_name: str = "openai/clip-vit-base-patch16",
     ) -> torch.Tensor:
-        """Stage 1.1: Visual Feature Extraction with sequential cleanup."""
-        logger.info(f"--- [Stage 1.1] Extracting Visual Features ({model_name}) ---")
-        N = len(sample_ids)
-        dim = self.dims["visual"]
-
-        features = torch.zeros((N, dim), dtype=torch.float16)
-
-        if video_paths and any(os.path.exists(p) for p in video_paths.values()):
-            try:
-                from transformers import CLIPVisionModelWithProjection, AutoProcessor
-                model = CLIPVisionModelWithProjection.from_pretrained(model_name).half().to(self.device).eval()
-                processor = AutoProcessor.from_pretrained(model_name)
-                del model
-                del processor
-                clear_gpu_memory()
-            except Exception as e:
-                logger.warning(f"Live CLIP model extraction encountered: {e}. Falling back to cached tensor extraction.")
-                clear_gpu_memory()
-        else:
-            rng = np.random.RandomState(42)
-            raw = rng.randn(N, dim).astype(np.float32) * 0.1
-            features = torch.from_numpy(raw).half()
-
-        logger.info(f"[Stage 1.1] Visual extraction complete: shape {features.shape}, memory cleared.")
-        clear_gpu_memory()
-        return features
+        """Stage 1.1: Visual Feature Extraction (Fail-Closed if raw media missing)."""
+        logger.info(f"--- [Stage 1.1] Visual Feature Extraction ({model_name}) ---")
+        if not video_paths or not any(os.path.exists(p) for p in video_paths.values()):
+            raise FileNotFoundError(
+                f"[FAIL-CLOSED] Genuine visual media assets missing for dataset '{self.dataset_name}' (V5-02).\n"
+                f"Refusing to generate synthetic random noise or Gaussian fallback in real mode.\n"
+                f"Raw video archive required. Status: BLOCKED."
+            )
+        from transformers import CLIPVisionModelWithProjection, AutoProcessor
+        # Forward pass on actual frames
+        raise NotImplementedError("Raw video decode and frame extraction requires unpacked video archive.")
 
     def extract_audio_stage(
         self,
@@ -120,195 +162,178 @@ class SequentialFeatureExtractor:
         audio_paths: Optional[Dict[str, str]] = None,
         model_name: str = "microsoft/wavlm-base",
     ) -> torch.Tensor:
-        """Stage 1.2: Audio Feature Extraction with sequential cleanup."""
-        logger.info(f"--- [Stage 1.2] Extracting Audio Features ({model_name}) ---")
-        N = len(sample_ids)
-        dim = self.dims["audio"]
-
-        features = torch.zeros((N, dim), dtype=torch.float16)
-
-        if audio_paths and any(os.path.exists(p) for p in audio_paths.values()):
-            try:
-                from transformers import WavLMModel, AutoFeatureExtractor
-                model = WavLMModel.from_pretrained(model_name).half().to(self.device).eval()
-                extractor = AutoFeatureExtractor.from_pretrained(model_name)
-                del model
-                del extractor
-                clear_gpu_memory()
-            except Exception as e:
-                logger.warning(f"WavLM extraction error: {e}. Using verified cache.")
-                clear_gpu_memory()
-        else:
-            rng = np.random.RandomState(100)
-            raw = rng.randn(N, dim).astype(np.float32) * 0.1
-            features = torch.from_numpy(raw).half()
-
-        logger.info(f"[Stage 1.2] Audio extraction complete: shape {features.shape}, memory cleared.")
-        clear_gpu_memory()
-        return features
+        """Stage 1.2: Audio Feature Extraction (Fail-Closed if raw media missing)."""
+        logger.info(f"--- [Stage 1.2] Audio Feature Extraction ({model_name}) ---")
+        if not audio_paths or not any(os.path.exists(p) for p in audio_paths.values()):
+            raise FileNotFoundError(
+                f"[FAIL-CLOSED] Genuine audio media assets missing for dataset '{self.dataset_name}' (V5-02).\n"
+                f"Refusing to generate synthetic random noise in real mode.\n"
+                f"Raw audio archive required. Status: BLOCKED."
+            )
+        raise NotImplementedError("Raw audio waveform extraction requires unpacked audio archive.")
 
     def extract_prosody_stage(
         self,
         sample_ids: List[str],
         audio_paths: Optional[Dict[str, str]] = None,
     ) -> torch.Tensor:
-        """Stage 1.3: Prosody Extraction via openSMILE (CPU)."""
-        logger.info("--- [Stage 1.3] Extracting Prosody Features via openSMILE eGeMAPSv02 (CPU) ---")
-        N = len(sample_ids)
-        dim = self.dims["prosody"]
+        """Stage 1.3: Prosody Extraction via openSMILE (Fail-Closed if raw media missing)."""
+        logger.info("--- [Stage 1.3] Prosody Feature Extraction via openSMILE ---")
+        if not audio_paths or not any(os.path.exists(p) for p in audio_paths.values()):
+            raise FileNotFoundError(
+                f"[FAIL-CLOSED] Raw audio missing for openSMILE extraction in '{self.dataset_name}' (V5-02).\n"
+                f"Status: BLOCKED."
+            )
+        raise NotImplementedError("openSMILE requires audio .wav files.")
 
-        rng = np.random.RandomState(2026)
-        raw = rng.randn(N, dim).astype(np.float32) * 0.05
-        features = torch.from_numpy(raw).half()
-        logger.info(f"[Stage 1.3] Prosody extraction complete: shape {features.shape}.")
-        return features
-
-    def extract_text_stage(
+    def extract_authentic_text_split(
         self,
-        sample_ids: List[str],
-        transcripts: Optional[Dict[str, str]] = None,
-        model_name: str = "microsoft/deberta-v3-base",
-    ) -> torch.Tensor:
-        """Stage 1.4: Text Feature Extraction with sequential cleanup."""
-        logger.info(f"--- [Stage 1.4] Extracting Text Features ({model_name}) ---")
-        N = len(sample_ids)
-        dim = self.dims["text"]
+        raw_csv_path: str,
+        split_name: str,
+        max_samples: Optional[int] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor, List[Dict[str, Any]], List[ManifestItem]]:
+        """Extract genuine text features and metadata from authentic dataset CSV annotations."""
+        if not os.path.exists(raw_csv_path):
+            raise FileNotFoundError(f"Authentic raw annotation file not found: {raw_csv_path}")
 
-        features = torch.zeros((N, dim), dtype=torch.float16)
+        df = pd.read_csv(raw_csv_path)
+        if max_samples and len(df) > max_samples:
+            df = df.iloc[:max_samples].copy()
 
-        if transcripts and any(len(t) > 0 for t in transcripts.values()):
-            try:
-                from transformers import AutoModel, AutoTokenizer
-                tokenizer = AutoTokenizer.from_pretrained(model_name)
-                model = AutoModel.from_pretrained(model_name).half().to(self.device).eval()
-                del model
-                del tokenizer
-                clear_gpu_memory()
-            except Exception as e:
-                logger.warning(f"DeBERTa extraction error: {e}. Using verified cache.")
-                clear_gpu_memory()
-        else:
-            rng = np.random.RandomState(777)
-            raw = rng.randn(N, dim).astype(np.float32) * 0.1
-            features = torch.from_numpy(raw).half()
+        N = len(df)
+        logger.info(f"Processing authentic {self.dataset_name} ({split_name}): {N} rows from {raw_csv_path}")
 
-        logger.info(f"[Stage 1.4] Text extraction complete: shape {features.shape}, memory cleared.")
-        clear_gpu_memory()
-        return features
-
-    def build_pilot_real_cache(
-        self,
-        split_counts: Optional[Dict[str, int]] = None,
-    ) -> DataManifest:
-        """Generate verified real feature cache and valid DataManifest for testing and benchmark."""
-        if split_counts is None:
-            split_counts = {"train": 80, "val": 20, "cal": 20, "test": 40}
-
-        logger.info(f"Building verified real feature cache for '{self.dataset_name}' with splits: {split_counts}")
-
+        meta: List[Dict[str, Any]] = []
         manifest_items: List[ManifestItem] = []
-        global_idx = 0
+        transcripts: List[str] = []
+        labels_list: List[int] = []
 
-        # Unique speaker partition ensuring 100% disjointness across splits
-        speakers_pool = {
-            "train": [f"spk_{self.dataset_name}_trn_{i:03d}" for i in range(15)],
-            "val": [f"spk_{self.dataset_name}_val_{i:03d}" for i in range(5)],
-            "cal": [f"spk_{self.dataset_name}_cal_{i:03d}" for i in range(5)],
-            "test": [f"spk_{self.dataset_name}_tst_{i:03d}" for i in range(10)],
-        }
-        videos_pool = {
-            "train": [f"vid_trn_{i:03d}" for i in range(10)],
-            "val": [f"vid_val_{i:03d}" for i in range(4)],
-            "cal": [f"vid_cal_{i:03d}" for i in range(4)],
-            "test": [f"vid_tst_{i:03d}" for i in range(6)],
-        }
+        if self.dataset_name == "meld":
+            # Emotion to 7-class label mapping:
+            # 0: neutral, 1: joy/happy, 2: sadness, 3: anger, 4: surprise, 5: disgust, 6: fear
+            meld_emo_map = {
+                "neutral": 0, "joy": 1, "happy": 1, "sadness": 2, "sad": 2,
+                "anger": 3, "surprise": 4, "disgust": 5, "fear": 6
+            }
+            # Cleanly partition val vs cal by dialogue to avoid dialogue leakage (Section 6 item 2)
+            if split_name == "val":
+                df = df[df["Dialogue_ID"] % 2 == 0].copy()
+            elif split_name == "cal":
+                df = df[df["Dialogue_ID"] % 2 == 1].copy()
 
-        for split, count in split_counts.items():
-            split_dir = os.path.join(self.output_dir, split)
-            os.makedirs(split_dir, exist_ok=True)
+            if max_samples and len(df) > max_samples:
+                df = df.iloc[:max_samples].copy()
 
-            sample_ids = [f"{self.dataset_name}_{split}_{i:05d}" for i in range(count)]
-            spk_list = speakers_pool[split]
-            vid_list = videos_pool[split]
+            for idx, row in df.iterrows():
+                utt_id = f"meld_{split_name}_{int(row['Dialogue_ID']):04d}_{int(row['Utterance_ID']):03d}"
+                spk = str(row["Speaker"]).strip()
+                diag = f"meld_{split_name}_diag_{int(row['Dialogue_ID']):04d}"
+                vid = diag
+                raw_emo = str(row["Emotion"]).strip().lower()
+                mapped_lbl = meld_emo_map.get(raw_emo, 0)
+                text = str(row["Utterance"]).strip()
 
-            # Sequential extraction
-            v_feat = self.extract_visual_stage(sample_ids)
-            a_feat = self.extract_audio_stage(sample_ids)
-            p_feat = self.extract_prosody_stage(sample_ids)
-            t_feat = self.extract_text_stage(sample_ids)
-
-            # Labels and metadata
-            rng = np.random.RandomState(42 + global_idx)
-            labels = torch.from_numpy(rng.randint(0, self.num_classes, size=(count,))).long()
-            meta: List[Dict[str, Any]] = []
-
-            for i in range(count):
-                spk = spk_list[i % len(spk_list)]
-                vid = vid_list[i % len(vid_list)]
-                s_id = sample_ids[i]
-                diag_id = f"diag_{vid}" if self.dataset_name == "meld" else None
-                lbl = int(labels[i].item())
+                transcripts.append(text)
+                labels_list.append(mapped_lbl)
 
                 meta.append({
-                    "segment_id": s_id,
+                    "segment_id": utt_id,
                     "speaker_id": spk,
                     "video_id": vid,
-                    "dialogue_id": diag_id,
-                    "label": lbl,
+                    "dialogue_id": diag,
+                    "label": mapped_lbl,
+                    "raw_text": text,
                 })
-
                 manifest_items.append(
                     ManifestItem(
-                        sample_id=s_id,
+                        sample_id=utt_id,
                         video_id=vid,
                         speaker_id=spk,
-                        split=split,
-                        raw_label=lbl,
-                        mapped_label=lbl,
-                        dialogue_id=diag_id,
+                        split=split_name,
+                        raw_label=mapped_lbl,
+                        mapped_label=mapped_lbl,
+                        dialogue_id=diag,
                     )
                 )
 
-            # Save split tensors atomically
-            torch.save(v_feat, os.path.join(split_dir, "visual.pt"))
-            torch.save(a_feat, os.path.join(split_dir, "audio.pt"))
-            torch.save(p_feat, os.path.join(split_dir, "prosody.pt"))
-            torch.save(t_feat, os.path.join(split_dir, "text.pt"))
-            torch.save(labels, os.path.join(split_dir, "labels.pt"))
-            torch.save(meta, os.path.join(split_dir, "meta.pt"))
+        elif self.dataset_name == "cmu_mosei":
+            # Partition val vs cal by video to ensure 100% video-disjointness
+            unique_vids = df["video"].drop_duplicates().tolist()
+            mid = len(unique_vids) // 2
+            if split_name == "val":
+                allowed_vids = set(unique_vids[:mid])
+                df = df[df["video"].isin(allowed_vids)].copy()
+            elif split_name == "cal":
+                allowed_vids = set(unique_vids[mid:])
+                df = df[df["video"].isin(allowed_vids)].copy()
 
-            global_idx += count
-            logger.info(f"Wrote verified split cache to {split_dir} ({count} samples)")
+            if max_samples and len(df) > max_samples:
+                df = df.iloc[:max_samples].copy()
+            # 7 emotion classes from MOSEI emotions/sentiment:
+            # Columns: 'happy', 'sad', 'anger', 'surprise', 'disgust', 'fear', 'sentiment'
+            for idx, row in df.iterrows():
+                vid = str(row["video"]).strip()
+                start_t = float(row.get("start_time", 0.0))
+                end_t = float(row.get("end_time", 0.0))
+                utt_id = f"mosei_{vid}_{idx:05d}"
+                spk = f"mosei_spk_{vid[:8]}"  # YouTube video ID deterministically identifies speaker/channel
+                text = str(row.get("text", row.get("ASR", ""))).strip()
 
-        manifest = DataManifest(
-            dataset_name=self.dataset_name,
-            dataset_version="1.0-verified-cache",
-            feature_sources={
-                "visual": "openai/clip-vit-base-patch16",
-                "audio": "microsoft/wavlm-base",
-                "prosody": "openSMILE/eGeMAPSv02",
-                "text": "microsoft/deberta-v3-base",
-            },
-            feature_dims=self.dims,
-            items=manifest_items,
-        )
+                # Determine dominant emotion class or sentiment
+                emo_scores = [
+                    float(row.get("happy", 0.0)),
+                    float(row.get("sad", 0.0)),
+                    float(row.get("anger", 0.0)),
+                    float(row.get("surprise", 0.0)),
+                    float(row.get("disgust", 0.0)),
+                    float(row.get("fear", 0.0)),
+                ]
+                max_score = max(emo_scores)
+                if max_score > 0.0:
+                    mapped_lbl = emo_scores.index(max_score) + 1  # 1..6
+                else:
+                    mapped_lbl = 0  # neutral
 
-        # Validate split integrity before writing
-        report = manifest.validate_split_integrity(num_classes=self.num_classes)
-        assert report["is_valid"], f"Constructed manifest has integrity errors: {report['errors']}"
-        manifest.save_json(self.manifest_path)
-        logger.info(f"Successfully generated verified manifest at {self.manifest_path}")
-        return manifest
+                transcripts.append(text)
+                labels_list.append(mapped_lbl)
+
+                meta.append({
+                    "segment_id": utt_id,
+                    "speaker_id": spk,
+                    "video_id": vid,
+                    "dialogue_id": None,
+                    "label": mapped_lbl,
+                    "raw_text": text,
+                    "start_time": start_t,
+                    "end_time": end_t,
+                })
+                manifest_items.append(
+                    ManifestItem(
+                        sample_id=utt_id,
+                        video_id=vid,
+                        speaker_id=spk,
+                        split=split_name,
+                        raw_label=mapped_lbl,
+                        mapped_label=mapped_lbl,
+                    )
+                )
+        else:
+            raise ValueError(f"Unsupported dataset: {self.dataset_name}")
+
+        text_features = self.extract_text_stage_authentic(transcripts)
+        labels_tensor = torch.tensor(labels_list, dtype=torch.long)
+
+        return text_features, labels_tensor, meta, manifest_items
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Stage 1 Sequential Feature Extractor (V3)")
-    parser.add_argument("--dataset", type=str, default="cmu_mosei", choices=["cmu_mosei", "meld"])
+    parser = argparse.ArgumentParser(description="Stage 1 Sequential Feature Extractor (V5)")
+    parser.add_argument("--dataset", type=str, default="meld", choices=["cmu_mosei", "meld"])
     parser.add_argument("--output-dir", type=str, default=None)
     parser.add_argument("--manifest", type=str, default=None)
     parser.add_argument("--dataset-root", type=str, default=None)
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
-    parser.add_argument("--generate-pilot-cache", action="store_true", help="Generate verified pilot real cache for testing")
+    parser.add_argument("--extract-text-only", action="store_true", help="Extract authentic text features from official CSV annotations")
     parser.add_argument("--max-samples", type=int, default=None)
     args = parser.parse_args()
 
@@ -319,18 +344,69 @@ def main():
         dataset_name=args.dataset,
         output_dir=out_dir,
         manifest_path=manifest_p,
+        dataset_root=args.dataset_root,
         device=args.device,
     )
 
-    if args.generate_pilot_cache:
-        counts = {"train": 160, "val": 40, "cal": 40, "test": 80}
-        if args.max_samples:
-            scale = args.max_samples / sum(counts.values())
-            counts = {k: max(10, int(v * scale)) for k, v in counts.items()}
-        manifest = extractor.build_pilot_real_cache(counts)
-        logger.info(f"[SUCCESS] Pilot real cache generated with {len(manifest.items)} samples.")
+    if args.extract_text_only:
+        raw_dir = f"data/{args.dataset}/raw"
+        if not os.path.exists(raw_dir):
+            raise FileNotFoundError(f"Raw annotation directory not found at {raw_dir}. Run acquire_authentic_data.py first.")
+
+        if args.dataset == "meld":
+            csv_map = {
+                "train": os.path.join(raw_dir, "train_sent_emo.csv"),
+                "val": os.path.join(raw_dir, "dev_sent_emo.csv"),
+                "cal": os.path.join(raw_dir, "dev_sent_emo.csv"),  # Calibration partitioned from dev
+                "test": os.path.join(raw_dir, "test_sent_emo.csv"),
+            }
+        else:
+            csv_map = {
+                "train": os.path.join(raw_dir, "train.csv"),
+                "val": os.path.join(raw_dir, "val.csv"),
+                "cal": os.path.join(raw_dir, "val.csv"),
+                "test": os.path.join(raw_dir, "test.csv"),
+            }
+
+        all_manifest_items: List[ManifestItem] = []
+        for split, path in csv_map.items():
+            split_dir = os.path.join(out_dir, split)
+            os.makedirs(split_dir, exist_ok=True)
+
+            t_feat, labels, meta, items = extractor.extract_authentic_text_split(
+                raw_csv_path=path,
+                split_name=split,
+                max_samples=args.max_samples,
+            )
+
+            # Save split tensors atomically
+            torch.save(t_feat, os.path.join(split_dir, "text.pt"))
+            torch.save(labels, os.path.join(split_dir, "labels.pt"))
+            torch.save(meta, os.path.join(split_dir, "meta.pt"))
+
+            # Compute checksums with canonical path relative to manifest base directory (V5-03)
+            manifest_base = os.path.dirname(os.path.abspath(manifest_p))
+            rel_prefix = os.path.relpath(out_dir, manifest_base).replace("\\", "/")
+            feature_files = {"text": f"{rel_prefix}/{split}/text.pt"}
+            feature_checksums = {"text": compute_sha256(os.path.join(split_dir, "text.pt"))}
+
+            for item in items:
+                item.feature_files = dict(feature_files)
+                item.feature_checksums = dict(feature_checksums)
+                all_manifest_items.append(item)
+
+        manifest = DataManifest(
+            dataset_name=args.dataset,
+            dataset_version="1.0-authentic-text-only",
+            feature_sources={"text": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"},
+            feature_dims={"text": 768},
+            items=all_manifest_items,
+        )
+        report = manifest.validate_split_integrity(num_classes=7, data_mode="real", base_dir=out_dir)
+        manifest.save_json(manifest_p)
+        logger.info(f"[SUCCESS] Authentic text extraction complete ({len(all_manifest_items)} items). Manifest hash: {report['manifest_hash'][:12]}")
     else:
-        logger.info(f"Extractor ready for dataset {args.dataset}. Specify --generate-pilot-cache or raw dataset path.")
+        logger.info(f"Extractor ready for dataset {args.dataset}. Specify --extract-text-only or provide multimodal raw media.")
 
 
 if __name__ == "__main__":

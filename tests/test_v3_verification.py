@@ -155,7 +155,7 @@ def test_v3_manifest_validation_rules():
     print("V3-T10: Manifest schema validation rules verified.")
 
 
-def test_v3_real_loader_fail_closed_without_meta(tmp_path_factory):
+def test_v3_real_loader_fail_closed_without_meta():
     """V3-T09: Real data mode strictly fails closed if meta.pt is missing (never invent IDs)."""
     # Create temporary directory with labels.pt but missing meta.pt
     import tempfile

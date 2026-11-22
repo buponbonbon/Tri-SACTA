@@ -1,0 +1,4572 @@
+{
+  "dataset_name": "cmu_mosei",
+  "dataset_version": "1.0-authentic-text-only",
+  "feature_sources": {
+    "text": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
+  },
+  "feature_dims": {
+    "text": 768
+  },
+  "items": [
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00000",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00001",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00002",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00003",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00004",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3g5yACwYnA_00005",
+      "video_id": "-3g5yACwYnA",
+      "speaker_id": "mosei_spk_-3g5yACw",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3nNcZdcdvU_00006",
+      "video_id": "-3nNcZdcdvU",
+      "speaker_id": "mosei_spk_-3nNcZdc",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3nNcZdcdvU_00007",
+      "video_id": "-3nNcZdcdvU",
+      "speaker_id": "mosei_spk_-3nNcZdc",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-3nNcZdcdvU_00008",
+      "video_id": "-3nNcZdcdvU",
+      "speaker_id": "mosei_spk_-3nNcZdc",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00009",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00010",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00011",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00012",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00013",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00014",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00015",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00016",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00017",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-HwX2H8Z4hY_00018",
+      "video_id": "-HwX2H8Z4hY",
+      "speaker_id": "mosei_spk_-HwX2H8Z",
+      "split": "train",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00019",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00020",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00021",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00022",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00023",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00024",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00025",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-THoVjtIkeU_00026",
+      "video_id": "-THoVjtIkeU",
+      "speaker_id": "mosei_spk_-THoVjtI",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00027",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00028",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00029",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00030",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00031",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00032",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00033",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00034",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00035",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-UuX1xuaiiE_00036",
+      "video_id": "-UuX1xuaiiE",
+      "speaker_id": "mosei_spk_-UuX1xua",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-WXXTNIJcVM_00037",
+      "video_id": "-WXXTNIJcVM",
+      "speaker_id": "mosei_spk_-WXXTNIJ",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-WXXTNIJcVM_00038",
+      "video_id": "-WXXTNIJcVM",
+      "speaker_id": "mosei_spk_-WXXTNIJ",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-WXXTNIJcVM_00039",
+      "video_id": "-WXXTNIJcVM",
+      "speaker_id": "mosei_spk_-WXXTNIJ",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-WXXTNIJcVM_00040",
+      "video_id": "-WXXTNIJcVM",
+      "speaker_id": "mosei_spk_-WXXTNIJ",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-WXXTNIJcVM_00041",
+      "video_id": "-WXXTNIJcVM",
+      "speaker_id": "mosei_spk_-WXXTNIJ",
+      "split": "train",
+      "raw_label": 4,
+      "mapped_label": 4,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00042",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00043",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00044",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00045",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00046",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-ZgjBOA1Yhw_00047",
+      "video_id": "-ZgjBOA1Yhw",
+      "speaker_id": "mosei_spk_-ZgjBOA1",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-a55Q6RWvTA_00048",
+      "video_id": "-a55Q6RWvTA",
+      "speaker_id": "mosei_spk_-a55Q6RW",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-aNfi7CP8vM_00049",
+      "video_id": "-aNfi7CP8vM",
+      "speaker_id": "mosei_spk_-aNfi7CP",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-aNfi7CP8vM_00050",
+      "video_id": "-aNfi7CP8vM",
+      "speaker_id": "mosei_spk_-aNfi7CP",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-aqamKhZ1Ec_00051",
+      "video_id": "-aqamKhZ1Ec",
+      "speaker_id": "mosei_spk_-aqamKhZ",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-aqamKhZ1Ec_00052",
+      "video_id": "-aqamKhZ1Ec",
+      "speaker_id": "mosei_spk_-aqamKhZ",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-aqamKhZ1Ec_00053",
+      "video_id": "-aqamKhZ1Ec",
+      "speaker_id": "mosei_spk_-aqamKhZ",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00054",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00055",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00056",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00057",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00058",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00059",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00060",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-dxfTGcXJoc_00061",
+      "video_id": "-dxfTGcXJoc",
+      "speaker_id": "mosei_spk_-dxfTGcX",
+      "split": "train",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00062",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00063",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00064",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00065",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00066",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00067",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00068",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00069",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00070",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00071",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00072",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00073",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00074",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00075",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00076",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00077",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-egA8-b7-3M_00078",
+      "video_id": "-egA8-b7-3M",
+      "speaker_id": "mosei_spk_-egA8-b7",
+      "split": "train",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_-iRBcNs9oI8_00079",
+      "video_id": "-iRBcNs9oI8",
+      "speaker_id": "mosei_spk_-iRBcNs9",
+      "split": "train",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/train/text.pt"
+      },
+      "feature_checksums": {
+        "text": "2ebf281571b161fe10e4df5bbe459c610debeb876c82058d62f24f58250b1c34"
+      }
+    },
+    {
+      "sample_id": "mosei_--qXJuDtHPw_00000",
+      "video_id": "--qXJuDtHPw",
+      "speaker_id": "mosei_spk_--qXJuDt",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-571d8cVauQ_00001",
+      "video_id": "-571d8cVauQ",
+      "speaker_id": "mosei_spk_-571d8cV",
+      "split": "val",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-571d8cVauQ_00002",
+      "video_id": "-571d8cVauQ",
+      "speaker_id": "mosei_spk_-571d8cV",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-571d8cVauQ_00003",
+      "video_id": "-571d8cVauQ",
+      "speaker_id": "mosei_spk_-571d8cV",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-I_e4mIh0yE_00004",
+      "video_id": "-I_e4mIh0yE",
+      "speaker_id": "mosei_spk_-I_e4mIh",
+      "split": "val",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-I_e4mIh0yE_00005",
+      "video_id": "-I_e4mIh0yE",
+      "speaker_id": "mosei_spk_-I_e4mIh",
+      "split": "val",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-I_e4mIh0yE_00006",
+      "video_id": "-I_e4mIh0yE",
+      "speaker_id": "mosei_spk_-I_e4mIh",
+      "split": "val",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-UacrmKiTn4_00007",
+      "video_id": "-UacrmKiTn4",
+      "speaker_id": "mosei_spk_-UacrmKi",
+      "split": "val",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-UacrmKiTn4_00008",
+      "video_id": "-UacrmKiTn4",
+      "speaker_id": "mosei_spk_-UacrmKi",
+      "split": "val",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-UacrmKiTn4_00009",
+      "video_id": "-UacrmKiTn4",
+      "speaker_id": "mosei_spk_-UacrmKi",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-UacrmKiTn4_00010",
+      "video_id": "-UacrmKiTn4",
+      "speaker_id": "mosei_spk_-UacrmKi",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-hnBHBN8p5A_00011",
+      "video_id": "-hnBHBN8p5A",
+      "speaker_id": "mosei_spk_-hnBHBN8",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-hnBHBN8p5A_00012",
+      "video_id": "-hnBHBN8p5A",
+      "speaker_id": "mosei_spk_-hnBHBN8",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-hnBHBN8p5A_00013",
+      "video_id": "-hnBHBN8p5A",
+      "speaker_id": "mosei_spk_-hnBHBN8",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-hnBHBN8p5A_00014",
+      "video_id": "-hnBHBN8p5A",
+      "speaker_id": "mosei_spk_-hnBHBN8",
+      "split": "val",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-hnBHBN8p5A_00015",
+      "video_id": "-hnBHBN8p5A",
+      "speaker_id": "mosei_spk_-hnBHBN8",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-qDkUB0GgYY_00016",
+      "video_id": "-qDkUB0GgYY",
+      "speaker_id": "mosei_spk_-qDkUB0G",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-qDkUB0GgYY_00017",
+      "video_id": "-qDkUB0GgYY",
+      "speaker_id": "mosei_spk_-qDkUB0G",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-qDkUB0GgYY_00018",
+      "video_id": "-qDkUB0GgYY",
+      "speaker_id": "mosei_spk_-qDkUB0G",
+      "split": "val",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/val/text.pt"
+      },
+      "feature_checksums": {
+        "text": "001bdece2229fb39f2ddd83d14396220683160271c7f3568b6b453fe06cab28f"
+      }
+    },
+    {
+      "sample_id": "mosei_-uywlfIYOS8_00019",
+      "video_id": "-uywlfIYOS8",
+      "speaker_id": "mosei_spk_-uywlfIY",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_-uywlfIYOS8_00020",
+      "video_id": "-uywlfIYOS8",
+      "speaker_id": "mosei_spk_-uywlfIY",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_06st0Ez_E_I_00021",
+      "video_id": "06st0Ez_E_I",
+      "speaker_id": "mosei_spk_06st0Ez_",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_06st0Ez_E_I_00022",
+      "video_id": "06st0Ez_E_I",
+      "speaker_id": "mosei_spk_06st0Ez_",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0utROiKxejc_00023",
+      "video_id": "0utROiKxejc",
+      "speaker_id": "mosei_spk_0utROiKx",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0utROiKxejc_00024",
+      "video_id": "0utROiKxejc",
+      "speaker_id": "mosei_spk_0utROiKx",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0utROiKxejc_00025",
+      "video_id": "0utROiKxejc",
+      "speaker_id": "mosei_spk_0utROiKx",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00026",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00027",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00028",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00029",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00030",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00031",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00032",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00033",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_0y022OlZ3W0_00034",
+      "video_id": "0y022OlZ3W0",
+      "speaker_id": "mosei_spk_0y022OlZ",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00035",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00036",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00037",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00038",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00039",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00040",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00041",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00042",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00043",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00044",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00045",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00046",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00047",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00048",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 4,
+      "mapped_label": 4,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00049",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_101787_00050",
+      "video_id": "101787",
+      "speaker_id": "mosei_spk_101787",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00051",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00052",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 4,
+      "mapped_label": 4,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00053",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00054",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00055",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00056",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00057",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00058",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00059",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102408_00060",
+      "video_id": "102408",
+      "speaker_id": "mosei_spk_102408",
+      "split": "cal",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00061",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00062",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00063",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00064",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00065",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00066",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00067",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00068",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00069",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00070",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00071",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00072",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00073",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00074",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00075",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00076",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00077",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00078",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_102858_00079",
+      "video_id": "102858",
+      "speaker_id": "mosei_spk_102858",
+      "split": "cal",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/cal/text.pt"
+      },
+      "feature_checksums": {
+        "text": "b11ad49502e121ffc45974af17b7123eb256a24a471030aaac33b1b4fbaf8b67"
+      }
+    },
+    {
+      "sample_id": "mosei_-6rXp3zJ3kc_00000",
+      "video_id": "-6rXp3zJ3kc",
+      "speaker_id": "mosei_spk_-6rXp3zJ",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-6rXp3zJ3kc_00001",
+      "video_id": "-6rXp3zJ3kc",
+      "speaker_id": "mosei_spk_-6rXp3zJ",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-6rXp3zJ3kc_00002",
+      "video_id": "-6rXp3zJ3kc",
+      "speaker_id": "mosei_spk_-6rXp3zJ",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00003",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00004",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00005",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00006",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00007",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00008",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00009",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-9y-fZ3swSY_00010",
+      "video_id": "-9y-fZ3swSY",
+      "speaker_id": "mosei_spk_-9y-fZ3s",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-AUZQgSxyPQ_00011",
+      "video_id": "-AUZQgSxyPQ",
+      "speaker_id": "mosei_spk_-AUZQgSx",
+      "split": "test",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-HeZS2-Prhc_00012",
+      "video_id": "-HeZS2-Prhc",
+      "speaker_id": "mosei_spk_-HeZS2-P",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-HeZS2-Prhc_00013",
+      "video_id": "-HeZS2-Prhc",
+      "speaker_id": "mosei_spk_-HeZS2-P",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-HeZS2-Prhc_00014",
+      "video_id": "-HeZS2-Prhc",
+      "speaker_id": "mosei_spk_-HeZS2-P",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-HeZS2-Prhc_00015",
+      "video_id": "-HeZS2-Prhc",
+      "speaker_id": "mosei_spk_-HeZS2-P",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-MeTTeMJBNc_00016",
+      "video_id": "-MeTTeMJBNc",
+      "speaker_id": "mosei_spk_-MeTTeMJ",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-MeTTeMJBNc_00017",
+      "video_id": "-MeTTeMJBNc",
+      "speaker_id": "mosei_spk_-MeTTeMJ",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-MeTTeMJBNc_00018",
+      "video_id": "-MeTTeMJBNc",
+      "speaker_id": "mosei_spk_-MeTTeMJ",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-MeTTeMJBNc_00019",
+      "video_id": "-MeTTeMJBNc",
+      "speaker_id": "mosei_spk_-MeTTeMJ",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-RfYyzHpjk4_00020",
+      "video_id": "-RfYyzHpjk4",
+      "speaker_id": "mosei_spk_-RfYyzHp",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-RfYyzHpjk4_00021",
+      "video_id": "-RfYyzHpjk4",
+      "speaker_id": "mosei_spk_-RfYyzHp",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-RfYyzHpjk4_00022",
+      "video_id": "-RfYyzHpjk4",
+      "speaker_id": "mosei_spk_-RfYyzHp",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-RfYyzHpjk4_00023",
+      "video_id": "-RfYyzHpjk4",
+      "speaker_id": "mosei_spk_-RfYyzHp",
+      "split": "test",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-UUCSKoHeMA_00024",
+      "video_id": "-UUCSKoHeMA",
+      "speaker_id": "mosei_spk_-UUCSKoH",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-UUCSKoHeMA_00025",
+      "video_id": "-UUCSKoHeMA",
+      "speaker_id": "mosei_spk_-UUCSKoH",
+      "split": "test",
+      "raw_label": 4,
+      "mapped_label": 4,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-UUCSKoHeMA_00026",
+      "video_id": "-UUCSKoHeMA",
+      "speaker_id": "mosei_spk_-UUCSKoH",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-UUCSKoHeMA_00027",
+      "video_id": "-UUCSKoHeMA",
+      "speaker_id": "mosei_spk_-UUCSKoH",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-cEhr0cQcDM_00028",
+      "video_id": "-cEhr0cQcDM",
+      "speaker_id": "mosei_spk_-cEhr0cQ",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-cEhr0cQcDM_00029",
+      "video_id": "-cEhr0cQcDM",
+      "speaker_id": "mosei_spk_-cEhr0cQ",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00030",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00031",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00032",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00033",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00034",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-ri04Z7vwnc_00035",
+      "video_id": "-ri04Z7vwnc",
+      "speaker_id": "mosei_spk_-ri04Z7v",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-rxZxtG0xmY_00036",
+      "video_id": "-rxZxtG0xmY",
+      "speaker_id": "mosei_spk_-rxZxtG0",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-rxZxtG0xmY_00037",
+      "video_id": "-rxZxtG0xmY",
+      "speaker_id": "mosei_spk_-rxZxtG0",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00038",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00039",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00040",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00041",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00042",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00043",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00044",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00045",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00046",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-s9qJ7ATP7w_00047",
+      "video_id": "-s9qJ7ATP7w",
+      "speaker_id": "mosei_spk_-s9qJ7AT",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-yRb-Jum7EQ_00048",
+      "video_id": "-yRb-Jum7EQ",
+      "speaker_id": "mosei_spk_-yRb-Jum",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-yRb-Jum7EQ_00049",
+      "video_id": "-yRb-Jum7EQ",
+      "speaker_id": "mosei_spk_-yRb-Jum",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-yRb-Jum7EQ_00050",
+      "video_id": "-yRb-Jum7EQ",
+      "speaker_id": "mosei_spk_-yRb-Jum",
+      "split": "test",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-yRb-Jum7EQ_00051",
+      "video_id": "-yRb-Jum7EQ",
+      "speaker_id": "mosei_spk_-yRb-Jum",
+      "split": "test",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_-yRb-Jum7EQ_00052",
+      "video_id": "-yRb-Jum7EQ",
+      "speaker_id": "mosei_spk_-yRb-Jum",
+      "split": "test",
+      "raw_label": 3,
+      "mapped_label": 3,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0Fqav67TDEw_00053",
+      "video_id": "0Fqav67TDEw",
+      "speaker_id": "mosei_spk_0Fqav67T",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0JaYazphxfM_00054",
+      "video_id": "0JaYazphxfM",
+      "speaker_id": "mosei_spk_0JaYazph",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0JaYazphxfM_00055",
+      "video_id": "0JaYazphxfM",
+      "speaker_id": "mosei_spk_0JaYazph",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00056",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00057",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00058",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00059",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 6,
+      "mapped_label": 6,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00060",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00061",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00062",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0K7dCp80n9c_00063",
+      "video_id": "0K7dCp80n9c",
+      "speaker_id": "mosei_spk_0K7dCp80",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0PlQc98SccA_00064",
+      "video_id": "0PlQc98SccA",
+      "speaker_id": "mosei_spk_0PlQc98S",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0PlQc98SccA_00065",
+      "video_id": "0PlQc98SccA",
+      "speaker_id": "mosei_spk_0PlQc98S",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0PlQc98SccA_00066",
+      "video_id": "0PlQc98SccA",
+      "speaker_id": "mosei_spk_0PlQc98S",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00067",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00068",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00069",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00070",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00071",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 0,
+      "mapped_label": 0,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00072",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00073",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00074",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0YiAKqU36KE_00075",
+      "video_id": "0YiAKqU36KE",
+      "speaker_id": "mosei_spk_0YiAKqU3",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0bxhZ-LIfZY_00076",
+      "video_id": "0bxhZ-LIfZY",
+      "speaker_id": "mosei_spk_0bxhZ-LI",
+      "split": "test",
+      "raw_label": 1,
+      "mapped_label": 1,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0bxhZ-LIfZY_00077",
+      "video_id": "0bxhZ-LIfZY",
+      "speaker_id": "mosei_spk_0bxhZ-LI",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0eTibWQdO5M_00078",
+      "video_id": "0eTibWQdO5M",
+      "speaker_id": "mosei_spk_0eTibWQd",
+      "split": "test",
+      "raw_label": 5,
+      "mapped_label": 5,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    },
+    {
+      "sample_id": "mosei_0uftSGdwo0Q_00079",
+      "video_id": "0uftSGdwo0Q",
+      "speaker_id": "mosei_spk_0uftSGdw",
+      "split": "test",
+      "raw_label": 2,
+      "mapped_label": 2,
+      "available_visual": true,
+      "available_audio": true,
+      "available_text": true,
+      "available_prosody": true,
+      "dialogue_id": null,
+      "feature_files": {
+        "text": "features_cache/test/text.pt"
+      },
+      "feature_checksums": {
+        "text": "320d480dee4ee8b287e39b03c31c1bcb13f009501adabdb84d534fc4dff81b12"
+      }
+    }
+  ]
+}

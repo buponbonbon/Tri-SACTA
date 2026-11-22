@@ -7,7 +7,7 @@ dataset:
   manifest_path: data/meld/data_manifest.json
   num_classes: 7               # neutral, surprise, fear, sadness, joy, disgust, anger
   label_type: emotion_7
-  split_type: dialogue_speaker_disjoint
+  split_type: dialogue_disjoint
 
 features:
   visual_dim: 512              # CLIP ViT-B/16
