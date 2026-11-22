@@ -55,6 +55,7 @@ import tests.test_feedback_delay as test_feedback_delay
 import tests.test_v3_verification as test_v3_verification
 import tests.test_data_authenticity as test_data_authenticity
 import tests.test_v5_provenance as test_v5_provenance
+import tests.test_v6_multimodal as test_v6_multimodal
 
 
 def run_test_module(module, module_name):
@@ -115,6 +116,7 @@ def main():
         (test_v3_verification, "V3 Scientific Hardening Suite (R3-01 to R3-11)"),
         (test_data_authenticity, "V4 Data Authenticity & Quarantine Suite (R4-01 to R4-09)"),
         (test_v5_provenance, "V5 Provenance Enforcement & Acceptance Suite (V5-01 to V5-11)"),
+        (test_v6_multimodal, "V6 Multimodal Authenticity & Selective Adaptation Suite (V6-01 to V6-11)"),
     ]
 
     total_passed = 0

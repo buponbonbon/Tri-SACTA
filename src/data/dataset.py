@@ -150,9 +150,27 @@ class MultimodalDataset(Dataset):
                     "speaker_id": spk_id,
                 }
                 for mod in MODALITY_NAMES:
-                    if mod in mod_data:
+                    is_present = (mod in mod_data)
+                    if manifest is not None:
+                        m_item = split_manifest_items[i]
+                        is_declared = getattr(m_item, f"available_{mod}", False)
+                        if is_present and not is_declared:
+                            raise ValueError(
+                                f"[FAIL-CLOSED] Undeclared feature tensor '{mod}.pt' present in cache for split '{self.split}', "
+                                f"but manifest declares available_{mod}=False for sample '{m_item.sample_id}'!"
+                            )
+                        if is_declared and not is_present:
+                            raise ValueError(
+                                f"[FAIL-CLOSED] Manifest declares available_{mod}=True for sample '{m_item.sample_id}', "
+                                f"but feature tensor '{mod}.pt' is missing from cache split '{self.split}'!"
+                            )
+                        avail = is_declared
+                    else:
+                        avail = is_present
+
+                    if is_present:
                         sample[mod] = mod_data[mod][i].half()
-                        sample[f"{mod}_available"] = True
+                        sample[f"{mod}_available"] = avail
                     else:
                         sample[mod] = torch.zeros(self.dims[mod], dtype=torch.float16)
                         sample[f"{mod}_available"] = False

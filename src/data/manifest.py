@@ -33,10 +33,10 @@ class ManifestItem:
     split: str  # 'train', 'val', 'cal', 'test'
     raw_label: Any
     mapped_label: int
-    available_visual: bool = True
-    available_audio: bool = True
-    available_text: bool = True
-    available_prosody: bool = True
+    available_visual: bool = False
+    available_audio: bool = False
+    available_text: bool = False
+    available_prosody: bool = False
     dialogue_id: Optional[str] = None
     feature_files: Dict[str, str] = field(default_factory=dict)
     feature_checksums: Dict[str, str] = field(default_factory=dict)
@@ -166,6 +166,16 @@ class DataManifest:
                 dialogues_by_split.setdefault(s, set()).add(item.dialogue_id)
             counts_by_split[s] = counts_by_split.get(s, 0) + 1
 
+            # V6-04: Validate modality availability declarations vs feature files
+            for m in ["visual", "audio", "text", "prosody"]:
+                is_avail = getattr(item, f"available_{m}", False)
+                has_file = m in item.feature_files
+                has_chk = m in item.feature_checksums
+                if is_avail and (not has_file or not has_chk):
+                    errors.append(f"Sample {item.sample_id}: Declared available_{m}=True but missing feature file or checksum.")
+                elif not is_avail and (has_file or has_chk):
+                    errors.append(f"Sample {item.sample_id}: Declared available_{m}=False but undeclared feature file/checksum for '{m}' is present.")
+
         # 5. Overlap detection
         splits = list(counts_by_split.keys())
         speaker_overlaps: Dict[str, List[str]] = {}
@@ -253,6 +263,7 @@ class DataManifest:
 
         return {
             "is_valid": is_valid,
+            "valid": is_valid,
             "errors": errors,
             "counts_by_split": counts_by_split,
             "speaker_overlaps": speaker_overlaps,
