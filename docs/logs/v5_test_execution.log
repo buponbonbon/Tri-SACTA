@@ -1,0 +1,163 @@
+==========================================
+Running Test Suite: Spectral Shift Detector (AUD-01, AUD-04)
+==========================================
+2026-11-22 10:33:34,724 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.175593554973602, 4: 10.691332384943962, 8: 6.000830337405205, 16: 3.068905510008335, 32: 1.239538986235857, 64: 0.4526117295026779}
+  [PASS] test_detector_excludes_missing: T04: Zero-padded rows corresponding to missing modalities must be excluded from stats.
+2026-11-22 10:33:34,815 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
+2026-11-22 10:33:34,932 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
+  [PASS] test_spectral_clean_null: T01: Clean holdout test batches should yield small excess shift scores.
+2026-11-22 10:33:35,095 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
+2026-11-22 10:33:35,151 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
+  [PASS] test_spectral_corruptions: T02: Distribution shift (mean shift and variance increase) must increase shift score.
+  [PASS] test_stable_weights_extreme: T03: Extreme shift scores (e.g. 1000.0) must not cause underflow or NaN/Inf.
+
+==========================================
+Running Test Suite: Masked Multimodal Fusion (AUD-02, AUD-03)
+==========================================
+2026-11-22 10:33:35,296 [INFO] MultimodalFusionModel initialized: 1,369,379 total params, 1,369,379 trainable (1.37 M)
+  [PASS] test_attention_token_axis: T07: Cross-modal attention weights across M>1 tokens respond to input differences.
+2026-11-22 10:33:35,359 [INFO] MultimodalFusionModel initialized: 1,369,379 total params, 1,369,379 trainable (1.37 M)
+  [PASS] test_effective_mask_fallback: T06: When all modalities have zero reliability weights, fallback to uniform over available.
+2026-11-22 10:33:35,406 [INFO] MultimodalFusionModel initialized: 1,369,379 total params, 1,369,379 trainable (1.37 M)
+  [PASS] test_mask_invariance_attention: T05: Changing values of a masked modality must NOT alter outputs for those samples.
+
+==========================================
+Running Test Suite: Selective Adaptation (AUD-05, AUD-06)
+==========================================
+2026-11-22 10:33:35,497 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
+2026-11-22 10:33:35,551 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
+2026-11-22 10:33:35,604 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
+2026-11-22 10:33:35,654 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
+2026-11-22 10:33:35,674 [INFO] MultimodalFusionModel initialized: 1,369,379 total params, 1,369,379 trainable (1.37 M)
+2026-11-22 10:33:39,955 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+  [PASS] test_adaptation_skip: T11: When no adaptable modality exists or no clean anchor exists, adaptation is skipped.
+2026-11-22 10:33:40,121 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
+2026-11-22 10:33:40,169 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
+2026-11-22 10:33:40,220 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
+2026-11-22 10:33:40,266 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
+2026-11-22 10:33:40,286 [INFO] MultimodalFusionModel initialized: 1,369,379 total params, 1,369,379 trainable (1.37 M)
+2026-11-22 10:33:40,289 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+  [PASS] test_selective_parameter_delta: T08: Inactive / anchor / corrupted parameters remain strictly UNCHANGED during adaptation.
+
+==========================================
+Running Test Suite: Online Conformal Prediction (AUD-07, AUD-08, AUD-09)
+==========================================
+  [PASS] test_cp_order_statistic: T15: SplitConformalPredictor uses exact finite-sample order statistic rank.
+  [PASS] test_prediction_feedback_immutable: T13: Delayed feedback evaluates coverage against the emitted set, even if model/alpha changes.
+  [PASS] test_step_size_bounds: T12: Extreme, negative, or zero velocities/disagreements must yield bounded positive eta.
+
+==========================================
+Running Test Suite: Data Integrity & Collator (AUD-10, AUD-12, AUD-14)
+==========================================
+  [PASS] test_collator_per_sample_missing: T21: Missing modality for one sample must NOT discard it for present samples in the batch.
+  [PASS] test_real_data_fail_closed: T19: Real data mode must raise FileNotFoundError if files are missing (no silent fallback).
+2026-11-22 10:33:40,401 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
+2026-11-22 10:33:40,408 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
+  [PASS] test_seed_cross_process: T23: Synthetic dataset generation is 100% deterministic given seed.
+
+==========================================
+Running Test Suite: Metrics Rigor & Footprint (AUD-20, AUD-23)
+==========================================
+  [PASS] test_ece_bin_boundaries: T26: ECE with zero-confidence or 1.0 confidence points must fall safely into boundary bins.
+  [PASS] test_macro_f1_absent_classes: T26: Macro-F1 with absent classes in batch must average across all num_classes.
+  [PASS] test_nll_fp32_precision: T26: NLL calculation must convert half/AMP tensors to FP32 without overflow.
+  [PASS] test_vram_profiler_footprint: T29: VRAMProfiler snapshot must report structured memory dictionary.
+
+==========================================
+Running Test Suite: Shift Stream Generator V2 (AUD-16)
+==========================================
+  [PASS] test_protocol_v2_regime_sequence: T25: Protocol V2 must define 6 sequential regimes with explicit R6 Recovery.
+  [PASS] test_snr_calibrated_noise: T25: Calibrated audio SNR noise must produce target noise-to-signal power ratio.
+  [PASS] test_structured_audio_prosody_missing: T25: Dropping audio must also drop derived prosody stream.
+
+==========================================
+Running Test Suite: Feedback Delay & Rare Mask Isolation (AUD-08, AUD-18)
+==========================================
+  [PASS] test_delay_buffer_strict_fifo: T14: Records must remain queued and not evaluated until exactly delay steps elapse.
+  [PASS] test_rare_mask_fallback: T18: Rare masks with support < min_mask_support fall back safely to global window.
+
+==========================================
+Running Test Suite: V3 Scientific Hardening Suite (R3-01 to R3-11)
+==========================================
+V3-T01: Variable-step ACI counterexample verified.
+  [PASS] test_v3_aci_counterexample: V3-T01: Proves variable-step ACI without TV constraint fails unweighted convergence.
+2026-11-22 10:33:40,459 [INFO] MultimodalFusionModel initialized: 33,743 total params, 33,743 trainable (0.03 M)
+2026-11-22 10:33:40,484 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.114310085773468, 4: 1.1358720064163208, 8: 0.5110527127981186, 16: 2.046282172203064, 32: 0.10739084240049124}
+2026-11-22 10:33:40,511 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.852286159992218, 4: 1.028606504201889, 8: 0.4762457609176636, 16: 1.9242731481790543, 32: 0.12000014632940292}
+2026-11-22 10:33:40,538 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 4.006979763507843, 4: 1.0412193536758423, 8: 0.4780825898051262, 16: 1.9146131295710802, 32: 0.11020284192636609}
+2026-11-22 10:33:40,567 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 4.447024405002594, 4: 1.0937762260437012, 8: 0.48593616485595703, 16: 1.8636356256902218, 32: 0.11357506737112999}
+2026-11-22 10:33:40,570 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+V3-T17: Pairwise valid intersection disagreement verified.
+  [PASS] test_v3_disagreement_pairwise_valid_intersection: V3-T17: Disagreement evaluates only on valid sample intersections.
+V3-T02: Fixed-step boundary full and empty actions verified.
+  [PASS] test_v3_fixed_step_boundary_actions: V3-T02: Verifies unprojected fixed-step controller boundary actions (full & empty sets).
+2026-11-22 10:33:40,583 [INFO] MultimodalFusionModel initialized: 34,068 total params, 34,068 trainable (0.03 M)
+V3-T16: Hard gating attention isolation verified.
+  [PASS] test_v3_hard_gating_attention_isolation: V3-T16: Corrupted modality tokens isolated by effective_mask cannot alter clean logits.
+V3-T10: Manifest schema validation rules verified.
+  [PASS] test_v3_manifest_validation_rules: V3-T10: Manifest validator rejects empty manifests, duplicate IDs, and speaker leakage.
+V3-T06: PredictionRecord deep immutability verified.
+  [PASS] test_v3_prediction_record_immutability: V3-T06: Caller cannot mutate stored record by altering original tensors or lists.
+V3-T09: Real loader fail-closed without meta.pt verified.
+  [PASS] test_v3_real_loader_fail_closed_without_meta: V3-T09: Real data mode strictly fails closed if meta.pt is missing (never invent IDs).
+2026-11-22 10:33:40,608 [INFO] MultimodalFusionModel initialized: 34,068 total params, 34,068 trainable (0.03 M)
+2026-11-22 10:33:40,635 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.189557671546936, 4: 1.031810849905014, 8: 0.5446296483278275, 16: 1.9708107970654964, 32: 0.11091678403317928}
+2026-11-22 10:33:40,664 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.831599742174149, 4: 1.0481907427310944, 8: 0.47826509177684784, 16: 1.8657823354005814, 32: 0.10782497189939022}
+2026-11-22 10:33:40,690 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 5.063336551189423, 4: 1.1786572858691216, 8: 0.5086890161037445, 16: 2.188198823481798, 32: 0.08545520342886448}
+2026-11-22 10:33:40,715 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 5.360343843698502, 4: 1.4015190154314041, 8: 0.4861210584640503, 16: 2.1463295705616474, 32: 0.09082282241433859}
+2026-11-22 10:33:40,718 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+V3-T15: Selective adaptation no-anchor skip verified.
+  [PASS] test_v3_selective_adaptation_no_anchor_skip: V3-T15: Adaptation is strictly skipped when no clean anchor exists (R3-07).
+2026-11-22 10:33:40,774 [INFO] Registered 'visual': D=64, N=200, k_max=32, null_grid={2: 10.831161260604858, 4: 5.240703389048576, 8: 2.1793785095214844, 16: 0.7578227669000626, 32: 0.3708181381225586, 64: 0.07983651012182236}
+V3-T14: Spectral sample-size matched rank verified.
+  [PASS] test_v3_spectral_sample_size_matching: V3-T14: Small batch size (N=4, 8) on clean distribution does not spuriously surge.
+
+==========================================
+Running Test Suite: V4 Data Authenticity & Quarantine Suite (R4-01 to R4-09)
+==========================================
+V4-T04: Authentic annotations and zero cross-split video overlap verified.
+  [PASS] test_authentic_annotations_present_and_disjoint: R4-03/R4-05: Verify authentic CSV annotations exist with genuine non-synthetic schemas.
+V4-T01: Quarantined fixture rejection verified.
+  [PASS] test_quarantined_fixtures_rejected_in_real_mode: R4-01/R4-09: Synthetic fixture manifest patterns must fail validation in real mode.
+V4-T02: Real mode fail-closed without manifest verified.
+  [PASS] test_real_mode_fails_closed_without_manifest: R4-02: Real data loader must raise FileNotFoundError if manifest is missing.
+2026-11-22 10:33:41,075 [INFO] Registered 'text': D=16, N=32, k_max=4, null_grid={2: 0.7178515911102294, 4: 0.225203338265419, 8: 0.11184598207473756, 16: 0.03577248714864254}
+2026-11-22 10:33:41,088 [INFO] Registered 'visual': D=16, N=32, k_max=4, null_grid={2: 0.7467042207717896, 4: 0.3626040041446686, 8: 0.10552422255277634, 16: 0.03804278522729874}
+2026-11-22 10:33:41,106 [INFO] MultimodalFusionModel initialized: 838,947 total params, 838,947 trainable (0.84 M)
+2026-11-22 10:33:41,108 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+V4-T03: Spectral detector single update per batch verified.
+  [PASS] test_spectral_detector_single_update_per_batch: R4-07: Detector history must update exactly once per batch in prequential mode.
+
+==========================================
+Running Test Suite: V5 Provenance Enforcement & Acceptance Suite (V5-01 to V5-11)
+==========================================
+[PASS] V5-01: Aggregator strictly excluded quarantined artifacts from aggregation.
+  [PASS] test_v5_01_aggregator_quarantine_exclusion: V5-01: Verify that aggregator strictly rejects quarantined and legacy results.
+2026-11-22 10:33:41,137 [INFO] --- [Stage 1.1] Visual Feature Extraction (openai/clip-vit-base-patch16) ---
+2026-11-22 10:33:41,137 [INFO] --- [Stage 1.2] Audio Feature Extraction (microsoft/wavlm-base) ---
+[PASS] V5-02: Feature extractor fails closed on missing raw assets.
+  [PASS] test_v5_02_fail_closed_feature_extractor: V5-02: Extractor must fail closed on missing media; no synthetic fallback in real mode.
+2026-11-22 10:33:41,378 [INFO] Saved dataset manifest (90 items, hash=9a211779cd9b) to C:\Users\ASUS\AppData\Local\Temp\tmpx7d6zfu6\fixture_manifest.json
+[PASS] V5-03: Full feature checksum validation verified (row 55 tamper & path traversal caught).
+  [PASS] test_v5_03_full_feature_checksum_and_tamper: V5-03: Verify checksum validation catches tamper at row 55, empty checksums, and path traversal.
+2026-11-22 10:33:41,488 [INFO] Successfully loaded and manifest-verified 10 real samples from C:\Users\ASUS\AppData\Local\Temp\tmpxqglhw2p\train
+[PASS] V5-04: Manifest-to-tensor row join and integrity verification confirmed.
+  [PASS] test_v5_04_manifest_to_tensor_row_join: V5-04: MultimodalDataset must strictly join cache rows to manifest items.
+2026-11-22 10:33:41,501 [INFO] Saved source spectral statistics to C:\Users\ASUS\AppData\Local\Temp\tmpdf9_7f6r\stats.pt (metadata bound: ['dataset_name', 'data_mode', 'seed', 'manifest_hash'])
+2026-11-22 10:33:41,505 [INFO] Loaded verified source spectral statistics from C:\Users\ASUS\AppData\Local\Temp\tmpdf9_7f6r\stats.pt
+[PASS] V5-05: Checkpoint and spectral stats provenance hash binding verified.
+  [PASS] test_v5_05_checkpoint_and_stats_binding: V5-05: Checkpoints and spectral stats must be cryptographically bound to manifest hash.
+[PASS] V5-06: Delayed-feedback counterexample reproduced and exact diagnostic identity confirmed.
+  [PASS] test_v5_06_delayed_feedback_counterexample_and_exact_identity: V5-06: Reproduce minimal delayed-feedback counterexample & verify exact diagnostic identity.
+2026-11-22 10:33:41,572 [INFO] MultimodalFusionModel initialized: 35,043 total params, 35,043 trainable (0.04 M)
+2026-11-22 10:33:41,573 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+[PASS] V5-07: Transductive spectral velocity scalar interface verified.
+  [PASS] test_v5_07_transductive_spectral_velocity_interface: V5-07: Verify scalar spectral velocity interface and transductive handler.
+2026-11-22 10:33:41,578 [INFO] MultimodalFusionModel initialized: 35,043 total params, 35,043 trainable (0.04 M)
+[PASS] V5-11: Fusion backbone abstain policy and NaN input sanitization verified.
+  [PASS] test_v5_11_fusion_backbone_abstain_policy: V5-11: Fusion backbone must abstain on all-rejected samples without leaking corrupted channels.
+
+==========================================
+SUMMARY: 45 PASSED, 0 FAILED
+==========================================
+ALL TESTS PASSED SUCCESSFULLY.

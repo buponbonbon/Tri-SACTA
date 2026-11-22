@@ -275,9 +275,10 @@ class SpectralShiftDetector:
         for m in self._shift_history:
             self._shift_history[m].clear()
 
-    def save_source_stats(self, filepath: str) -> None:
-        """Persist registered source statistics."""
+    def save_source_stats(self, filepath: str, metadata: Optional[Dict[str, Any]] = None) -> None:
+        """Persist registered source statistics with cryptographic provenance binding (V5-05)."""
         payload = {
+            "schema_version": 5,
             "source_means": self.source_means,
             "source_stds": self.source_stds,
             "source_covariances": self.source_covariances,
@@ -287,12 +288,30 @@ class SpectralShiftDetector:
             "gamma": self.gamma,
             "top_k": self.top_k,
         }
+        if metadata:
+            payload["metadata"] = metadata
         torch.save(payload, filepath)
-        logger.info(f"Saved source spectral statistics to {filepath}")
+        logger.info(f"Saved source spectral statistics to {filepath} (metadata bound: {list(metadata.keys()) if metadata else 'None'})")
 
-    def load_source_stats(self, filepath: str) -> None:
-        """Load registered source statistics."""
+    def load_source_stats(self, filepath: str, expected_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Load registered source statistics and verify provenance binding (V5-05)."""
         payload = torch.load(filepath, map_location="cpu")
+        if not isinstance(payload, dict) or "source_means" not in payload:
+            raise ValueError(f"[FAIL-CLOSED] Corrupted spectral statistics file at {filepath}")
+
+        # V5-05: Strict provenance verification for real data runs
+        if expected_metadata:
+            meta = payload.get("metadata", {})
+            for key, exp_val in expected_metadata.items():
+                act_val = meta.get(key)
+                if act_val is None:
+                    raise ValueError(f"[FAIL-CLOSED] Spectral stats at {filepath} missing required metadata field '{key}'.")
+                if act_val != exp_val:
+                    raise ValueError(
+                        f"[FAIL-CLOSED] Spectral stats metadata mismatch for '{key}': "
+                        f"expected '{exp_val}', got '{act_val}' in {filepath}"
+                    )
+
         self.source_means = payload["source_means"]
         self.source_stds = payload["source_stds"]
         self.source_covariances = payload.get("source_covariances", {})
@@ -302,4 +321,5 @@ class SpectralShiftDetector:
         self.gamma = payload.get("gamma", self.gamma)
         self.top_k = payload.get("top_k", self.top_k)
         self._source_registered = True
-        logger.info(f"Loaded source spectral statistics from {filepath}")
+        logger.info(f"Loaded verified source spectral statistics from {filepath}")
+        return payload

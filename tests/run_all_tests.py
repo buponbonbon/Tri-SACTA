@@ -52,6 +52,9 @@ import tests.test_data_integrity as test_data_integrity
 import tests.test_metrics_rigor as test_metrics_rigor
 import tests.test_shift_generator as test_shift_generator
 import tests.test_feedback_delay as test_feedback_delay
+import tests.test_v3_verification as test_v3_verification
+import tests.test_data_authenticity as test_data_authenticity
+import tests.test_v5_provenance as test_v5_provenance
 
 
 def run_test_module(module, module_name):
@@ -109,6 +112,9 @@ def main():
         (test_metrics_rigor, "Metrics Rigor & Footprint (AUD-20, AUD-23)"),
         (test_shift_generator, "Shift Stream Generator V2 (AUD-16)"),
         (test_feedback_delay, "Feedback Delay & Rare Mask Isolation (AUD-08, AUD-18)"),
+        (test_v3_verification, "V3 Scientific Hardening Suite (R3-01 to R3-11)"),
+        (test_data_authenticity, "V4 Data Authenticity & Quarantine Suite (R4-01 to R4-09)"),
+        (test_v5_provenance, "V5 Provenance Enforcement & Acceptance Suite (V5-01 to V5-11)"),
     ]
 
     total_passed = 0

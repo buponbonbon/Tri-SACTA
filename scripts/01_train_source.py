@@ -17,6 +17,8 @@ import copy
 import argparse
 import logging
 import yaml
+import json
+import hashlib
 import torch
 import torch.nn as nn
 from torch.amp import autocast, GradScaler
@@ -172,11 +174,26 @@ def main():
     namespaced_dir = os.path.join(args.output_dir, dataset_name, args.data_mode, f"seed{args.seed}")
     os.makedirs(namespaced_dir, exist_ok=True)
 
+    # Compute provenance hashes (V5-05)
+    manifest_hash = "synthetic_stream"
+    if args.data_mode == "real" and config.get("dataset", {}).get("manifest_path"):
+        from src.data.manifest import DataManifest
+        m_path = config["dataset"]["manifest_path"]
+        if os.path.exists(m_path):
+            m = DataManifest.load_json(m_path)
+            manifest_hash = m.compute_manifest_hash()
+
+    config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode("utf-8")).hexdigest()
+    source_run_id = hashlib.sha256(f"{dataset_name}:{args.data_mode}:{args.seed}:{manifest_hash[:16]}:{config_hash[:16]}".encode("utf-8")).hexdigest()[:16]
+
     ckpt_payload = {
-        "schema_version": 3,
+        "schema_version": 5,
         "dataset": dataset_name,
         "data_mode": args.data_mode,
         "seed": args.seed,
+        "manifest_hash": manifest_hash,
+        "config_hash": config_hash,
+        "source_run_id": source_run_id,
         "model_state_dict": best_weights,
         "best_val_f1": float(best_val_f1),
         "config": config,
@@ -184,10 +201,11 @@ def main():
     namespaced_ckpt = os.path.join(namespaced_dir, "source_model.pt")
     torch.save(ckpt_payload, namespaced_ckpt)
 
-    # Legacy compatibility copy
-    legacy_ckpt = os.path.join(args.output_dir, f"source_model_{args.data_mode}_seed{args.seed}.pt")
-    torch.save(best_weights, legacy_ckpt)
-    logger.info(f"Saved namespaced checkpoint to {namespaced_ckpt} (and legacy to {legacy_ckpt})")
+    # Legacy copy only for synthetic debug mode
+    if args.data_mode == "synthetic":
+        legacy_ckpt = os.path.join(args.output_dir, f"source_model_{args.data_mode}_seed{args.seed}.pt")
+        torch.save(best_weights, legacy_ckpt)
+    logger.info(f"Saved verified checkpoint (schema_v5, run_id={source_run_id}, manifest_hash={manifest_hash[:12]}) to {namespaced_ckpt}")
 
     # 4. Extract and register source anchor statistics on VALID ROWS ONLY (R3-08)
     logger.info("Computing source anchor statistics on training valid rows...")
@@ -224,11 +242,19 @@ def main():
     # Calibrate null baseline on holdout validation data (R3-08)
     detector.register_source_stats(stacked_train, val_features_by_modality=stacked_val)
 
+    stats_metadata = {
+        "dataset_name": dataset_name,
+        "data_mode": args.data_mode,
+        "seed": args.seed,
+        "manifest_hash": manifest_hash,
+        "source_run_id": source_run_id,
+    }
     namespaced_stats = os.path.join(namespaced_dir, "source_spectral_stats.pt")
-    detector.save_source_stats(namespaced_stats)
-    legacy_stats = os.path.join(args.output_dir, f"source_spectral_stats_{args.data_mode}_seed{args.seed}.pt")
-    detector.save_source_stats(legacy_stats)
-    logger.info(f"Saved spectral anchor statistics to {namespaced_stats} (and legacy to {legacy_stats})")
+    detector.save_source_stats(namespaced_stats, metadata=stats_metadata)
+    if args.data_mode == "synthetic":
+        legacy_stats = os.path.join(args.output_dir, f"source_spectral_stats_{args.data_mode}_seed{args.seed}.pt")
+        detector.save_source_stats(legacy_stats, metadata=stats_metadata)
+    logger.info(f"Saved verified spectral anchor statistics to {namespaced_stats}")
 
     # 5. Check Conformal Calibration baseline
     cal_metrics = evaluate(model, dataloaders["cal"], num_classes, device)

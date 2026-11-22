@@ -33,7 +33,13 @@ logger = logging.getLogger(__name__)
 
 
 def load_runs(input_dir: str, target_data_mode: Optional[str] = None) -> Dict[Tuple[str, str, str, str, str, int], Dict[int, Dict[str, Any]]]:
-    """Load and group runs by (dataset, data_mode, protocol, method, conformal, delay) with unique seed mapping."""
+    """Load and group runs by (dataset, data_mode, protocol, method, conformal, delay) with unique seed mapping.
+    
+    Strict scientific provenance enforcement (V5-01):
+    - Strictly rejects any path containing 'quarantine' or 'quarantined'
+    - Rejects files containing legacy, summary, or corrupted formats
+    - Strictly prevents quarantined pseudo-real runs from entering real-mode aggregation
+    """
     grouped: Dict[Tuple[str, str, str, str, str, int], Dict[int, Dict[str, Any]]] = defaultdict(dict)
     
     files = glob.glob(os.path.join(input_dir, "**", "*.json"), recursive=True)
@@ -41,7 +47,9 @@ def load_runs(input_dir: str, target_data_mode: Optional[str] = None) -> Dict[Tu
         files = glob.glob(os.path.join(input_dir, "*.json"))
 
     for fpath in files:
-        if "legacy" in fpath or "summary" in fpath or "_mosei_seed42.json" in fpath:
+        norm_path = os.path.normpath(fpath).replace("\\", "/").lower()
+        # V5-01: Strict quarantine rejection at file path level
+        if "quarantin" in norm_path or "legacy" in norm_path or "summary" in norm_path or "_mosei_seed42.json" in norm_path:
             continue
         try:
             with open(fpath, "r", encoding="utf-8") as f:
@@ -51,6 +59,13 @@ def load_runs(input_dir: str, target_data_mode: Optional[str] = None) -> Dict[Tu
 
         if not isinstance(data, dict) or "overall_metrics" not in data:
             continue
+
+        # V5-01: Metadata-level quarantine rejection
+        if data.get("quarantined", False) or "quarantined" in str(data.get("provenance", "")).lower():
+            continue
+        if data.get("is_synthetic_fixture", False):
+            if target_data_mode == "real":
+                continue
 
         dataset = data.get("dataset", "mosei")
         data_mode = data.get("data_mode", "synthetic")

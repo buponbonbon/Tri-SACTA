@@ -58,15 +58,15 @@ def main():
     parser = argparse.ArgumentParser(description="Run Continual Compound Shift Benchmark")
     parser.add_argument("--config", type=str, default="configs/mosei_mvp.yaml")
     parser.add_argument("--checkpoint", type=str, default=None)
-    parser.add_argument("--spectral_stats", type=str, default=None)
+    parser.add_argument("--spectral_stats", "--spectral-stats", dest="spectral_stats", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only"])
     parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "static_cp", "mccf", "none"])
     parser.add_argument("--delay", type=int, default=0, help="Delayed feedback steps (0, 10, 50)")
     parser.add_argument("--protocol", type=str, default="prequential", choices=["prequential", "transductive"], help="Stream protocol (R3-06)")
-    parser.add_argument("--data-mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
+    parser.add_argument("--data-mode", "--data_mode", dest="data_mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
-    parser.add_argument("--output_dir", type=str, default="results")
+    parser.add_argument("--output_dir", "--output-dir", dest="output_dir", type=str, default="results")
     args = parser.parse_args()
 
     with open(args.config, "r") as f:
@@ -91,12 +91,20 @@ def main():
     test_loader = dataloaders["test"]
     cal_loader = dataloaders["cal"]
 
+    current_manifest_hash = None
+    if args.data_mode == "real" and config.get("dataset", {}).get("manifest_path"):
+        from src.data.manifest import DataManifest
+        m_path = config["dataset"]["manifest_path"]
+        if os.path.exists(m_path):
+            current_manifest = DataManifest.load_json(m_path)
+            current_manifest_hash = current_manifest.compute_manifest_hash()
+
     # 2. Model setup
     model = MultimodalFusionModel(config).to(device)
     num_classes = config.get("model", {}).get("num_classes", 7)
     target_alpha = config.get("conformal", {}).get("alpha", 0.10)
 
-    # Resolve namespaced checkpoint (R3-05)
+    # Resolve namespaced checkpoint (R3-05, V5-05)
     ckpt_path = args.checkpoint
     if not ckpt_path:
         candidate_paths = [
@@ -112,16 +120,31 @@ def main():
     if ckpt_path and os.path.exists(ckpt_path):
         raw_obj = torch.load(ckpt_path, map_location=device)
         if isinstance(raw_obj, dict) and "model_state_dict" in raw_obj:
-            # Validate checkpoint metadata against run configuration (R3-05)
+            # Validate checkpoint metadata against run configuration (R3-05, V5-05)
             ckpt_dataset = raw_obj.get("dataset")
             ckpt_mode = raw_obj.get("data_mode")
+            ckpt_seed = raw_obj.get("seed")
+            ckpt_manifest_hash = raw_obj.get("manifest_hash")
+
             if args.data_mode == "real":
                 if ckpt_mode != "real":
                     raise ValueError(f"[FAIL-CLOSED] Attempted to load {ckpt_mode} checkpoint into real mode run! (R3-05)")
                 if ckpt_dataset and ckpt_dataset != dataset_name:
                     raise ValueError(f"[FAIL-CLOSED] Cross-dataset checkpoint rejected: {ckpt_dataset} vs {dataset_name} (R3-05)")
+                if ckpt_seed is not None and ckpt_seed != args.seed:
+                    raise ValueError(f"[FAIL-CLOSED] Seed mismatch in checkpoint: {ckpt_seed} vs {args.seed} (V5-05)")
+                if current_manifest_hash and ckpt_manifest_hash != current_manifest_hash:
+                    raise ValueError(
+                        f"[FAIL-CLOSED] Checkpoint manifest_hash mismatch: "
+                        f"checkpoint has '{ckpt_manifest_hash}', current manifest is '{current_manifest_hash}' (V5-05)"
+                    )
             state_dict = raw_obj["model_state_dict"]
         else:
+            if args.data_mode == "real":
+                raise ValueError(
+                    f"[FAIL-CLOSED] Legacy bare state dictionary rejected in real mode (V5-05).\n"
+                    f"A verified schema_v5 checkpoint with cryptographic manifest hash is required."
+                )
             state_dict = raw_obj
 
         model.load_state_dict(state_dict)
@@ -160,8 +183,15 @@ def main():
                     break
 
         if stats_path and os.path.exists(stats_path):
-            detector.load_source_stats(stats_path)
-            logger.info(f"Loaded source anchor statistics from {stats_path}")
+            expected_meta = None
+            if args.data_mode == "real":
+                expected_meta = {
+                    "dataset_name": dataset_name,
+                    "data_mode": args.data_mode,
+                    "manifest_hash": current_manifest_hash,
+                }
+            detector.load_source_stats(stats_path, expected_metadata=expected_meta)
+            logger.info(f"Loaded verified source anchor statistics from {stats_path}")
         else:
             if args.data_mode == "real":
                 raise FileNotFoundError(f"[FAIL-CLOSED] Spectral stats missing for real mode: {stats_path}")
@@ -287,8 +317,13 @@ def main():
                 if tta_method is not None:
                     step_res = tta_method.adapt_step(features, mod_mask)
                     logits = step_res["logits"]
-                    shift_vel = tta_method.get_shift_velocity() if hasattr(tta_method, "get_shift_velocity") else {}
-                    avg_shift_vel = float(np.mean(list(shift_vel.values()))) if shift_vel else 0.0
+                    shift_vel = tta_method.get_shift_velocity() if hasattr(tta_method, "get_shift_velocity") else 0.0
+                    if isinstance(shift_vel, dict):
+                        avg_shift_vel = float(np.mean(list(shift_vel.values()))) if shift_vel else 0.0
+                    elif isinstance(shift_vel, (int, float)):
+                        avg_shift_vel = max(0.0, float(shift_vel))
+                    else:
+                        avg_shift_vel = 0.0
                     disagree = step_res.get("cross_modal_disagreement", 0.0)
                     if isinstance(disagree, torch.Tensor):
                         disagree = float(disagree.item())

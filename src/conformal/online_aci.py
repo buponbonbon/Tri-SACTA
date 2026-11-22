@@ -89,6 +89,8 @@ class OnlineACI:
         self._per_mask_set_size: Dict[str, List[float]] = defaultdict(list)
         self._per_mask_empty_sets: Dict[str, int] = defaultdict(int)
         self._per_mask_full_sets: Dict[str, int] = defaultdict(int)
+        self._clipping_residuals: Dict[str, List[float]] = defaultdict(list)
+        self._cumulative_clipping_residual: Dict[str, float] = defaultdict(float)
 
     @property
     def global_score_window(self) -> deque:
@@ -236,13 +238,16 @@ class OnlineACI:
 
         # Update controller state
         if self.controller_mode == "fixed_mask_aci":
-            # Exact unprojected fixed step update
+            # Exact fixed step update with projection residual tracking (V5-06)
             eta_t = self.eta_0
             alpha_m = self.alphas[mask_key]
-            alpha_new = alpha_m + eta_t * (self.alpha - avg_miss)
+            alpha_raw = alpha_m + eta_t * (self.alpha - avg_miss)
             # Bound within [-eta, 1 + eta] for numerical safety
-            alpha_new = float(np.clip(alpha_new, -self.eta_0, 1.0 + self.eta_0))
-            self.alphas[mask_key] = alpha_new
+            alpha_clipped = float(np.clip(alpha_raw, -self.eta_0, 1.0 + self.eta_0))
+            residual = alpha_clipped - alpha_raw
+            self._clipping_residuals[mask_key].append(residual)
+            self._cumulative_clipping_residual[mask_key] += abs(residual)
+            self.alphas[mask_key] = alpha_clipped
         else:
             # Dynamic heuristic update (AUD-07)
             vel_mag = abs(record.shift_velocity)
@@ -251,9 +256,12 @@ class OnlineACI:
             eta_t = float(np.clip(eta_t, self.eta_min, self.eta_max))
 
             alpha_m = self.alphas[mask_key]
-            alpha_new = alpha_m + eta_t * (self.alpha - avg_miss)
-            alpha_new = float(np.clip(alpha_new, 0.01, 0.99))
-            self.alphas[mask_key] = alpha_new
+            alpha_raw = alpha_m + eta_t * (self.alpha - avg_miss)
+            alpha_clipped = float(np.clip(alpha_raw, 0.01, 0.99))
+            residual = alpha_clipped - alpha_raw
+            self._clipping_residuals[mask_key].append(residual)
+            self._cumulative_clipping_residual[mask_key] += abs(residual)
+            self.alphas[mask_key] = alpha_clipped
 
         # Telemetry
         mean_cov = float(np.mean(batch_hits))
@@ -345,3 +353,7 @@ class OnlineACI:
             "per_mask_full_sets": dict(self._per_mask_full_sets),
             "current_alphas": dict(self.alphas),
         }
+
+
+# Backward-compatibility alias
+OnlineAdaptiveACI = OnlineACI

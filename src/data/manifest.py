@@ -61,12 +61,18 @@ class DataManifest:
         }
 
     def compute_manifest_hash(self) -> str:
-        """Compute deterministic SHA-256 fingerprint over ordered manifest items."""
+        """Compute deterministic canonical SHA-256 fingerprint over complete manifest contents (V5-03)."""
         h = hashlib.sha256()
-        h.update(self.dataset_name.encode("utf-8"))
-        h.update(self.dataset_version.encode("utf-8"))
+        h.update(f"dataset:{self.dataset_name}\n".encode("utf-8"))
+        h.update(f"version:{self.dataset_version}\n".encode("utf-8"))
+        for k in sorted(self.feature_sources.keys()):
+            h.update(f"src:{k}={self.feature_sources[k]}\n".encode("utf-8"))
+        for k in sorted(self.feature_dims.keys()):
+            h.update(f"dim:{k}={self.feature_dims[k]}\n".encode("utf-8"))
+
         for item in sorted(self.items, key=lambda x: x.sample_id):
-            row_str = f"{item.sample_id}:{item.split}:{item.speaker_id}:{item.video_id}:{item.mapped_label}"
+            f_str = ",".join(f"{m}={item.feature_files.get(m, '')}:{item.feature_checksums.get(m, '')}" for m in sorted(item.feature_files.keys()))
+            row_str = f"{item.sample_id}|{item.split}|{item.speaker_id}|{item.video_id}|{item.dialogue_id}|{item.mapped_label}|{item.raw_label}|{f_str}\n"
             h.update(row_str.encode("utf-8"))
         return h.hexdigest()
 
@@ -110,14 +116,17 @@ class DataManifest:
                 "total_samples": 0,
             }
 
-        # 2. Strict authenticity check: Reject synthetic fixtures in real mode (R4-01, R4-05)
+        # 2. Strict authenticity check: Reject synthetic fixtures in real mode (R4-01, R4-05, V5-03)
         if data_mode == "real":
             if "fixture" in self.dataset_version.lower() or "quarantined" in self.dataset_version.lower():
                 errors.append(f"Synthetic fixture version '{self.dataset_version}' is strictly forbidden in real mode.")
 
-            synthetic_spk_prefixes = ("spk_cmu_mosei_", "spk_meld_", "spk_trn_", "spk_val_")
-            synthetic_vid_prefixes = ("vid_trn_", "vid_val_", "vid_cal_", "vid_tst_")
+            synthetic_spk_prefixes = ("spk_cmu_mosei_", "spk_meld_", "spk_trn_", "spk_val_", "fixture_spk_")
+            synthetic_vid_prefixes = ("vid_trn_", "vid_val_", "vid_cal_", "vid_tst_", "fixture_vid_")
             for item in self.items:
+                if item.sample_id.startswith("fixture_"):
+                    errors.append(f"Fixture sample ID '{item.sample_id}' strictly forbidden in real mode.")
+                    break
                 if item.speaker_id.startswith(synthetic_spk_prefixes):
                     errors.append(f"Synthetic speaker pattern '{item.speaker_id}' detected in real-mode manifest.")
                     break
@@ -187,25 +196,58 @@ class DataManifest:
         if dialogue_overlaps:
             errors.append(f"Dialogue cross-split leakage: {dialogue_overlaps}")
 
-        # 6. Feature checksum verification if base_dir provided
+        # 6. Complete feature checksum and path traversal verification (V5-03)
         if base_dir and os.path.exists(base_dir) and data_mode == "real":
             import hashlib
-            for item in self.items[:50]:  # Verify pilot subset
+            base_dir_abs = os.path.abspath(base_dir)
+            file_actual_shas: Dict[str, str] = {}
+
+            # Collect unique files referenced across all manifest items
+            unique_rel_paths: Set[str] = set()
+            for item in self.items:
+                for rel_path in item.feature_files.values():
+                    unique_rel_paths.add(rel_path)
+
+            for rel_path in unique_rel_paths:
+                full_p = os.path.abspath(os.path.join(base_dir_abs, rel_path))
+                # Path traversal check: must reside strictly under base_dir
+                try:
+                    if os.path.commonpath([base_dir_abs, full_p]) != base_dir_abs:
+                        errors.append(f"Path traversal detected: {rel_path} escapes approved base directory {base_dir}")
+                        continue
+                except ValueError:
+                    errors.append(f"Path traversal check failed across drives: {rel_path}")
+                    continue
+
+                if not os.path.exists(full_p):
+                    errors.append(f"Feature file not found: {full_p}")
+                    continue
+
+                h = hashlib.sha256()
+                with open(full_p, "rb") as f:
+                    while chunk := f.read(65536):
+                        h.update(chunk)
+                file_actual_shas[rel_path] = h.hexdigest()
+
+            # Verify EVERY item across the entire manifest (no 50-row truncation)
+            for idx, item in enumerate(self.items):
+                if not item.feature_files or not item.feature_checksums:
+                    errors.append(f"Row {idx} ({item.sample_id}) lacks mandatory feature_files or feature_checksums in real mode.")
+                    break
                 for mod, rel_path in item.feature_files.items():
-                    full_p = os.path.join(base_dir, rel_path)
-                    if not os.path.exists(full_p):
-                        errors.append(f"Feature file not found: {full_p}")
-                        break
                     expected_sha = item.feature_checksums.get(mod)
-                    if expected_sha:
-                        h = hashlib.sha256()
-                        with open(full_p, "rb") as f:
-                            while chunk := f.read(65536):
-                                h.update(chunk)
-                        actual_sha = h.hexdigest()
-                        if actual_sha != expected_sha:
-                            errors.append(f"SHA-256 mismatch for {full_p}: expected {expected_sha[:12]}, got {actual_sha[:12]}")
-                            break
+                    if not expected_sha:
+                        errors.append(f"Row {idx} ({item.sample_id}): Missing expected checksum for modality '{mod}'.")
+                        break
+                    actual_sha = file_actual_shas.get(rel_path)
+                    if actual_sha != expected_sha:
+                        errors.append(
+                            f"Checksum mismatch at row {idx} ({item.sample_id}, {mod}): "
+                            f"expected {expected_sha[:12]}, got {actual_sha[:12] if actual_sha else 'MISSING'}"
+                        )
+                        break
+                if len(errors) >= 10:  # Cap error list to avoid spamming
+                    break
 
         is_valid = (len(errors) == 0)
 
