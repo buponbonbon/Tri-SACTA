@@ -21,10 +21,13 @@ from __future__ import annotations
 import os
 import sys
 import copy
+import math
+import hashlib
 import argparse
 import logging
 import json
 import yaml
+from collections import defaultdict
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -254,6 +257,22 @@ def main():
     shift_gen = ShiftStreamGenerator(config, seed=args.seed, use_protocol_v2=True)
     regimes = shift_gen.get_regime_sequence()
 
+    # Provenance hashes (V5-05, V6-09)
+    config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode("utf-8")).hexdigest()
+    checkpoint_hash = "none"
+    if ckpt_path and os.path.exists(ckpt_path):
+        checkpoint_hash = hashlib.sha256(open(ckpt_path, "rb").read()).hexdigest()
+    stream_hasher = hashlib.sha256()
+
+    all_pred_labels: List[int] = []
+    all_true_labels: List[int] = []
+    all_modality_masks: List[str] = []
+    per_event_telemetry: List[Dict[str, Any]] = []
+    total_adapted_batches: int = 0
+    total_evaluated_batches: int = 0
+    per_regime_adapted: Dict[str, int] = defaultdict(int)
+    total_param_delta: float = 0.0
+
     overall_tracker = MetricsTracker(num_classes=num_classes, target_coverage=(1.0 - target_alpha))
     regime_results = {}
     time_series_data = {
@@ -285,10 +304,15 @@ def main():
             labels = batch["labels"].to(device)
             bsz = labels.size(0)
 
+            # Update stream hash deterministically
+            stream_hasher.update(str(reg_idx).encode("utf-8"))
+            stream_hasher.update(labels.detach().cpu().numpy().tobytes())
+
             latency.start()
 
             # Prequential protocol (R3-06): evaluate prediction with theta_t BEFORE adapting
             precomputed_shift_scores = None
+            step_res = None
             if args.protocol == "prequential":
                 if tta_method is not None and hasattr(tta_method, "detector"):
                     # Update shift detector history EXACTLY ONCE per batch (R4-07)
@@ -368,11 +392,54 @@ def main():
             # In prequential protocol: adapt model AFTER prediction sets are emitted (R3-06, R4-07)
             if args.protocol == "prequential" and tta_method is not None:
                 if precomputed_shift_scores is not None and hasattr(tta_method, "adapt_step"):
-                    _ = tta_method.adapt_step(features, mod_mask, precomputed_shift_scores=precomputed_shift_scores)
+                    step_res = tta_method.adapt_step(features, mod_mask, precomputed_shift_scores=precomputed_shift_scores)
                 else:
-                    _ = tta_method.adapt_step(features, mod_mask)
+                    step_res = tta_method.adapt_step(features, mod_mask)
+
+            # Track adaptation activity
+            total_evaluated_batches += 1
+            if step_res is not None and step_res.get("adapted", False):
+                total_adapted_batches += 1
+                per_regime_adapted[f"regime_{reg_idx}"] += 1
+                total_param_delta += float(step_res.get("param_delta", 0.0))
 
             latency_ms = latency.stop(num_samples=bsz)
+
+            # Per-event conformal and label telemetry (V6-09)
+            for i in range(bsz):
+                s_pred = int(logits[i].argmax().item())
+                s_true = int(labels[i].item())
+                m_str = get_mask_key(batch["modality_mask"], i)
+                s_set = pred_sets[i] if pred_sets is not None else [s_pred]
+                is_hit = bool(s_true in s_set)
+
+                all_pred_labels.append(s_pred)
+                all_true_labels.append(s_true)
+                all_modality_masks.append(m_str)
+
+                alpha_val = float(conformal_predictor.alphas[m_str]) if (conformal_predictor and hasattr(conformal_predictor, "alphas")) else float(target_alpha)
+                eta_val = float(getattr(conformal_predictor, "eta_0", 0.0))
+                if conformal_predictor and getattr(conformal_predictor, "controller_mode", "") == "dynamic_mask_aci":
+                    eta_val = float(np.clip(
+                        conformal_predictor.eta_0 * (1.0 + conformal_predictor.beta_1 * math.tanh(avg_shift_vel) + conformal_predictor.beta_2 * math.tanh(disagree)),
+                        conformal_predictor.eta_min, conformal_predictor.eta_max
+                    ))
+
+                per_event_telemetry.append({
+                    "t": len(all_pred_labels),
+                    "regime": reg_idx,
+                    "regime_name": reg_name,
+                    "mask": m_str,
+                    "true_label": s_true,
+                    "predicted_label": s_pred,
+                    "prediction_set": s_set,
+                    "set_size": len(s_set),
+                    "covered": is_hit,
+                    "alpha_t": alpha_val,
+                    "eta_t": eta_val,
+                    "shift_velocity": float(avg_shift_vel),
+                    "disagreement": float(disagree),
+                })
 
             # Update trackers
             reg_tracker.update(logits, labels, pred_sets)
@@ -400,6 +467,8 @@ def main():
 
     time_series_data["coverage_hits"] = overall_tracker.coverage_binary_stream
 
+    stream_hash_str = stream_hasher.hexdigest()
+
     final_results = {
         "dataset": dataset_name,
         "method": args.method,
@@ -408,6 +477,26 @@ def main():
         "data_mode": args.data_mode,
         "seed": args.seed,
         "delay": args.delay,
+        "manifest_hash": current_manifest_hash or "none",
+        "checkpoint_hash": checkpoint_hash,
+        "config_hash": config_hash,
+        "stream_hash": stream_hash_str,
+        "predicted_labels": all_pred_labels,
+        "true_labels": all_true_labels,
+        "modality_masks": all_modality_masks,
+        "adaptation_counts": {
+            "total_adapted_batches": total_adapted_batches,
+            "total_evaluated_batches": total_evaluated_batches,
+            "adaptation_rate": float(total_adapted_batches / max(total_evaluated_batches, 1)),
+            "per_regime_adapted": dict(per_regime_adapted),
+            "total_param_delta": float(total_param_delta),
+        },
+        "abstention_counts": {
+            "total_fallback": getattr(model, "fallback_count", 0),
+            "total_abstain": getattr(model, "abstain_count", 0),
+            "empty_prediction_sets": getattr(conformal_predictor, "_empty_set_count", 0) if conformal_predictor else 0,
+            "full_prediction_sets": getattr(conformal_predictor, "_full_set_count", 0) if conformal_predictor else 0,
+        },
         "overall_metrics": overall_metrics,
         "regime_metrics": regime_results,
         "efficiency": {
@@ -415,6 +504,7 @@ def main():
             "avg_latency_ms_per_sample": avg_latency,
         },
         "time_series": time_series_data,
+        "per_event_conformal_telemetry": per_event_telemetry,
     }
 
     # Save canonical namespaced artifact (R3-10)

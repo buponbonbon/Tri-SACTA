@@ -198,6 +198,9 @@ class TriSACTA:
                     + self.lambda_reg * loss_reg
                 )
 
+            # Snapshot adaptable parameters before optimizer step to verify nonzero update
+            params_before = [p.detach().clone() for p in adaptable_params]
+
             if device_type == "cuda":
                 self.scaler.scale(loss_total).backward()
                 self.scaler.step(self.optimizer)
@@ -205,6 +208,9 @@ class TriSACTA:
             else:
                 loss_total.backward()
                 self.optimizer.step()
+
+            with torch.no_grad():
+                param_delta = sum((p - p_b).norm().item() for p, p_b in zip(adaptable_params, params_before))
 
             # Clean gradients
             for p in self.model.parameters():
@@ -223,6 +229,7 @@ class TriSACTA:
             result["loss_ent"] = float(loss_ent.item())
             result["loss_align"] = float(loss_align.item())
             result["loss_reg"] = float(loss_reg.item())
+            result["param_delta"] = float(param_delta)
             result["adapted"] = True
         else:
             # Inference only (no reliable anchor or no adaptable modality)

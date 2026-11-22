@@ -10,10 +10,10 @@ dataset:
   split_type: standard_speaker_disjoint
 
 features:
-  visual_dim: 512              # CLIP ViT-B/16 (FPS=1, center-crop)
-  audio_dim: 768               # WavLM-Base (16kHz mono)
-  text_dim: 768                # DeBERTa-v3-Base (last hidden state mean pooling)
-  prosody_dim: 88              # openSMILE eGeMAPSv02
+  visual_dim: 35               # Facet (35-dim continuous action units / pose)
+  audio_dim: 74                # COVAREP (74-dim acoustic features)
+  text_dim: 768                # mDeBERTa-v3-Base (last hidden state mean pooling)
+  prosody_dim: 88              # Padding dim (available_prosody=False)
   cache_dir: data/cmu_mosei/features_cache/
   format: pt                   # PyTorch float16 tensors
 
@@ -53,5 +53,6 @@ training:
   lr: 1.0e-3
   batch_size: 32
   patience: 7
+  class_weights: balanced
   seeds: [42, 100, 2026, 777, 999]
   num_workers: 2

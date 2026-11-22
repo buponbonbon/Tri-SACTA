@@ -252,6 +252,10 @@ class SequentialFeatureExtractor:
                         split=split_name,
                         raw_label=mapped_lbl,
                         mapped_label=mapped_lbl,
+                        available_visual=False,
+                        available_audio=False,
+                        available_text=True,
+                        available_prosody=False,
                         dialogue_id=diag,
                     )
                 )
@@ -315,6 +319,10 @@ class SequentialFeatureExtractor:
                         split=split_name,
                         raw_label=mapped_lbl,
                         mapped_label=mapped_lbl,
+                        available_visual=False,
+                        available_audio=False,
+                        available_text=True,
+                        available_prosody=False,
                     )
                 )
         else:
@@ -402,7 +410,10 @@ def main():
             feature_dims={"text": 768},
             items=all_manifest_items,
         )
-        report = manifest.validate_split_integrity(num_classes=7, data_mode="real", base_dir=out_dir)
+        manifest_base = os.path.dirname(os.path.abspath(manifest_p))
+        report = manifest.validate_split_integrity(num_classes=7, data_mode="real", base_dir=manifest_base)
+        if not report.get("is_valid", False):
+            raise ValueError(f"[FAIL-CLOSED] Manifest validation failed: {report.get('errors')}")
         manifest.save_json(manifest_p)
         logger.info(f"[SUCCESS] Authentic text extraction complete ({len(all_manifest_items)} items). Manifest hash: {report['manifest_hash'][:12]}")
     else:

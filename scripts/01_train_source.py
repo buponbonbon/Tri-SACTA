@@ -107,6 +107,7 @@ def main():
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--epochs", type=int, default=None, help="Override epochs from config")
     parser.add_argument("--data-mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
+    parser.add_argument("--class-weights", type=str, default="none", choices=["none", "balanced"], help="Class weighting scheme to prevent single-class collapse")
     parser.add_argument("--output_dir", type=str, default="checkpoints")
     args = parser.parse_args()
 
@@ -137,9 +138,23 @@ def main():
 
     device_type = "cuda" if device.type == "cuda" else "cpu"
     scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
-    criterion = nn.CrossEntropyLoss()
-
     num_classes = config.get("model", {}).get("num_classes", 7)
+
+    use_balanced = args.class_weights == "balanced" or config.get("training", {}).get("class_weights") == "balanced"
+    if use_balanced:
+        all_train_labels = []
+        for batch in dataloaders["train"]:
+            all_train_labels.extend(batch["labels"].tolist())
+        class_counts = np.bincount(all_train_labels, minlength=num_classes)
+        class_counts = np.maximum(class_counts, 1)
+        total_samples = len(all_train_labels)
+        weights = total_samples / (num_classes * class_counts)
+        weights = weights / weights.sum() * float(num_classes)
+        weight_tensor = torch.tensor(weights, dtype=torch.float32, device=device)
+        logger.info(f"Using balanced class weights: {np.round(weights, 3).tolist()}")
+        criterion = nn.CrossEntropyLoss(weight=weight_tensor)
+    else:
+        criterion = nn.CrossEntropyLoss()
     best_val_f1 = -1.0
     best_weights = None
     patience = config.get("training", {}).get("patience", 10)

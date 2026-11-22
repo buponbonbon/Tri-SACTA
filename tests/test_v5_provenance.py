@@ -187,7 +187,18 @@ def test_v5_04_manifest_to_tensor_row_join():
 
         # Build matching manifest
         manifest_items = [
-            ManifestItem(sample_id=f"utt_{i:03d}", speaker_id=f"spk_{i:02d}", video_id=f"vid_{i:02d}", split="train", raw_label=0, mapped_label=0)
+            ManifestItem(
+                sample_id=f"utt_{i:03d}",
+                speaker_id=f"spk_{i:02d}",
+                video_id=f"vid_{i:02d}",
+                split="train",
+                raw_label=0,
+                mapped_label=0,
+                available_visual=True,
+                available_audio=True,
+                available_text=True,
+                available_prosody=True,
+            )
             for i in range(count)
         ]
         manifest = DataManifest(
