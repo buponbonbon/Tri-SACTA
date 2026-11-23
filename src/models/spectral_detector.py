@@ -234,6 +234,8 @@ class SpectralShiftDetector:
 
             scores[modality] = float(excess_shift)
             if update_history:
+                if modality not in self._shift_history:
+                    self._shift_history[modality] = deque(maxlen=50)
                 self._shift_history[modality].append(float(excess_shift))
 
         return scores

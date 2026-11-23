@@ -1,0 +1,45 @@
+{
+  "audit_version": "v11.0",
+  "date": "2026-11-23",
+  "status": "BLOCKED_DEPENDENCIES_AND_DATA_ABSENT",
+  "raw_media_inventory": {
+    "raw_video_files_found": 0,
+    "raw_audio_files_found": 0,
+    "raw_transcript_files_found": 0,
+    "verdict": "RAW_DATA_UNAVAILABLE"
+  },
+  "extraction_toolchain_audit": {
+    "torchaudio": "AVAILABLE",
+    "cv2": "AVAILABLE",
+    "librosa": "NOT_INSTALLED",
+    "whisper": "NOT_INSTALLED",
+    "soundfile": "NOT_INSTALLED",
+    "ffmpeg": "NOT_INSTALLED",
+    "covarep_74d": "INCOMPATIBLE_MATLAB_DEPENDENT",
+    "facet_openface_35d": "INCOMPATIBLE_PROPRIETARY_BINARY",
+    "verdict": "FEATURE_INCOMPATIBLE"
+  },
+  "pipeline_stages_feasibility": {
+    "stage_1_raw_ingestion": {
+      "status": "BLOCKED",
+      "reason": "No raw .mp4 or .wav video/audio clips exist in repo or local workspace"
+    },
+    "stage_2_asr_transcription": {
+      "status": "BLOCKED",
+      "reason": "Whisper / speech-to-text models not installed in python environment"
+    },
+    "stage_3_feature_extraction": {
+      "status": "BLOCKED",
+      "reason": "Cannot reproduce 74D COVAREP or 35D FACET features from raw waveforms"
+    },
+    "stage_4_feature_caching_and_inference": {
+      "status": "FUNCTIONAL_CACHED_ONLY",
+      "latency_p50_ms": 4.32,
+      "latency_p95_ms": 5.81,
+      "peak_gpu_vram_mb": 30.1,
+      "throughput_samples_per_sec": 231.5,
+      "caveat": "Measures only tensor forward pass from disk cache, NOT true raw end-to-end media pipeline."
+    }
+  },
+  "conclusion": "Building a genuine raw-input-to-prediction pipeline is fundamentally blocked by lack of raw media files and incompatible legacy extraction toolchains."
+}

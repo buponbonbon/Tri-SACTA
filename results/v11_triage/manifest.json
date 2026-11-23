@@ -1,0 +1,41 @@
+{
+  "manifest_schema": "v11_triage",
+  "created_at": "2026-11-23T21:00:00+07:00",
+  "branch": "research/v11-system-feasibility-go-no-go",
+  "base_commit": "314364fcf90dbf80a112aadab227397370544cd7",
+  "dataset": {
+    "name": "cmu_mosei",
+    "feature_dir": "data/cmu_mosei/features_cache",
+    "splits": {
+      "train": {"samples": 1000, "videos": 112},
+      "val": {"samples": 250, "videos": 29},
+      "cal": {"samples": 250, "videos": 46},
+      "test": {"samples": 500, "videos": 58}
+    },
+    "cross_split_video_overlap": 0
+  },
+  "checkpoints": {
+    "verified_on_disk": [
+      {
+        "seed": 42,
+        "path": "checkpoints/cmu_mosei/real/seed42/source_model.pt",
+        "sha256": "61dd86587e31bcd6850144b12da341386c3e57d78af6c1fdd0c72050c79e5ed4"
+      }
+    ],
+    "unverified_seeds": ["seed100", "seed2026", "seed777", "seed999"],
+    "unverified_status": "CLASSIFIED_AS_NOT_RUN"
+  },
+  "audit_results": {
+    "task_pilot_metrics": "results/v11_triage/task_pilot_metrics.json",
+    "raw_pipeline_timings": "results/v11_triage/raw_pipeline_timings.json",
+    "failure_injection_metrics": "results/v11_triage/failure_injection_metrics.json",
+    "go_no_go": "results/v11_triage/go_no_go.json"
+  },
+  "unit_tests": {
+    "total_tests": 76,
+    "passed": 76,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "verdict": "FREEZE_TRI_SACTA"
+}

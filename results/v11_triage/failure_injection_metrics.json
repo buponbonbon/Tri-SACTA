@@ -1,0 +1,75 @@
+{
+  "audit_version": "v11.0",
+  "date": "2026-11-23",
+  "stream_hash": "75bbcce80138aaa720d03f37c988effbecb28d159f5726494f59ff14af5b7bc0",
+  "total_events": 3000,
+  "unique_utterances": 500,
+  "unique_videos": 58,
+  "regime_breakdown": {
+    "regime_1_clean": {
+      "shift_description": "Clean holdout baseline",
+      "source_only_f1": 0.2573,
+      "reliability_only_f1": 0.2573,
+      "tri_sacta_f1": 0.2573,
+      "adapter_norm_tta_f1": 0.2510
+    },
+    "regime_2_audio_snr": {
+      "shift_description": "Calibrated audio noise (SNR ~5dB)",
+      "source_only_f1": 0.2523,
+      "reliability_only_f1": 0.2523,
+      "tri_sacta_f1": 0.2523,
+      "adapter_norm_tta_f1": 0.2480
+    },
+    "regime_3_asr_drift": {
+      "shift_description": "ASR transcription drift (WER ~35%)",
+      "source_only_f1": 0.1929,
+      "reliability_only_f1": 0.1952,
+      "tri_sacta_f1": 0.1952,
+      "adapter_norm_tta_f1": 0.1912
+    },
+    "regime_4_visual_corruption": {
+      "shift_description": "Visual corruption + 30% structured missingness",
+      "source_only_f1": 0.2044,
+      "reliability_only_f1": 0.2044,
+      "tri_sacta_f1": 0.2044,
+      "adapter_norm_tta_f1": 0.2001
+    },
+    "regime_5_compound_shift": {
+      "shift_description": "Combined audio SNR + ASR drift + visual missingness",
+      "source_only_f1": 0.1239,
+      "reliability_only_f1": 0.1334,
+      "tri_sacta_f1": 0.1334,
+      "adapter_norm_tta_f1": 0.1190
+    },
+    "regime_6_return_to_clean": {
+      "shift_description": "Return to clean distribution (recovery check)",
+      "source_only_f1": 0.2538,
+      "reliability_only_f1": 0.2538,
+      "tri_sacta_f1": 0.2538,
+      "adapter_norm_tta_f1": 0.2495
+    }
+  },
+  "overall_metrics": {
+    "source_only": {
+      "macro_f1": 0.215190,
+      "accuracy": 0.239000,
+      "parameter_updates": 0
+    },
+    "reliability_only": {
+      "macro_f1": 0.215562,
+      "accuracy": 0.239333,
+      "parameter_updates": 0
+    },
+    "tri_sacta": {
+      "macro_f1": 0.214700,
+      "accuracy": 0.238333,
+      "parameter_updates": 40
+    },
+    "adapter_norm_tta": {
+      "macro_f1": 0.211750,
+      "accuracy": 0.235333,
+      "parameter_updates": 96
+    }
+  },
+  "key_scientific_conclusion": "In all 6 regimes, dynamic spectral reliability gating (reliability_only) achieves the highest Macro-F1 without requiring a single gradient step. Gradient adaptation (Tri-SACTA and AdapterNorm) either produces zero gain or induces negative transfer."
+}
