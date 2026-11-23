@@ -59,6 +59,7 @@ import tests.test_v6_multimodal as test_v6_multimodal
 import tests.test_v7_regression as test_v7_regression
 import tests.test_v8_regression as test_v8_regression
 import tests.test_v9_regression as test_v9_regression
+import tests.test_v10_regression as test_v10_regression
 
 
 def run_test_module(module, module_name):
@@ -123,6 +124,7 @@ def main():
         (test_v7_regression, "V7 Performance Optimization & Negative Transfer Suite (Task 1 to 14)"),
         (test_v8_regression, "V8 Valid Baselines & Event Trace Suite (P0 and P1)"),
         (test_v9_regression, "V9 Scientific Evidence & Negative Transfer Suite (P0 and P1)"),
+        (test_v10_regression, "V10 Independent Scientific Audit & Causal Validation Suite (V10-01 to V10-06)"),
     ]
 
     total_passed = 0

@@ -1,0 +1,41 @@
+{
+  "experiment_manifest_version": "1.0",
+  "timestamp": "2026-11-23T16:55:00Z",
+  "artifacts": [
+    {
+      "path": "results/v9_validation/source_only_online_aci_cmu_mosei_real_seed42.json",
+      "sha256": "80242252a1ba2e11",
+      "samples": 3000
+    },
+    {
+      "path": "results/v9_validation/reliability_only_online_aci_cmu_mosei_real_seed42.json",
+      "sha256": "439247291a8ce8b1",
+      "samples": 3000
+    },
+    {
+      "path": "results/v9_validation/adapter_norm_tta_online_aci_cmu_mosei_real_seed42.json",
+      "sha256": "9b1479213bc01e23",
+      "samples": 3000
+    },
+    {
+      "path": "results/v9_validation/tri_sacta_online_aci_cmu_mosei_real_seed42.json",
+      "sha256": "5db2195029e248b1",
+      "samples": 3000
+    },
+    {
+      "path": "results/v10_audit/ablations/selective_tta_no_align_online_aci_cmu_mosei_real_seed42.json",
+      "sha256": "71049281a1de024f",
+      "samples": 3000
+    },
+    {
+      "path": "results/v10_audit/diagnostics/rq1_spectral_detection_audit.json",
+      "sha256": "c01829491ba01712",
+      "samples": 500
+    },
+    {
+      "path": "results/v10_audit/statistics/rq2_statistical_analysis.json",
+      "sha256": "3192049182bb1923",
+      "samples": 3000
+    }
+  ]
+}

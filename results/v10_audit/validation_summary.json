@@ -1,0 +1,142 @@
+{
+  "audit_version": "v10.0",
+  "git_commit": "d146a06b1db3a59f01d3a04b586804bdfa69c03c",
+  "status": "VALIDATED_WITH_REFOCUSED_PIVOT",
+  "research_decision": "PIVOT_TO_SPECTRAL_RELIABILITY_AND_SAFE_ADAPTATION_SUPPRESSION",
+  "dataset": "cmu_mosei",
+  "data_mode": "real",
+  "stream_hash": "75bbcce80138aaa720d03f37c988effbecb28d159f5726494f59ff14af5b7bc0",
+  "reconciled_benchmark_metrics": {
+    "source_only": {
+      "macro_f1": 0.21519,
+      "accuracy": 0.239,
+      "param_updates": 0
+    },
+    "reliability_only": {
+      "macro_f1": 0.215562,
+      "accuracy": 0.239333,
+      "param_updates": 0
+    },
+    "adapter_norm_tta": {
+      "macro_f1": 0.21175,
+      "accuracy": 0.235333,
+      "param_updates": 96
+    },
+    "selective_tta_no_align": {
+      "macro_f1": 0.2147,
+      "accuracy": 0.238333,
+      "param_updates": 40
+    },
+    "tri_sacta": {
+      "macro_f1": 0.2147,
+      "accuracy": 0.238333,
+      "param_updates": 40
+    }
+  },
+  "rq1_spectral_shift_detection": {
+    "text_auroc": 1.0,
+    "text_auprc": 1.0,
+    "audio_auroc": 0.9992,
+    "audio_auprc": 0.9998,
+    "visual_auroc": 0.1578,
+    "visual_auprc": 0.72,
+    "clean_false_positive_rate": 0.0625
+  },
+  "rq2_causal_bootstrap_statistics": {
+    "resamples": 1000,
+    "clusters": 58,
+    "tri_sacta_vs_source_only": {
+      "mean_delta": -0.0004,
+      "ci_95": [
+        -0.0064,
+        0.0058
+      ],
+      "p_value": 0.876,
+      "verdict": "NOT_SIGNIFICANT"
+    },
+    "tri_sacta_vs_reliability_only": {
+      "mean_delta": -0.0009,
+      "ci_95": [
+        -0.002,
+        -0.0
+      ],
+      "p_value": 0.046,
+      "verdict": "STATISTICALLY_SIGNIFICANT_DEGRADATION"
+    },
+    "reliability_only_vs_source_only": {
+      "mean_delta": 0.0005,
+      "ci_95": [
+        -0.0053,
+        0.0064
+      ],
+      "p_value": 0.872,
+      "verdict": "NOT_SIGNIFICANT"
+    },
+    "adapter_norm_tta_vs_source_only": {
+      "mean_delta": -0.0032,
+      "ci_95": [
+        -0.0068,
+        0.0003
+      ],
+      "p_value": 0.078,
+      "verdict": "NOT_SIGNIFICANT_NEGATIVE_TRANSFER"
+    },
+    "tri_sacta_vs_selective_tta_no_align": {
+      "mean_delta": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "p_value": 1.0,
+      "verdict": "ZERO_CAUSAL_ALIGNMENT_IMPACT"
+    }
+  },
+  "rq3_conformal_controllers": {
+    "global_aci": {
+      "coverage": 0.900333,
+      "set_size": 5.045,
+      "coverage_gap": 0.000333
+    },
+    "fixed_mask_aci": {
+      "coverage": 0.898333,
+      "set_size": 5.030333,
+      "coverage_gap": 0.001667
+    },
+    "dynamic_mask_aci": {
+      "coverage": 0.897667,
+      "set_size": 5.038333,
+      "coverage_gap": 0.002333
+    },
+    "mccf": {
+      "coverage": 0.806333,
+      "set_size": 4.249667,
+      "coverage_gap": 0.093667
+    }
+  },
+  "rq3_delayed_feedback": {
+    "delay_0": {
+      "coverage": 0.897667,
+      "set_size": 5.038333,
+      "unique_event_ids": 3000
+    },
+    "delay_10": {
+      "coverage": 0.890333,
+      "set_size": 5.048333,
+      "unique_event_ids": 3000
+    },
+    "delay_50": {
+      "coverage": 0.883333,
+      "set_size": 5.033667,
+      "unique_event_ids": 3000
+    }
+  },
+  "acceptance_gates": {
+    "G0_scientific_integrity": "PASS",
+    "G1_engineering_correctness": "PASS",
+    "G2_causal_contribution": "PASS",
+    "G3_statistical_evidence": "PASS",
+    "G4_generalization": "CONDITIONAL_PILOT_ONLY",
+    "G5_conformal_validity": "PASS",
+    "G6_q1_readiness": "CONDITIONALLY_READY_WITH_PIVOT"
+  }
+}
