@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "source_only": {
+      "macro_f1": 0.21519011977468466,
+      "accuracy": 0.239
+    },
+    "reliability_only": {
+      "macro_f1": 0.21556153081456028,
+      "accuracy": 0.23933333333333334
+    },
+    "adapter_norm_tta": {
+      "macro_f1": 0.21174974467897215,
+      "accuracy": 0.23533333333333334
+    },
+    "tri_sacta": {
+      "macro_f1": 0.21469995012923865,
+      "accuracy": 0.23833333333333334
+    },
+    "selective_tta_no_align": {
+      "macro_f1": 0.21469995012923865,
+      "accuracy": 0.23833333333333334
+    }
+  },
+  "bootstrap_comparisons": {
+    "tri_sacta_vs_source_only": {
+      "mean_difference": -0.0004221770634443058,
+      "ci_95": [
+        -0.006437768599064536,
+        0.00583267580094949
+      ],
+      "p_value_approx": 0.876,
+      "statistically_significant": false
+    },
+    "tri_sacta_vs_reliability_only": {
+      "mean_difference": -0.0008844099099622222,
+      "ci_95": [
+        -0.002006197142625911,
+        -3.2968611401778034e-06
+      ],
+      "p_value_approx": 0.046,
+      "statistically_significant": true
+    },
+    "reliability_only_vs_source_only": {
+      "mean_difference": 0.0004622328465179164,
+      "ci_95": [
+        -0.005251204826649225,
+        0.00636767364319119
+      ],
+      "p_value_approx": 0.872,
+      "statistically_significant": false
+    },
+    "adapter_norm_tta_vs_source_only": {
+      "mean_difference": -0.00316683825008254,
+      "ci_95": [
+        -0.006791169486711905,
+        0.0003281055619123187
+      ],
+      "p_value_approx": 0.078,
+      "statistically_significant": false
+    },
+    "tri_sacta_vs_selective_tta_no_align": {
+      "mean_difference": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "p_value_approx": 1.0,
+      "statistically_significant": false
+    }
+  }
+}

@@ -63,7 +63,7 @@ def main():
     parser.add_argument("--checkpoint", type=str, default=None)
     parser.add_argument("--spectral_stats", "--spectral-stats", dest="spectral_stats", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only", "reliability_only", "full_adaptation", "adapter_norm_tta"])
+    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only", "reliability_only", "full_adaptation", "adapter_norm_tta", "selective_tta_no_align"])
     parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "fixed_mask_aci", "dynamic_mask_aci", "global_aci", "static_cp", "mccf", "none"])
     parser.add_argument("--delay", type=int, default=0, help="Delayed feedback steps (0, 10, 50)")
     parser.add_argument("--protocol", type=str, default="prequential", choices=["prequential", "transductive"], help="Stream protocol (R3-06)")
@@ -218,6 +218,10 @@ def main():
         rel_config = copy.deepcopy(config)
         rel_config["tta"]["lr"] = 0.0
         tta_method = TriSACTA(model, detector, rel_config)
+    elif args.method == "selective_tta_no_align":
+        no_align_config = copy.deepcopy(config)
+        no_align_config["tta"]["lambda_align"] = 0.0
+        tta_method = TriSACTA(model, detector, no_align_config)
     elif args.method in ["full_adaptation", "adapter_norm_tta"]:
         full_config = copy.deepcopy(config)
         tta_method = AdapterNormTTA(model, full_config)
