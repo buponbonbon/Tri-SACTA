@@ -7,15 +7,15 @@
 ## 2. Clean Null Distribution (Validation Split)
 | Modality | Mean Shift Score | P50 | P95 | P99 | Max | Calibrated $\tau_m$ |
 |---|---|---|---|---|---|---|
-| `visual` | 7.5358 | 7.7360 | 9.7863 | 10.2902 | 10.4162 | `0.0294` |
-| `audio` | 4.6718 | 3.5131 | 7.7948 | 8.1779 | 8.2737 | `0.0369` |
-| `text` | 0.0372 | 0.0319 | 0.0855 | 0.0958 | 0.0984 | `3.3664` |
+| `visual` | 7.5358 | 7.7360 | 9.7863 | 10.2902 | 10.4162 | `0.0217` |
+| `audio` | 4.6718 | 3.5131 | 7.7948 | 8.1779 | 8.2737 | `0.0273` |
+| `text` | 0.0372 | 0.0319 | 0.0855 | 0.0958 | 0.0984 | `2.3282` |
 
 ## 3. Calibrated Classification Performance (Validation Split)
-- **Anchor Threshold ($\theta_{\text{high}}$):** `0.75`
-- **Corrupted Threshold ($\theta_{\text{low}}$):** `0.2`
+- **Anchor Threshold ($\theta_{\text{high}}$):** `0.8`
+- **Corrupted Threshold ($\theta_{\text{low}}$):** `0.1`
 - **Clean Anchor Rate:** `87.5%` (Clean FPR on anchor classification: `12.5%`)
-- **Moderate Shift Adaptable Rate:** `0.0%`
+- **Moderate Shift Adaptable Rate:** `25.0%`
 - **Severe Shift Corrupted Rate:** `66.7%`
 
 ## 4. Scientific Diagnosis & Resolution

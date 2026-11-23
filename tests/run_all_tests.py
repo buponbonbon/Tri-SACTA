@@ -57,6 +57,7 @@ import tests.test_data_authenticity as test_data_authenticity
 import tests.test_v5_provenance as test_v5_provenance
 import tests.test_v6_multimodal as test_v6_multimodal
 import tests.test_v7_regression as test_v7_regression
+import tests.test_v8_regression as test_v8_regression
 
 
 def run_test_module(module, module_name):
@@ -119,6 +120,7 @@ def main():
         (test_v5_provenance, "V5 Provenance Enforcement & Acceptance Suite (V5-01 to V5-11)"),
         (test_v6_multimodal, "V6 Multimodal Authenticity & Selective Adaptation Suite (V6-01 to V6-11)"),
         (test_v7_regression, "V7 Performance Optimization & Negative Transfer Suite (Task 1 to 14)"),
+        (test_v8_regression, "V8 Valid Baselines & Event Trace Suite (P0 and P1)"),
     ]
 
     total_passed = 0

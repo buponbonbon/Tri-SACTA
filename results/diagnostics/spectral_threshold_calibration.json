@@ -31,12 +31,12 @@
     }
   },
   "calibrated_tau_by_modality": {
-    "visual": 0.029396554552089643,
-    "audio": 0.03690674187931965,
-    "text": 3.366401698265802
+    "visual": 0.02168496140673574,
+    "audio": 0.027286061382775183,
+    "text": 2.32818401178451
   },
-  "theta_high": 0.75,
-  "theta_low": 0.2,
+  "theta_high": 0.8,
+  "theta_low": 0.1,
   "performance": {
     "clean_anchor_rate": 0.875,
     "clean_counts": {
@@ -44,11 +44,11 @@
       "adaptable": 3,
       "corrupted": 0
     },
-    "moderate_adaptable_rate": 0.0,
+    "moderate_adaptable_rate": 0.25,
     "moderate_counts": {
       "anchor": 8,
-      "adaptable": 0,
-      "corrupted": 16
+      "adaptable": 6,
+      "corrupted": 10
     },
     "severe_corrupted_rate": 0.6666666666666666,
     "severe_counts": {

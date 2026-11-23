@@ -119,17 +119,17 @@ def main():
     auprc = float(auc(rec, prec))
     logger.info(f"Overall Shift Detection: AUROC={auroc:.4f}, AUPRC={auprc:.4f}")
 
-    # 3. Per-Modality Calibration: tau_m = -ln(theta_high) / (p95_clean_score)
-    theta_high = 0.75
-    theta_low = 0.20
+    # 3. Per-Modality Calibration: tau_m = -ln(theta_high) / (p99_clean_score)
+    theta_high = 0.80
+    theta_low = 0.10
     tau_by_modality: Dict[str, float] = {}
 
     for m, st in clean_stats.items():
-        p95_val = max(1e-4, st["p95"])
-        # Ensure at least 95% of clean samples achieve r >= theta_high
-        tau_m = float(-np.log(theta_high) / p95_val)
+        p99_val = max(1e-4, st.get("p99", st["p95"]))
+        # Ensure at least 99% of clean samples achieve r >= theta_high (V8 P1-1 fix)
+        tau_m = float(-np.log(theta_high) / p99_val)
         tau_by_modality[m] = tau_m
-        logger.info(f"Calibrated tau for '{m}': tau_{m} = {tau_m:.4f} (p95={p95_val:.4f})")
+        logger.info(f"Calibrated tau for '{m}': tau_{m} = {tau_m:.4f} (p99={p99_val:.4f})")
 
     # Evaluate calibrated per-modality thresholds on clean validation
     clean_classifications = {"anchor": 0, "adaptable": 0, "corrupted": 0}

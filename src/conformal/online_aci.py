@@ -147,9 +147,15 @@ class OnlineACI:
         shift_velocity: float = 0.0,
         disagreement: float = 0.0,
     ) -> List[List[int]]:
-        """Construct conformal prediction sets with rigorous boundary policy and immutable record."""
+        """Construct conformal prediction sets with rigorous boundary policy and immutable record.
+
+        Returns:
+            prediction_sets_list: List of prediction sets for the batch.
+            self.last_record_id tracks the unique record ID for telemetry and delayed feedback.
+        """
         self._global_t += 1
         record_id = self._global_t
+        self.last_record_id = record_id
         alpha_m = self.alphas[modality_mask_key]
 
         with torch.no_grad():
@@ -314,9 +320,16 @@ class OnlineACI:
         modality_mask_key: str,
         shift_velocity: float = 0.0,
         disagreement: float = 0.0,
+        record_id: Optional[int] = None,
     ) -> None:
-        """Standard batch update with delay queue support."""
-        current_id = self._global_t
+        """Standard batch update with delay queue support.
+
+        Args:
+            record_id: Explicit record ID returned by predict_set(). If None,
+                       falls back to self._global_t (backward compatibility only).
+                       Always pass the record_id from predict_set() for correctness (P0-2 fix).
+        """
+        current_id = record_id if record_id is not None else self._global_t
 
         if self.delay > 0:
             self._delay_buffer.append((current_id, labels.detach().cpu().clone(), self._global_t))
@@ -393,3 +406,226 @@ class OnlineACI:
 
 # Backward-compatibility alias
 OnlineAdaptiveACI = OnlineACI
+
+
+class GlobalACI:
+    """Genuinely global ACI controller (P0-3 fix for V8).
+
+    Maintains a SINGLE global alpha level and a single pooled score window
+    for ALL modality mask types. This is the scientifically correct
+    implementation of a mask-agnostic global conformal controller.
+
+    Distinct from fixed_mask_aci (per-mask alpha) and dynamic_mask_aci
+    (per-mask alpha with velocity modulation). GlobalACI has no mask
+    conditioning at all — identical to standard online ACI on a single stream.
+    """
+
+    def __init__(self, num_classes: int, alpha: float, config: Dict[str, Any]):
+        self.num_classes = num_classes
+        self.alpha = float(alpha)
+
+        conf = config.get("conformal", config)
+        self.eta_0: float = float(conf.get("eta_0", 0.01))
+        self.window_size: int = int(conf.get("window_size", 200))
+        self.delay: int = int(conf.get("delay", 0))
+        self.score_fn_name: str = str(conf.get("score_fn", "aps")).lower()
+
+        # Single global alpha and score window
+        self._alpha_global: float = self.alpha
+        self._score_window: deque = deque(maxlen=self.window_size)
+
+        # Tracking
+        self._global_t: int = 0
+        self._records: Dict[int, PredictionRecord] = {}
+        self._delay_buffer: deque = deque()
+        self._coverage_history: List[float] = []
+        self._set_size_history: List[float] = []
+        self._event_telemetry: List[Dict[str, Any]] = []
+        self._last_event_telemetry: Optional[Dict[str, Any]] = None
+        self._empty_set_count: int = 0
+        self._full_set_count: int = 0
+
+        # Expose alphas dict for backward compat (always global alpha for any key)
+        class _GlobalAlphaDict:
+            def __init__(self_, alpha_ref):
+                self_._ref = alpha_ref
+            def __getitem__(self_, key):
+                return self_._global_alpha_ref[0]
+        self.alphas = defaultdict(lambda: self._alpha_global)
+
+    def _compute_scores(self, logits: torch.Tensor, labels: Optional[torch.Tensor] = None) -> torch.Tensor:
+        probs = torch.softmax(logits.float(), dim=-1)
+        if self.score_fn_name == "lac":
+            if labels is None:
+                return 1.0 - probs
+            lbl = labels.long().unsqueeze(-1)
+            return 1.0 - probs.gather(dim=-1, index=lbl).squeeze(-1)
+        # APS
+        sorted_probs, sorted_idx = probs.sort(dim=-1, descending=True)
+        cum = sorted_probs.cumsum(dim=-1)
+        inv_idx = sorted_idx.argsort(dim=-1)
+        cum_scores = cum.gather(dim=-1, index=inv_idx)
+        if labels is None:
+            return cum_scores
+        lbl = labels.long().unsqueeze(-1)
+        return cum_scores.gather(dim=-1, index=lbl).squeeze(-1)
+
+    def _get_quantile(self) -> float:
+        n = len(self._score_window)
+        if n == 0:
+            return 1.0
+        alpha_m = float(np.clip(self._alpha_global, 1e-4, 1.0 - 1e-4))
+        scores_arr = np.sort(np.array(list(self._score_window)))
+        k = math.ceil((n + 1) * (1.0 - alpha_m))
+        if k > n:
+            return 1.0
+        elif k < 1:
+            return float(scores_arr[0])
+        return float(scores_arr[k - 1])
+
+    def predict_set(
+        self,
+        logits: torch.Tensor,
+        modality_mask_key: str,
+        shift_velocity: float = 0.0,
+        disagreement: float = 0.0,
+    ) -> List[List[int]]:
+        """Predict conformal set using single global alpha.
+
+        Returns:
+            prediction_sets_list: List of prediction sets for the batch.
+        """
+        self._global_t += 1
+        record_id = self._global_t
+        self.last_record_id = record_id
+
+        with torch.no_grad():
+            per_class_scores = self._compute_scores(logits, labels=None)
+        per_class_np = per_class_scores.detach().cpu().numpy()
+        batch_size = per_class_np.shape[0]
+
+        q_hat = self._get_quantile()
+        prediction_sets_list: List[List[int]] = []
+        for i in range(batch_size):
+            pset = [int(c) for c in range(self.num_classes) if per_class_np[i, c] <= q_hat]
+            if not pset:
+                pset = [int(logits[i].argmax().item())]
+                self._empty_set_count += 1
+            elif len(pset) == self.num_classes:
+                self._full_set_count += 1
+            prediction_sets_list.append(sorted(pset))
+
+        immutable_sets = tuple(tuple(s) for s in prediction_sets_list)
+        self._records[record_id] = PredictionRecord(
+            record_id=record_id,
+            timestamp=self._global_t,
+            modality_mask_key=modality_mask_key,
+            prediction_sets=immutable_sets,
+            logits=logits.detach().cpu().clone(),
+            shift_velocity=float(shift_velocity),
+            disagreement=float(disagreement),
+            alpha_at_emission=float(self._alpha_global),
+            quantile=float(q_hat),
+        )
+
+        # Keep alphas dict updated for backward compat
+        self.alphas[modality_mask_key] = self._alpha_global
+
+        return prediction_sets_list
+
+    def update(
+        self,
+        logits: torch.Tensor,
+        labels: torch.Tensor,
+        modality_mask_key: str,
+        shift_velocity: float = 0.0,
+        disagreement: float = 0.0,
+        record_id: Optional[int] = None,
+    ) -> None:
+        current_id = record_id if record_id is not None else self._global_t
+        if self.delay > 0:
+            self._delay_buffer.append((current_id, labels.detach().cpu().clone(), self._global_t))
+            self._flush_delay_buffer()
+        else:
+            self._observe(current_id, labels)
+
+    def _flush_delay_buffer(self) -> None:
+        while self._delay_buffer:
+            rec_id, lbl, t_entry = self._delay_buffer[0]
+            if self._global_t - t_entry >= self.delay:
+                self._delay_buffer.popleft()
+                self._observe(rec_id, lbl)
+            else:
+                break
+
+    def _observe(self, record_id: int, labels: torch.Tensor) -> None:
+        if record_id not in self._records:
+            return
+        record = self._records.pop(record_id)
+        pred_sets = record.prediction_sets
+        labels_np = labels.detach().cpu().numpy().reshape(-1)
+
+        with torch.no_grad():
+            scores = self._compute_scores(record.logits, labels.cpu().view(-1))
+        scores_np = scores.numpy()
+
+        batch_hits: List[float] = []
+        batch_sizes: List[float] = []
+        for i in range(len(labels_np)):
+            true_label = int(labels_np[i])
+            hit = 1.0 if true_label in pred_sets[i] else 0.0
+            batch_hits.append(hit)
+            batch_sizes.append(float(len(pred_sets[i])))
+            self._score_window.append(float(scores_np[i]))
+
+        avg_miss = 1.0 - float(np.mean(batch_hits))
+        alpha_before = self._alpha_global
+        alpha_raw = self._alpha_global + self.eta_0 * (self.alpha - avg_miss)
+        alpha_clipped = float(np.clip(alpha_raw, -self.eta_0, 1.0 + self.eta_0))
+        self._alpha_global = alpha_clipped
+        # Sync alphas dict
+        for k in list(self.alphas.keys()):
+            self.alphas[k] = alpha_clipped
+
+        mean_cov = float(np.mean(batch_hits))
+        mean_sz = float(np.mean(batch_sizes))
+        self._coverage_history.append(mean_cov)
+        self._set_size_history.append(mean_sz)
+
+        event_dict = {
+            "event_id": record_id,
+            "timestamp": record.timestamp,
+            "modality_mask_key": record.modality_mask_key,
+            "alpha_before": float(alpha_before),
+            "alpha_after": float(alpha_clipped),
+            "eta_used": self.eta_0,
+            "quantile": float(record.quantile),
+            "clipping_residual": float(alpha_clipped - alpha_raw),
+            "mean_coverage": mean_cov,
+            "mean_set_size": mean_sz,
+            "shift_velocity": record.shift_velocity,
+            "disagreement": record.disagreement,
+        }
+        self._event_telemetry.append(event_dict)
+        self._last_event_telemetry = event_dict
+
+    def get_last_event_telemetry(self) -> Optional[Dict[str, Any]]:
+        return self._last_event_telemetry
+
+    def get_event_telemetry(self) -> List[Dict[str, Any]]:
+        return list(self._event_telemetry)
+
+    def get_metrics(self) -> Dict[str, Any]:
+        cov = float(np.mean(self._coverage_history)) if self._coverage_history else 0.0
+        sz = float(np.mean(self._set_size_history)) if self._set_size_history else 0.0
+        return {
+            "controller_mode": "global_aci",
+            "coverage": cov,
+            "gap": abs(cov - (1.0 - self.alpha)),
+            "avg_set_size": sz,
+            "empty_sets_total": self._empty_set_count,
+            "full_sets_total": self._full_set_count,
+            "coverage_history": list(self._coverage_history),
+            "set_size_history": list(self._set_size_history),
+            "current_alpha_global": self._alpha_global,
+        }

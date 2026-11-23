@@ -27,12 +27,12 @@ model:
 
 tta:
   tau:
-    text: 3.3664
-    audio: 0.0369
-    visual: 0.0294
-    prosody: 0.0300
-  theta_high: 0.75
-  theta_low: 0.20
+    text: 2.3282
+    audio: 0.0273
+    visual: 0.0217
+    prosody: 0.0250
+  theta_high: 0.80
+  theta_low: 0.10
   lambda_align: 0.5
   lambda_reg: 0.01
   lr: 1.0e-4
