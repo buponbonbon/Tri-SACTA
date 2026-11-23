@@ -2,7 +2,7 @@
 
 [![Target Venue: Q1 Journal](https://img.shields.io/badge/Target%20Venue-Q1%20Journal%20(Inf%20Fusion%20%2F%20IEEE%20TMM%20%2F%20Neural%20Networks)-blue.svg)](#)
 [![Hardware: 4GB VRAM Compatible](https://img.shields.io/badge/Hardware-1x%204GB%20Laptop%20GPU%20(Peak%20VRAM%20%3C%2050MB)-success.svg)](#)
-[![Unit Tests: 64/64 PASS](https://img.shields.io/badge/Unit%20Tests-64%2F64%20PASS%20(100%25)-brightgreen.svg)](#)
+[![Unit Tests: 70/70 PASS](https://img.shields.io/badge/Unit%20Tests-70%2F70%20PASS%20(100%25)-brightgreen.svg)](#)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](#)
 [![PyTorch: AMP FP16](https://img.shields.io/badge/PyTorch-AMP%20FP16-red.svg)](#)
 
@@ -36,9 +36,11 @@ Existing multimodal test-time adaptation (TTA) algorithms (e.g., AV-CTTA, READ) 
 ```text
 Tri-SACTA/
 ├── docs/
-│   ├── AUDIT_STATUS_V8.md          # Complete V8 defect register (P0 & P1 blockers resolved)
-│   ├── HANDOVER_V8.md              # V8 engineering handover guide & reproduction steps
-│   ├── CLAIM_EVIDENCE_MATRIX.md    # Formal scientific claim-evidence matrix (v8.0)
+│   ├── AUDIT_STATUS_V9.md          # Complete V9 defect register (P0 negative transfer & P1 baselines resolved)
+│   ├── HANDOVER_V9.md              # V9 engineering handover guide & reproduction steps
+│   ├── CLAIM_EVIDENCE_MATRIX.md    # Formal scientific claim-evidence matrix (v9.0)
+│   ├── AUDIT_STATUS_V8.md          # Historical V8 defect register
+│   ├── HANDOVER_V8.md              # Historical V8 engineering handover guide
 │   ├── AUDIT_STATUS_V7.md          # Historical V7 defect register
 │   ├── THEORY_V3.md                # Conformal proofs, exact accounting identity & counterexample
 │   └── DATA_PROVENANCE_AUDIT.md    # Forensic data provenance audit and quarantine log
@@ -74,15 +76,17 @@ Tri-SACTA/
 │   ├── 05_aggregate_results.py     # Multi-seed aggregator with strict quarantine filtering
 │   ├── calibrate_spectral_thresholds.py # Validation-set spectral threshold & temperature calibrator
 │   ├── diagnose_unimodal_multimodal_baselines.py # 9-way baseline diagnostic benchmark
+│   ├── run_v9_validation_suite.py  # End-to-end V9 validation suite
 │   └── run_v8_validation_suite.py  # End-to-end V8 validation suite
 ├── tests/
-│   ├── run_all_tests.py            # Unified test runner (64/64 unit & regression tests PASS)
+│   ├── run_all_tests.py            # Unified test runner (70/70 unit & regression tests PASS)
+│   ├── test_v9_regression.py       # V9 regression suite (P0 negative transfer, P1 attribution & event trace)
 │   ├── test_v8_regression.py       # V8 regression suite (P0-1 to P0-5, P1-1)
 │   ├── test_v7_regression.py       # V7 regression suite
 │   ├── test_v6_multimodal.py       # V6 multimodal authenticity suite
 │   └── ...                         # Core algorithm and metric verification suites
 ├── results/
-│   ├── v8_validation/              # End-to-end V8 validation outputs and comparison reports
+│   ├── v9_validation/              # End-to-end V9 validation outputs and comparison reports
 │   ├── diagnostics/                # Calibration and unimodal baseline diagnostic artifacts
 │   └── quarantined_v3_fixtures/    # Quarantined legacy artifacts (retained strictly for audit)
 └── requirements.txt

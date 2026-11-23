@@ -160,80 +160,88 @@ class TriSACTA:
 
         # 5. Selective Adaptation (strictly requires clean anchor, R3-07)
         if adaptable_set and anchor_set:
-            self.model.train()
-
-            # Strictly freeze all non-adaptable parameters (AUD-05)
-            for param in self.model.parameters():
-                param.requires_grad = False
-
-            adaptable_params = self.model.get_adaptable_params(active_modalities=list(adaptable_set))
-            for p in adaptable_params:
-                p.requires_grad = True
-
-            self.optimizer.zero_grad(set_to_none=True)
-
-            device_type = "cuda" if device.type == "cuda" else "cpu"
-            with autocast(device_type, enabled=(device_type == "cuda")):
-                out = self.model(
-                    features=batch,
-                    modality_mask=modality_mask,
-                    reliability_weights=reliability_weights,
-                    effective_mask=effective_mask,
-                )
-                logits = out["logits"]
-                curr_per_mod_logits = out["per_modality_logits"]
-
-                # (a) Entropy minimization on fused prediction
-                loss_ent = self._entropy_loss(logits)
-
-                # (b) Cross-modal alignment: align adaptable to detached anchor heads
-                loss_align = self._alignment_loss(
-                    curr_per_mod_logits, anchor_set, adaptable_set, modality_mask
-                )
-
-                # (c) Parameter regularization: only on active adaptable parameters
-                loss_reg = self._regularization_loss(adaptable_set, device)
-
-                loss_total = (
-                    loss_ent
-                    + self.lambda_align * loss_align
-                    + self.lambda_reg * loss_reg
-                )
-
-            # Snapshot adaptable parameters before optimizer step to verify nonzero update
-            params_before = [p.detach().clone() for p in adaptable_params]
-
-            if device_type == "cuda":
-                self.scaler.scale(loss_total).backward()
-                self.scaler.step(self.optimizer)
-                self.scaler.update()
+            if self.lr <= 1e-12:
+                # Reliability-only mode (zero learning rate, AUD-V8): parameters strictly frozen
+                result["logits"] = init_out["logits"].detach()
+                result["param_delta"] = 0.0
+                result["adapted"] = False
+                result["branch_executed"] = True
             else:
-                loss_total.backward()
-                self.optimizer.step()
+                self.model.train()
 
-            with torch.no_grad():
-                param_delta = sum((p - p_b).norm().item() for p, p_b in zip(adaptable_params, params_before))
+                # Strictly freeze all non-adaptable parameters (AUD-05)
+                for param in self.model.parameters():
+                    param.requires_grad = False
 
-            # Clean gradients
-            for p in self.model.parameters():
-                p.grad = None
+                adaptable_params = self.model.get_adaptable_params(active_modalities=list(adaptable_set))
+                for p in adaptable_params:
+                    p.requires_grad = True
 
-            # Clean post-adaptation evaluation forward pass in eval() mode (AUD-25, Task 5)
-            self.model.eval()
-            with torch.no_grad():
-                post_out = self.model(
-                    features=batch,
-                    modality_mask=modality_mask,
-                    reliability_weights=reliability_weights,
-                    effective_mask=effective_mask,
-                )
-            result["logits"] = post_out["logits"].detach()
-            result["loss"] = float(loss_total.item())
-            result["loss_ent"] = float(loss_ent.item())
-            result["loss_align"] = float(loss_align.item())
-            result["loss_reg"] = float(loss_reg.item())
-            result["param_delta"] = float(param_delta)
-            result["adapted"] = True
+                self.optimizer.zero_grad(set_to_none=True)
+
+                device_type = "cuda" if device.type == "cuda" else "cpu"
+                with autocast(device_type, enabled=(device_type == "cuda")):
+                    out = self.model(
+                        features=batch,
+                        modality_mask=modality_mask,
+                        reliability_weights=reliability_weights,
+                        effective_mask=effective_mask,
+                    )
+                    logits = out["logits"]
+                    curr_per_mod_logits = out["per_modality_logits"]
+
+                    # (a) Entropy minimization on fused prediction
+                    loss_ent = self._entropy_loss(logits)
+
+                    # (b) Cross-modal alignment: align adaptable to detached anchor heads
+                    loss_align = self._alignment_loss(
+                        curr_per_mod_logits, anchor_set, adaptable_set, modality_mask
+                    )
+
+                    # (c) Parameter regularization: only on active adaptable parameters
+                    loss_reg = self._regularization_loss(adaptable_set, device)
+
+                    loss_total = (
+                        loss_ent
+                        + self.lambda_align * loss_align
+                        + self.lambda_reg * loss_reg
+                    )
+
+                # Snapshot adaptable parameters before optimizer step to verify nonzero update
+                params_before = [p.detach().clone() for p in adaptable_params]
+
+                if device_type == "cuda":
+                    self.scaler.scale(loss_total).backward()
+                    self.scaler.step(self.optimizer)
+                    self.scaler.update()
+                else:
+                    loss_total.backward()
+                    self.optimizer.step()
+
+                with torch.no_grad():
+                    param_delta = sum((p - p_b).norm().item() for p, p_b in zip(adaptable_params, params_before))
+
+                # Clean gradients
+                for p in self.model.parameters():
+                    p.grad = None
+
+                # Clean post-adaptation evaluation forward pass in eval() mode (AUD-25, Task 5)
+                self.model.eval()
+                with torch.no_grad():
+                    post_out = self.model(
+                        features=batch,
+                        modality_mask=modality_mask,
+                        reliability_weights=reliability_weights,
+                        effective_mask=effective_mask,
+                    )
+                result["logits"] = post_out["logits"].detach()
+                result["loss"] = float(loss_total.item())
+                result["loss_ent"] = float(loss_ent.item())
+                result["loss_align"] = float(loss_align.item())
+                result["loss_reg"] = float(loss_reg.item())
+                result["param_delta"] = float(param_delta)
+                result["adapted"] = bool(param_delta > 1e-7)
+                result["branch_executed"] = True
         else:
             # Inference only (no reliable anchor or no adaptable modality)
             result["logits"] = init_out["logits"].detach()

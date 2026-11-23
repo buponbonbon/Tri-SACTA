@@ -119,17 +119,35 @@ def main():
     auprc = float(auc(rec, prec))
     logger.info(f"Overall Shift Detection: AUROC={auroc:.4f}, AUPRC={auprc:.4f}")
 
-    # 3. Per-Modality Calibration: tau_m = -ln(theta_high) / (p99_clean_score)
+    # 3. Per-Modality Joint Calibration:
+    # tau_m = min(-ln(theta_high) / p99_clean, -ln(theta_low) / d_mod)
+    # Guarantees both clean anchor retention >= 85% and moderate shift adaptability (V9-03).
     theta_high = 0.80
     theta_low = 0.10
     tau_by_modality: Dict[str, float] = {}
 
+    # Measure moderate shift scores (noise 0.5) on validation split
+    mod_scores_by_modality: Dict[str, List[float]] = {m: [] for m in clean_scores}
+    for batch in val_loader:
+        feats = {k: v.clone().cpu() for k, v in batch["features"].items()}
+        mask = {k: v.cpu() for k, v in batch["modality_mask"].items()}
+        for m in clean_scores:
+            feats[m] = feats[m] + torch.randn_like(feats[m]) * 0.5
+        scores = detector.compute_shift_scores(feats, mask, update_history=False)
+        for m in clean_scores:
+            mod_scores_by_modality[m].append(scores.get(m, 0.0))
+
     for m, st in clean_stats.items():
         p99_val = max(1e-4, st.get("p99", st["p95"]))
-        # Ensure at least 99% of clean samples achieve r >= theta_high (V8 P1-1 fix)
-        tau_m = float(-np.log(theta_high) / p99_val)
+        tau_clean = float(-np.log(theta_high) / p99_val)
+        
+        # Moderate shift upper bound to prevent premature corrupted classification
+        mod_p90 = max(1e-4, float(np.percentile(mod_scores_by_modality[m], 90)))
+        tau_mod = float(-np.log(theta_low) / (mod_p90 * 1.5))
+        
+        tau_m = float(min(tau_clean, tau_mod))
         tau_by_modality[m] = tau_m
-        logger.info(f"Calibrated tau for '{m}': tau_{m} = {tau_m:.4f} (p99={p99_val:.4f})")
+        logger.info(f"Calibrated tau for '{m}': tau_{m} = {tau_m:.4f} (clean_bound={tau_clean:.4f}, mod_bound={tau_mod:.4f})")
 
     # Evaluate calibrated per-modality thresholds on clean validation
     clean_classifications = {"anchor": 0, "adaptable": 0, "corrupted": 0}
