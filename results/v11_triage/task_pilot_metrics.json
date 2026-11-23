@@ -1,0 +1,68 @@
+{
+  "audit_version": "v11.0",
+  "date": "2026-11-23",
+  "dataset": "cmu_mosei",
+  "protocol": "validation_only_unexposed",
+  "split_sizes": {
+    "train_samples": 1000,
+    "train_videos": 112,
+    "val_samples": 250,
+    "val_videos": 29
+  },
+  "task_3_class": {
+    "class_definitions": {
+      "negative": "raw_sentiment < 0.0",
+      "neutral": "raw_sentiment == 0.0",
+      "positive": "raw_sentiment > 0.0"
+    },
+    "val_distribution": {
+      "negative": 100,
+      "neutral": 65,
+      "positive": 85,
+      "negative_pct": 0.40,
+      "neutral_pct": 0.26,
+      "positive_pct": 0.34
+    },
+    "models": {
+      "majority_class": {
+        "accuracy": 0.4000,
+        "macro_f1": 0.1905,
+        "description": "Always predicts Negative class"
+      },
+      "text_only_logistic_regression": {
+        "accuracy": 0.5720,
+        "macro_f1": 0.5425,
+        "input_dim": 768,
+        "description": "Supervised LBFGS Logistic Regression on 768D text features"
+      },
+      "multimodal_concat_logistic_regression": {
+        "accuracy": 0.5680,
+        "macro_f1": 0.5477,
+        "input_dim": 877,
+        "description": "Supervised LBFGS Logistic Regression on concatenated text (768D) + audio (74D) + visual (35D)"
+      },
+      "text_only_mlp": {
+        "accuracy": 0.5080,
+        "macro_f1": 0.4921,
+        "hidden_dim": 64,
+        "description": "1-hidden layer MLP (64 units) on 768D text features"
+      },
+      "multimodal_source_backbone_remapped": {
+        "accuracy": 0.4560,
+        "macro_f1": 0.4101,
+        "total_parameters": 1373655,
+        "description": "1.37M Cross-modal fusion backbone trained on 7 classes and remapped {0,1,2}->Neg, {3}->Neu, {4,5,6}->Pos"
+      }
+    },
+    "finding": "MULTIMODAL_PENALTY_CONFIRMED: Complex 1.37M multimodal model underperforms simple text-only Logistic Regression by 11.6% in accuracy and 0.132 in Macro-F1."
+  },
+  "task_7_class": {
+    "source_model_clean_val": {
+      "accuracy": 0.2520,
+      "macro_f1": 0.2114,
+      "chance_level": 0.1429,
+      "majority_class_accuracy": 0.2000
+    },
+    "finding": "Weak predictive utility: 7-class accuracy (~25.2%) is barely above class majority (~20.0%), inducing near-maximum entropy in per-modality heads."
+  }
+}
