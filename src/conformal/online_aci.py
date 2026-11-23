@@ -96,6 +96,8 @@ class OnlineACI:
         # Precise observation event telemetry (Task 7)
         self._event_telemetry: List[Dict[str, Any]] = []
         self._last_event_telemetry: Optional[Dict[str, Any]] = None
+        self._last_emission_telemetry: Optional[Dict[str, Any]] = None
+        self._last_emission_telemetry: Optional[Dict[str, Any]] = None
 
     @property
     def global_score_window(self) -> deque:
@@ -219,6 +221,17 @@ class OnlineACI:
             quantile=float(q_hat_val),
         )
 
+        self._last_emission_telemetry = {
+            "event_id": int(record_id),
+            "timestamp": int(self._global_t),
+            "modality_mask_key": str(modality_mask_key),
+            "alpha_at_emission": float(alpha_m),
+            "quantile": float(q_hat_val),
+            "shift_velocity": float(shift_velocity),
+            "disagreement": float(disagreement),
+            "feedback_delay": int(self.delay),
+        }
+
         return prediction_sets_list
 
     def observe(self, record_id: int, labels: torch.Tensor) -> None:
@@ -308,6 +321,10 @@ class OnlineACI:
     def get_last_event_telemetry(self) -> Optional[Dict[str, Any]]:
         """Return the most recently processed observation event telemetry (Task 7)."""
         return self._last_event_telemetry
+
+    def get_last_emission_telemetry(self) -> Optional[Dict[str, Any]]:
+        """Return emission telemetry for the most recent predict_set call (V9-04)."""
+        return self._last_emission_telemetry
 
     def get_event_telemetry(self) -> List[Dict[str, Any]]:
         """Return full list of observation event telemetries (Task 7)."""
@@ -442,6 +459,7 @@ class GlobalACI:
         self._set_size_history: List[float] = []
         self._event_telemetry: List[Dict[str, Any]] = []
         self._last_event_telemetry: Optional[Dict[str, Any]] = None
+        self._last_emission_telemetry: Optional[Dict[str, Any]] = None
         self._empty_set_count: int = 0
         self._full_set_count: int = 0
 
@@ -531,6 +549,17 @@ class GlobalACI:
         # Keep alphas dict updated for backward compat
         self.alphas[modality_mask_key] = self._alpha_global
 
+        self._last_emission_telemetry = {
+            "event_id": int(record_id),
+            "timestamp": int(self._global_t),
+            "modality_mask_key": str(modality_mask_key),
+            "alpha_at_emission": float(self._alpha_global),
+            "quantile": float(q_hat),
+            "shift_velocity": float(shift_velocity),
+            "disagreement": float(disagreement),
+            "feedback_delay": int(self.delay),
+        }
+
         return prediction_sets_list
 
     def update(
@@ -611,6 +640,9 @@ class GlobalACI:
 
     def get_last_event_telemetry(self) -> Optional[Dict[str, Any]]:
         return self._last_event_telemetry
+
+    def get_last_emission_telemetry(self) -> Optional[Dict[str, Any]]:
+        return self._last_emission_telemetry
 
     def get_event_telemetry(self) -> List[Dict[str, Any]]:
         return list(self._event_telemetry)

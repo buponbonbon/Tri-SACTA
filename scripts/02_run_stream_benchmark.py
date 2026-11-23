@@ -41,7 +41,7 @@ from src.models.fusion_backbone import MultimodalFusionModel
 from src.models.spectral_detector import SpectralShiftDetector
 from src.adaptation.tri_sacta import TriSACTA
 from src.utils.naming import get_checkpoint_path, get_spectral_stats_path, get_run_output_path
-from src.adaptation.baselines_tta import TENT, SAR, MultimodalTTABaseline, FullAdaptation
+from src.adaptation.baselines_tta import TENT, SAR, MultimodalTTABaseline, FullAdaptation, AdapterNormTTA
 from src.conformal.online_aci import OnlineACI, GlobalACI
 from src.conformal.static_cp import SplitConformalPredictor, MaskConditionalCP
 from src.utils.metrics import MetricsTracker, VRAMProfiler, LatencyProfiler
@@ -63,7 +63,7 @@ def main():
     parser.add_argument("--checkpoint", type=str, default=None)
     parser.add_argument("--spectral_stats", "--spectral-stats", dest="spectral_stats", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only", "reliability_only", "full_adaptation"])
+    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only", "reliability_only", "full_adaptation", "adapter_norm_tta"])
     parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "fixed_mask_aci", "dynamic_mask_aci", "global_aci", "static_cp", "mccf", "none"])
     parser.add_argument("--delay", type=int, default=0, help="Delayed feedback steps (0, 10, 50)")
     parser.add_argument("--protocol", type=str, default="prequential", choices=["prequential", "transductive"], help="Stream protocol (R3-06)")
@@ -72,6 +72,7 @@ def main():
     parser.add_argument("--output_dir", "--output-dir", dest="output_dir", type=str, default="results")
     parser.add_argument("--save-logits", "--save_logits", dest="save_logits", type=str, default=None, help="Save streaming test logits to disk (PT file)")
     parser.add_argument("--replay-logits", "--replay_logits", dest="replay_logits", type=str, default=None, help="Replay frozen streaming test logits from disk (PT file)")
+    parser.add_argument("--abstention-mode", "--abstention_mode", dest="abstention_mode", type=str, default="fallback", choices=["hard", "fallback"], help="Abstention policy when all channels are rejected: hard (reject) or fallback (presence fallback)")
     args = parser.parse_args()
 
     with open(args.config, "r") as f:
@@ -217,9 +218,9 @@ def main():
         rel_config = copy.deepcopy(config)
         rel_config["tta"]["lr"] = 0.0
         tta_method = TriSACTA(model, detector, rel_config)
-    elif args.method == "full_adaptation":
+    elif args.method in ["full_adaptation", "adapter_norm_tta"]:
         full_config = copy.deepcopy(config)
-        tta_method = FullAdaptation(model, full_config)
+        tta_method = AdapterNormTTA(model, full_config)
     elif args.method == "tent":
         tta_method = TENT(model, config)
     elif args.method == "sar":
@@ -287,12 +288,15 @@ def main():
     per_event_telemetry: List[Dict[str, Any]] = []
     total_adapted_batches: int = 0
     total_evaluated_batches: int = 0
+    total_branch_executions: int = 0
     per_regime_adapted: Dict[str, int] = defaultdict(int)
     total_param_delta: float = 0.0
 
-    # Genuine abstention counters (Task 6)
+    # Genuine abstention & fallback counters (Task 6 & Audit G1)
     total_abstained_count: int = 0
+    total_fallback_count: int = 0
     per_regime_abstained: Dict[str, int] = defaultdict(int)
+    per_regime_fallback: Dict[str, int] = defaultdict(int)
     non_abstained_preds: List[int] = []
     non_abstained_trues: List[int] = []
     if hasattr(model, "reset_counters"):
@@ -377,8 +381,9 @@ def main():
                     rel_weights = tta_method.detector.compute_reliability_weights(shift_scores, mod_mask, tau=tta_method.tau)
                     anchor_s, adaptable_s, corrupted_s = tta_method._classify_modalities(rel_weights, mod_mask)
                     eff_mask = {m: (mod_mask[m] > 0.5) & (m not in corrupted_s) for m in MODALITY_NAMES}
+                    fallback_flag = (args.abstention_mode == "fallback")
                     with torch.no_grad():
-                        out_pre = model(features, modality_mask=mod_mask, reliability_weights=rel_weights, effective_mask=eff_mask, fallback_to_presence_on_all_rejected=True)
+                        out_pre = model(features, modality_mask=mod_mask, reliability_weights=rel_weights, effective_mask=eff_mask, fallback_to_presence_on_all_rejected=fallback_flag)
                         logits = out_pre["logits"]
                     avg_shift_vel = tta_method.detector.compute_shift_velocity()
                     disagree = tta_method.get_cross_modal_disagreement(
@@ -444,15 +449,20 @@ def main():
                             disagreement=disagree,
                         )[0]
                         pred_sets.append(p_set)
+                        rec_id = getattr(conformal_predictor, "last_record_id", None)
                         conformal_predictor.update(
                             sample_logits,
                             labels[i : i + 1],
                             m_key,
                             shift_velocity=avg_shift_vel,
                             disagreement=disagree,
+                            record_id=rec_id,
                         )
                         time_series_data["alpha_t"].append(conformal_predictor.alphas[m_key])
-                        if hasattr(conformal_predictor, "get_last_event_telemetry"):
+                        if hasattr(conformal_predictor, "get_last_emission_telemetry"):
+                            last_em = conformal_predictor.get_last_emission_telemetry()
+                            sample_telemetries.append(copy.deepcopy(last_em) if last_em is not None else None)
+                        elif hasattr(conformal_predictor, "get_last_event_telemetry"):
                             last_ev = conformal_predictor.get_last_event_telemetry()
                             sample_telemetries.append(copy.deepcopy(last_ev) if last_ev is not None else None)
                         else:
@@ -473,16 +483,21 @@ def main():
                 else:
                     step_res = tta_method.adapt_step(features, mod_mask)
 
-            # Track adaptation activity
+            # Track adaptation activity with strict nonzero update attribution (Audit G0 / P1-1)
             total_evaluated_batches += 1
-            if step_res is not None and step_res.get("adapted", False):
-                total_adapted_batches += 1
-                per_regime_adapted[f"regime_{reg_idx}"] += 1
-                total_param_delta += float(step_res.get("param_delta", 0.0))
+            if step_res is not None:
+                if step_res.get("branch_executed", False):
+                    total_branch_executions += 1
+                if step_res.get("adapted", False):
+                    p_delta = float(step_res.get("param_delta", 0.0))
+                    if p_delta > 1e-7 and args.method not in ["source_only", "reliability_only"]:
+                        total_adapted_batches += 1
+                        per_regime_adapted[f"regime_{reg_idx}"] += 1
+                        total_param_delta += p_delta
 
             latency_ms = latency.stop(num_samples=bsz)
 
-            # Per-event conformal and label telemetry (V6-09, Task 6, Task 7)
+            # Per-event conformal and label telemetry (V6-09, Task 6, Task 7, V9 P0-3)
             for i in range(bsz):
                 s_pred = int(logits[i].argmax().item())
                 s_true = int(labels[i].item())
@@ -490,20 +505,31 @@ def main():
                 s_set = pred_sets[i] if pred_sets is not None else [s_pred]
                 is_hit = bool(s_true in s_set)
 
+                # Abstention evaluation: check if sample had all modalities rejected (Task 6 & V9 P0-3)
+                is_rejected = False
+                if args.protocol == "prequential":
+                    if "all_modalities_rejected" in out_pre:
+                        is_rejected = bool(out_pre["all_modalities_rejected"][i].item())
+                else:
+                    if step_res is not None and "all_modalities_rejected" in step_res:
+                        is_rejected = bool(step_res["all_modalities_rejected"][i].item())
+                    elif "all_modalities_rejected" in out_trans:
+                        is_rejected = bool(out_trans["all_modalities_rejected"][i].item())
+
+                if args.abstention_mode == "hard":
+                    is_abstained = is_rejected
+                    is_fallback = False
+                    if is_abstained:
+                        s_pred = -1
+                        s_set = []
+                        is_hit = False
+                else:
+                    is_abstained = False
+                    is_fallback = is_rejected
+
                 all_pred_labels.append(s_pred)
                 all_true_labels.append(s_true)
                 all_modality_masks.append(m_str)
-
-                # Abstention evaluation: check if sample had all modalities rejected (Task 6)
-                is_abstained = False
-                if args.protocol == "prequential":
-                    if "all_modalities_rejected" in out_pre:
-                        is_abstained = bool(out_pre["all_modalities_rejected"][i].item())
-                else:
-                    if step_res is not None and "all_modalities_rejected" in step_res:
-                        is_abstained = bool(step_res["all_modalities_rejected"][i].item())
-                    elif "all_modalities_rejected" in out_trans:
-                        is_abstained = bool(out_trans["all_modalities_rejected"][i].item())
 
                 if is_abstained:
                     total_abstained_count += 1
@@ -512,15 +538,15 @@ def main():
                     non_abstained_preds.append(s_pred)
                     non_abstained_trues.append(s_true)
 
-                # Pull precise telemetry directly from OnlineACI state (Task 7 & V8 P0-2)
+                # Pull precise telemetry directly from OnlineACI state (Task 7 & V8 P0-2 / V9 P1-2)
                 last_ev = sample_telemetries[i] if (sample_telemetries and i < len(sample_telemetries)) else None
                 if last_ev is not None:
-                    alpha_before = last_ev["alpha_before"]
-                    alpha_val = last_ev["alpha_after"]
-                    eta_val = last_ev["eta_used"]
-                    quantile_val = last_ev["quantile"]
-                    residual_val = last_ev["clipping_residual"]
-                    event_id_val = last_ev["event_id"]
+                    alpha_before = last_ev.get("alpha_before", last_ev.get("alpha_at_emission", target_alpha))
+                    alpha_val = last_ev.get("alpha_after", last_ev.get("alpha_at_emission", target_alpha))
+                    eta_val = last_ev.get("eta_used", getattr(conformal_predictor, "eta_0", 0.0))
+                    quantile_val = last_ev.get("quantile", 0.0)
+                    residual_val = last_ev.get("clipping_residual", 0.0)
+                    event_id_val = last_ev.get("event_id", len(all_pred_labels))
                 elif conformal_predictor is not None and hasattr(conformal_predictor, "alphas"):
                     alpha_before = float(target_alpha)
                     alpha_val = float(conformal_predictor.alphas[m_str])
@@ -548,6 +574,7 @@ def main():
                     "set_size": len(s_set),
                     "covered": is_hit,
                     "is_abstained": is_abstained,
+                    "is_fallback": is_fallback,
                     "alpha_before": alpha_before,
                     "alpha_after": alpha_val,
                     "alpha_t": alpha_val,
@@ -614,11 +641,15 @@ def main():
         "adaptation_counts": {
             "total_adapted_batches": total_adapted_batches,
             "total_evaluated_batches": total_evaluated_batches,
+            "total_branch_executions": total_branch_executions,
+            "parameter_updates_nonzero": total_adapted_batches,
+            "adaptation_steps_attempted": total_branch_executions,
             "adaptation_rate": float(total_adapted_batches / max(total_evaluated_batches, 1)),
             "per_regime_adapted": dict(per_regime_adapted),
             "total_param_delta": float(total_param_delta),
         },
         "abstention_counts": {
+            "abstention_mode": args.abstention_mode,
             "total_emitted_predictions": len(all_pred_labels),
             "total_abstain": total_abstained_count,
             "rejection_rate": rejection_rate,
@@ -655,9 +686,10 @@ def main():
 
     # Save flat backward-compatible output
     delay_tag = f"_delay{args.delay}" if args.delay > 0 else ""
+    ab_tag = "_hard" if args.abstention_mode == "hard" else ""
     flat_file = os.path.join(
         args.output_dir,
-        f"{args.method}_{args.conformal}_{dataset_name}_{args.data_mode}{delay_tag}_seed{args.seed}.json"
+        f"{args.method}_{args.conformal}_{dataset_name}_{args.data_mode}{delay_tag}{ab_tag}_seed{args.seed}.json"
     )
     with open(flat_file, "w") as f:
         json.dump(final_results, f, indent=2)

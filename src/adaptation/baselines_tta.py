@@ -660,20 +660,17 @@ class MultimodalTTABaseline:
 
 
 # ===========================================================================
-# FullAdaptation: Unconditional full-parameter entropy minimization baseline
+# AdapterNormTTA: Unconditional adapter and LayerNorm entropy minimization
 # ===========================================================================
 
 
-class FullAdaptation:
-    """Full-parameter entropy minimization baseline (P0-1 fix for V8).
+class AdapterNormTTA:
+    """Unconditional Adapter & LayerNorm TTA baseline (Audit G0 / P1-1).
 
-    This is a valid scientific baseline that performs unconditional gradient
-    updates on ALL adaptable parameters (LayerNorm + LowRankAdapters) for
-    every test batch, without any modality classification gate. It is distinct
-    from Tri-SACTA which requires a non-empty anchor set before adapting.
-
-    This correctly implements what 'full_adaptation' should mean: adapt
-    regardless of reliability scores, using entropy minimization loss.
+    This baseline performs unconditional gradient updates on ALL adaptable
+    parameters (LayerNorm + LowRankAdapters, representing 1.83% of network parameters)
+    for every test batch, without any spectral detection or modality classification gate.
+    Formerly labeled 'full_adaptation'.
     """
 
     def __init__(
@@ -706,7 +703,7 @@ class FullAdaptation:
         self._step_count: int = 0
 
         logger.info(
-            f"FullAdaptation initialized — lr={self.lr:.1e}, lambda_reg={self.lambda_reg:.4f}"
+            f"AdapterNormTTA initialized — lr={self.lr:.1e}, lambda_reg={self.lambda_reg:.4f}"
         )
 
     def adapt_step(
@@ -804,3 +801,7 @@ class FullAdaptation:
         device_type = "cuda" if torch.cuda.is_available() else "cpu"
         self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
         self._step_count = 0
+
+
+# Backward compatibility alias (Audit G0 / P1-1)
+FullAdaptation = AdapterNormTTA

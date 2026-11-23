@@ -8,14 +8,14 @@
 | Modality | Mean Shift Score | P50 | P95 | P99 | Max | Calibrated $\tau_m$ |
 |---|---|---|---|---|---|---|
 | `visual` | 7.5358 | 7.7360 | 9.7863 | 10.2902 | 10.4162 | `0.0217` |
-| `audio` | 4.6718 | 3.5131 | 7.7948 | 8.1779 | 8.2737 | `0.0273` |
-| `text` | 0.0372 | 0.0319 | 0.0855 | 0.0958 | 0.0984 | `2.3282` |
+| `audio` | 4.6718 | 3.5131 | 7.7948 | 8.1779 | 8.2737 | `0.0177` |
+| `text` | 0.0372 | 0.0319 | 0.0855 | 0.0958 | 0.0984 | `0.1848` |
 
 ## 3. Calibrated Classification Performance (Validation Split)
 - **Anchor Threshold ($\theta_{\text{high}}$):** `0.8`
 - **Corrupted Threshold ($\theta_{\text{low}}$):** `0.1`
-- **Clean Anchor Rate:** `87.5%` (Clean FPR on anchor classification: `12.5%`)
-- **Moderate Shift Adaptable Rate:** `25.0%`
+- **Clean Anchor Rate:** `95.8%` (Clean FPR on anchor classification: `4.2%`)
+- **Moderate Shift Adaptable Rate:** `66.7%`
 - **Severe Shift Corrupted Rate:** `66.7%`
 
 ## 4. Scientific Diagnosis & Resolution

@@ -27,8 +27,8 @@ model:
 
 tta:
   tau:
-    text: 2.3282
-    audio: 0.0273
+    text: 0.1848
+    audio: 0.0177
     visual: 0.0217
     prosody: 0.0250
   theta_high: 0.80
