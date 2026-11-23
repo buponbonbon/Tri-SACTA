@@ -35,12 +35,13 @@ class ModalityProjection(nn.Module):
 
     def __init__(self, input_dim: int, fusion_dim: int, dropout: float = 0.1) -> None:
         super().__init__()
+        self.input_norm = nn.LayerNorm(input_dim)
         self.proj = nn.Linear(input_dim, fusion_dim)
         self.norm = nn.LayerNorm(fusion_dim)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.dropout(self.norm(self.proj(x)))
+        return self.dropout(self.norm(self.proj(self.input_norm(x))))
 
 
 class LowRankAdapter(nn.Module):
@@ -186,9 +187,12 @@ class MultimodalFusionModel(nn.Module):
         self.classifier_norm = nn.LayerNorm(self.fusion_dim)
         self.classifier = nn.Linear(self.fusion_dim, self.num_classes)
 
-        # Telemetry counters for fallback / isolation policy (V5-11)
+        # Telemetry counters for fallback / isolation policy (V5-11, Task 6)
         self.fallback_count: int = 0
         self.abstain_count: int = 0
+
+        # Learned modality importance prior (Task 3)
+        self.modality_gate = nn.Parameter(torch.zeros(len(MODALITY_ORDER)))
 
         total, trainable = self.get_total_params()
         logger.info(f"MultimodalFusionModel initialized: {total:,} total params, {trainable:,} trainable ({trainable/1e6:.2f} M)")
@@ -276,7 +280,8 @@ class MultimodalFusionModel(nn.Module):
         for layer in self.transformer_layers:
             tokens = layer(tokens, attn_mask)
 
-        # 4. Safe reliability-weighted pooling (AUD-01, AUD-03, R3-07)
+        # 4. Safe reliability-weighted pooling with learned modality prior (AUD-01, AUD-03, R3-07, Task 3)
+        gate_priors = F.softmax(self.modality_gate, dim=0)
         raw_weights_list = []
         for i, m in enumerate(MODALITY_ORDER):
             if reliability_weights is not None and m in reliability_weights:
@@ -288,8 +293,8 @@ class MultimodalFusionModel(nn.Module):
             else:
                 w = torch.ones(B, device=device)
 
-            # Gate by effective attention mask
-            w = w * attn_mask[:, i].float()
+            # Gate by effective attention mask and learned modality prior
+            w = w * attn_mask[:, i].float() * gate_priors[i]
             raw_weights_list.append(w)
 
         raw_weights = torch.stack(raw_weights_list, dim=1)  # (B, M)
@@ -348,6 +353,11 @@ class MultimodalFusionModel(nn.Module):
 
     def save_source_checkpoint(self, path: str) -> None:
         torch.save(self.state_dict(), path)
+
+    def reset_counters(self) -> None:
+        """Reset telemetry counters for fallback and abstentions (Task 6)."""
+        self.fallback_count = 0
+        self.abstain_count = 0
 
     def load_source_checkpoint(self, path: str, device: str = "cpu") -> None:
         state = torch.load(path, map_location=device)

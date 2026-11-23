@@ -160,9 +160,12 @@ def main():
     patience = config.get("training", {}).get("patience", 10)
     patience_cnt = 0
 
+    aux_weight = float(config.get("training", {}).get("aux_weight", 0.05))
+    logger.info(f"Auxiliary unimodal loss weight: {aux_weight}")
+
     logger.info("Starting source model training...")
     for epoch in range(1, epochs + 1):
-        loss = train_one_epoch(model, dataloaders["train"], optimizer, scaler, criterion, device)
+        loss = train_one_epoch(model, dataloaders["train"], optimizer, scaler, criterion, device, aux_weight=aux_weight)
         val_metrics = evaluate(model, dataloaders["val"], num_classes, device)
         scheduler.step()
 

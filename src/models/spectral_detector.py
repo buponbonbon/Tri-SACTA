@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import logging
 from collections import deque
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Union
 
 import torch
 import torch.nn.functional as F
@@ -242,9 +242,9 @@ class SpectralShiftDetector:
         self,
         shift_scores: Dict[str, float],
         modality_mask: Dict[str, torch.Tensor],
-        tau: float = 1.0,
+        tau: Union[float, Dict[str, float]] = 1.0,
     ) -> Dict[str, torch.Tensor]:
-        """Compute per-modality reliability weights in [0, 1]."""
+        """Compute per-modality reliability weights in [0, 1]. Supports scalar or per-modality calibrated tau (Task 4)."""
         weights: Dict[str, torch.Tensor] = {}
 
         for modality, d_t in shift_scores.items():
@@ -252,7 +252,8 @@ class SpectralShiftDetector:
             if mask is None:
                 continue
 
-            r_val = float(np.exp(-tau * max(0.0, d_t)))
+            tau_m = tau.get(modality, 1.0) if isinstance(tau, dict) else float(tau)
+            r_val = float(np.exp(-tau_m * max(0.0, d_t)))
             r_val = max(1e-4, min(1.0, r_val))
 
             mask_f = mask.float().view(-1)

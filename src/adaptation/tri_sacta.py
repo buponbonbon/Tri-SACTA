@@ -56,7 +56,8 @@ class TriSACTA:
         self.config = config
 
         tta_cfg = config.get("tta", {})
-        self.tau = float(tta_cfg.get("tau", 1.0))
+        raw_tau = tta_cfg.get("tau", 1.0)
+        self.tau = {k: float(v) for k, v in raw_tau.items()} if isinstance(raw_tau, dict) else float(raw_tau)
         self.theta_high = float(tta_cfg.get("theta_high", 0.7))
         self.theta_low = float(tta_cfg.get("theta_low", 0.3))
         self.lambda_align = float(tta_cfg.get("lambda_align", 0.5))
@@ -85,8 +86,9 @@ class TriSACTA:
         self._prev_prev_shift_scores: Optional[Dict[str, float]] = None
         self._step_count: int = 0
 
+        tau_str = f"{self.tau:.2f}" if isinstance(self.tau, (int, float)) else str(self.tau)
         logger.info(
-            f"TriSACTA initialized — tau={self.tau:.2f}, theta_high={self.theta_high:.2f}, "
+            f"TriSACTA initialized — tau={tau_str}, theta_high={self.theta_high:.2f}, "
             f"theta_low={self.theta_low:.2f}, lambda_align={self.lambda_align:.3f}, lambda_reg={self.lambda_reg:.4f}, lr={self.lr:.1e}"
         )
 
@@ -216,13 +218,14 @@ class TriSACTA:
             for p in self.model.parameters():
                 p.grad = None
 
-            # Clean post-adaptation evaluation forward pass in eval() mode (AUD-25)
+            # Clean post-adaptation evaluation forward pass in eval() mode (AUD-25, Task 5)
             self.model.eval()
             with torch.no_grad():
                 post_out = self.model(
                     features=batch,
                     modality_mask=modality_mask,
                     reliability_weights=reliability_weights,
+                    effective_mask=effective_mask,
                 )
             result["logits"] = post_out["logits"].detach()
             result["loss"] = float(loss_total.item())
@@ -284,7 +287,8 @@ class TriSACTA:
         adaptable_set: Set[str],
         modality_mask: Dict[str, torch.Tensor],
     ) -> torch.Tensor:
-        """Align adaptable predictions to stop-gradient anchor predictions."""
+        """Align adaptable predictions to stop-gradient anchor predictions with certainty weighting (V8 P0-5 fix)."""
+        import math
         device = next(self.model.parameters()).device
         loss = torch.tensor(0.0, device=device)
         num_pairs = 0
@@ -296,6 +300,11 @@ class TriSACTA:
             p_a = F.softmax(per_modality_logits[a].detach(), dim=-1)
             a_mask = modality_mask.get(a, torch.ones(p_a.size(0), device=device)).bool().view(-1)
 
+            # Certainty weighting: do not let high-entropy (uncertain) anchors corrupt adaptable heads
+            entropy_a = -(p_a * (p_a + 1e-8).log()).sum(dim=-1)  # (B,)
+            max_entropy = math.log(self.num_classes)
+            certainty_a = torch.clamp(1.0 - (entropy_a / max_entropy), min=0.0, max=1.0)
+
             for u in adaptable_set:
                 if u not in per_modality_logits:
                     continue
@@ -304,14 +313,10 @@ class TriSACTA:
 
                 valid_pair_mask = a_mask & u_mask
                 if valid_pair_mask.any():
-                    # KL(p_u || sg(p_a))
-                    kl = F.kl_div(
-                        p_u_log[valid_pair_mask],
-                        p_a[valid_pair_mask],
-                        reduction="batchmean",
-                        log_target=False,
-                    )
-                    loss = loss + kl
+                    # Pointwise KL divergence summed across classes: (B,)
+                    kl_pointwise = F.kl_div(p_u_log, p_a, reduction="none", log_target=False).sum(dim=-1)
+                    weighted_kl = (kl_pointwise * certainty_a * valid_pair_mask.float()).sum() / valid_pair_mask.float().sum().clamp(min=1.0)
+                    loss = loss + weighted_kl
                     num_pairs += 1
 
         return loss / max(num_pairs, 1)

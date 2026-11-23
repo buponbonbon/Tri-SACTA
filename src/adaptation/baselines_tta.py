@@ -657,3 +657,150 @@ class MultimodalTTABaseline:
     def get_shift_velocity(self) -> Dict[str, float]:
         """Baseline does not track spectral shift velocity."""
         return {}
+
+
+# ===========================================================================
+# FullAdaptation: Unconditional full-parameter entropy minimization baseline
+# ===========================================================================
+
+
+class FullAdaptation:
+    """Full-parameter entropy minimization baseline (P0-1 fix for V8).
+
+    This is a valid scientific baseline that performs unconditional gradient
+    updates on ALL adaptable parameters (LayerNorm + LowRankAdapters) for
+    every test batch, without any modality classification gate. It is distinct
+    from Tri-SACTA which requires a non-empty anchor set before adapting.
+
+    This correctly implements what 'full_adaptation' should mean: adapt
+    regardless of reliability scores, using entropy minimization loss.
+    """
+
+    def __init__(
+        self,
+        model: MultimodalFusionModel,
+        config: dict,
+    ) -> None:
+        self.model = model
+        self.config = config
+        tta_cfg = config.get("tta", {})
+        self.lr = float(tta_cfg.get("lr", 1e-4))
+        self.lambda_reg = float(tta_cfg.get("lambda_reg", 0.01))
+        self.num_classes = config.get("model", {}).get("num_classes", 7)
+
+        # Freeze source state for regularization
+        self.source_state: Dict[str, torch.Tensor] = {
+            k: v.clone().detach().cpu() for k, v in model.state_dict().items()
+        }
+
+        # Optimize ALL adaptable parameters unconditionally
+        adaptable_params = model.get_adaptable_params()
+        self.optimizer = torch.optim.AdamW(
+            adaptable_params if adaptable_params else [torch.zeros(1, requires_grad=True)],
+            lr=self.lr,
+            weight_decay=0.0,
+        )
+
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
+        self._step_count: int = 0
+
+        logger.info(
+            f"FullAdaptation initialized — lr={self.lr:.1e}, lambda_reg={self.lambda_reg:.4f}"
+        )
+
+    def adapt_step(
+        self,
+        batch: Dict[str, torch.Tensor],
+        modality_mask: Dict[str, torch.Tensor],
+        precomputed_shift_scores: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """Unconditionally adapt ALL adaptable parameters via entropy minimization."""
+        self._step_count += 1
+        device = next(self.model.parameters()).device
+
+        # Enable training on all adaptable params
+        for param in self.model.parameters():
+            param.requires_grad = False
+        adaptable_params = self.model.get_adaptable_params()
+        for p in adaptable_params:
+            p.requires_grad = True
+
+        self.model.train()
+        self.optimizer.zero_grad(set_to_none=True)
+
+        device_type = "cuda" if device.type == "cuda" else "cpu"
+        params_before = [p.detach().clone() for p in adaptable_params]
+
+        with autocast(device_type, enabled=(device_type == "cuda")):
+            out = self.model(features=batch, modality_mask=modality_mask)
+            logits = out["logits"]
+
+            # Entropy minimization loss
+            probs = torch.softmax(logits, dim=-1)
+            log_probs = torch.log_softmax(logits, dim=-1)
+            loss_ent = -(probs * log_probs).sum(dim=-1).mean()
+
+            # L2 regularization vs source
+            loss_reg = torch.tensor(0.0, device=device)
+            for name, param in self.model.named_parameters():
+                if param.requires_grad and name in self.source_state:
+                    src = self.source_state[name].to(device)
+                    loss_reg = loss_reg + (param - src).pow(2).sum()
+
+            loss_total = loss_ent + self.lambda_reg * loss_reg
+
+        if device_type == "cuda":
+            self.scaler.scale(loss_total).backward()
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+        else:
+            loss_total.backward()
+            self.optimizer.step()
+
+        with torch.no_grad():
+            param_delta = sum(
+                (p - p_b).norm().item() for p, p_b in zip(adaptable_params, params_before)
+            )
+
+        for p in self.model.parameters():
+            p.grad = None
+
+        # Post-adaptation evaluation pass
+        self.model.eval()
+        with torch.no_grad():
+            post_out = self.model(features=batch, modality_mask=modality_mask)
+
+        return {
+            "logits": post_out["logits"].detach(),
+            "loss": float(loss_total.item()),
+            "loss_ent": float(loss_ent.item()),
+            "loss_align": 0.0,
+            "loss_reg": float(loss_reg.item()),
+            "param_delta": float(param_delta),
+            "adapted": True,
+            "shift_scores": {},
+            "reliability_weights": {},
+            "anchor_set": list(modality_mask.keys()),  # All present modalities
+            "adaptable_set": list(modality_mask.keys()),
+            "corrupted_set": [],
+            "cross_modal_disagreement": 0.0,
+        }
+
+    def get_shift_velocity(self) -> float:
+        return 0.0
+
+    def get_cross_modal_disagreement(self, *args, **kwargs) -> float:
+        return 0.0
+
+    def reset(self) -> None:
+        self.model.load_state_dict(copy.deepcopy(self.source_state))
+        adaptable_params = self.model.get_adaptable_params()
+        self.optimizer = torch.optim.AdamW(
+            adaptable_params if adaptable_params else [torch.zeros(1, requires_grad=True)],
+            lr=self.lr,
+            weight_decay=0.0,
+        )
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scaler = GradScaler(device_type, enabled=(device_type == "cuda"))
+        self._step_count = 0
