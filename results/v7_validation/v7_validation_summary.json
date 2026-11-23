@@ -1,0 +1,132 @@
+{
+  "stream_hash": "75bbcce80138aaa720d03f37c988effbecb28d159f5726494f59ff14af5b7bc0",
+  "checkpoint_hash": "61dd86587e31bcd6850144b12da341386c3e57d78af6c1fdd0c72050c79e5ed4",
+  "adaptation_comparison": {
+    "source_only": {
+      "accuracy": 0.239,
+      "macro_f1": 0.21519011977468466,
+      "empirical_coverage": 0.898,
+      "coverage_gap": 0.0020000000000000018,
+      "avg_set_size": 5.06,
+      "adapted_batches": 0,
+      "adaptation_rate": 0.0,
+      "total_abstain": 0,
+      "rejection_rate": 0.0,
+      "selective_accuracy": 0.239,
+      "selective_macro_f1": 0.21519011977468466
+    },
+    "reliability_only": {
+      "accuracy": 0.23433333333333334,
+      "macro_f1": 0.21216168616958325,
+      "empirical_coverage": 0.9,
+      "coverage_gap": 0.0,
+      "avg_set_size": 5.015333333333333,
+      "adapted_batches": 21,
+      "adaptation_rate": 0.21875,
+      "total_abstain": 225,
+      "rejection_rate": 0.075,
+      "selective_accuracy": 0.24,
+      "selective_macro_f1": 0.21710844567879328
+    },
+    "full_adaptation": {
+      "accuracy": 0.23633333333333334,
+      "macro_f1": 0.21123997428381877,
+      "empirical_coverage": 0.899,
+      "coverage_gap": 0.0010000000000000009,
+      "avg_set_size": 5.065333333333333,
+      "adapted_batches": 0,
+      "adaptation_rate": 0.0,
+      "total_abstain": 0,
+      "rejection_rate": 0.0,
+      "selective_accuracy": 0.23633333333333334,
+      "selective_macro_f1": 0.21123997428381877
+    },
+    "tri_sacta": {
+      "accuracy": 0.23333333333333334,
+      "macro_f1": 0.21217329169783222,
+      "empirical_coverage": 0.8993333333333333,
+      "coverage_gap": 0.0006666666666667043,
+      "avg_set_size": 5.007666666666666,
+      "adapted_batches": 21,
+      "adaptation_rate": 0.21875,
+      "total_abstain": 225,
+      "rejection_rate": 0.075,
+      "selective_accuracy": 0.23891891891891892,
+      "selective_macro_f1": 0.21704161660145987
+    }
+  },
+  "conformal_comparison": {
+    "fixed_mask_aci": {
+      "accuracy": 0.23333333333333334,
+      "macro_f1": 0.21217329169783222,
+      "empirical_coverage": 0.9063333333333333,
+      "coverage_gap": 0.006333333333333302,
+      "avg_set_size": 5.056666666666667
+    },
+    "dynamic_mask_aci": {
+      "accuracy": 0.23333333333333334,
+      "macro_f1": 0.21217329169783222,
+      "empirical_coverage": 0.8993333333333333,
+      "coverage_gap": 0.0006666666666667043,
+      "avg_set_size": 5.007666666666666
+    },
+    "global_aci": {
+      "accuracy": 0.23333333333333334,
+      "macro_f1": 0.21217329169783222,
+      "empirical_coverage": 0.907,
+      "coverage_gap": 0.007000000000000006,
+      "avg_set_size": 5.0776666666666666
+    },
+    "mccf": {
+      "accuracy": 0.23266666666666666,
+      "macro_f1": 0.21155873208889675,
+      "empirical_coverage": 0.8306666666666667,
+      "coverage_gap": 0.06933333333333336,
+      "avg_set_size": 4.426333333333333
+    }
+  },
+  "regime_comparison": {
+    "regime_1": {
+      "name": "Regime 1: Clean Baseline",
+      "source_only_f1": 0.2598116461899672,
+      "reliability_only_f1": 0.2547142473289064,
+      "full_adaptation_f1": 0.2547142473289064,
+      "tri_sacta_f1": 0.2547142473289064
+    },
+    "regime_2": {
+      "name": "Regime 2: Audio Degradation (SNR ~5dB)",
+      "source_only_f1": 0.25610466383312847,
+      "reliability_only_f1": 0.24667552416429528,
+      "full_adaptation_f1": 0.24887188065092533,
+      "tri_sacta_f1": 0.24525245757869807
+    },
+    "regime_3": {
+      "name": "Regime 3: ASR Text Drift (WER ~35%)",
+      "source_only_f1": 0.19300833508164178,
+      "reliability_only_f1": 0.16751993509812205,
+      "full_adaptation_f1": 0.1933065972670517,
+      "tri_sacta_f1": 0.16751993509812205
+    },
+    "regime_4": {
+      "name": "Regime 4: Visual Corruption + 30% Missing",
+      "source_only_f1": 0.20778614270994075,
+      "reliability_only_f1": 0.20255855132059006,
+      "full_adaptation_f1": 0.20255855132059006,
+      "tri_sacta_f1": 0.20032939096109673
+    },
+    "regime_5": {
+      "name": "Regime 5: Severe Compound Shift",
+      "source_only_f1": 0.12388556660217279,
+      "reliability_only_f1": 0.11361977987156638,
+      "full_adaptation_f1": 0.12199822496638177,
+      "tri_sacta_f1": 0.11361977987156638
+    },
+    "regime_6": {
+      "name": "Regime 6: Return-to-Clean Recovery",
+      "source_only_f1": 0.2598116461899672,
+      "reliability_only_f1": 0.25134567270121805,
+      "full_adaptation_f1": 0.25134567270121805,
+      "tri_sacta_f1": 0.255620104106129
+    }
+  }
+}

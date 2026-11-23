@@ -42,6 +42,7 @@ class PredictionRecord:
     shift_velocity: float
     disagreement: float
     alpha_at_emission: float
+    quantile: float = 0.0
 
 
 class OnlineACI:
@@ -91,6 +92,10 @@ class OnlineACI:
         self._per_mask_full_sets: Dict[str, int] = defaultdict(int)
         self._clipping_residuals: Dict[str, List[float]] = defaultdict(list)
         self._cumulative_clipping_residual: Dict[str, float] = defaultdict(float)
+
+        # Precise observation event telemetry (Task 7)
+        self._event_telemetry: List[Dict[str, Any]] = []
+        self._last_event_telemetry: Optional[Dict[str, Any]] = None
 
     @property
     def global_score_window(self) -> deque:
@@ -154,16 +159,19 @@ class OnlineACI:
         batch_size = per_class_np.shape[0]
 
         prediction_sets_list: List[List[int]] = []
+        q_hat_val: float = 0.0
 
         # Boundary checks for fixed-step reference controller (THEORY_V3 Theorem 1)
         if self.controller_mode == "fixed_mask_aci" and alpha_m <= 0.0:
             # Full set of all classes -> guaranteed e_t = 0
+            q_hat_val = float("inf")
             for _ in range(batch_size):
                 prediction_sets_list.append(list(range(self.num_classes)))
                 self._full_set_count += 1
                 self._per_mask_full_sets[modality_mask_key] += 1
         elif self.controller_mode == "fixed_mask_aci" and alpha_m >= 1.0:
             # Empty set -> guaranteed e_t = 1
+            q_hat_val = float("-inf")
             for _ in range(batch_size):
                 prediction_sets_list.append([])
                 self._empty_set_count += 1
@@ -171,6 +179,7 @@ class OnlineACI:
         else:
             # Interior quantile order statistic
             q_hat = self._get_quantile(modality_mask_key)
+            q_hat_val = float(q_hat)
             for i in range(batch_size):
                 pset = [
                     int(c)
@@ -201,6 +210,7 @@ class OnlineACI:
             shift_velocity=float(shift_velocity),
             disagreement=float(disagreement),
             alpha_at_emission=float(alpha_m),
+            quantile=float(q_hat_val),
         )
 
         return prediction_sets_list
@@ -270,6 +280,32 @@ class OnlineACI:
         self._set_size_history.append(mean_sz)
         self._per_mask_coverage[mask_key].append(mean_cov)
         self._per_mask_set_size[mask_key].append(mean_sz)
+
+        # Precise observation event telemetry directly from OnlineACI state (Task 7)
+        event_dict = {
+            "event_id": int(record.record_id),
+            "timestamp": int(record.timestamp),
+            "modality_mask_key": str(mask_key),
+            "alpha_before": float(alpha_m),
+            "alpha_after": float(alpha_clipped),
+            "eta_used": float(eta_t),
+            "quantile": float(record.quantile),
+            "clipping_residual": float(residual),
+            "mean_coverage": float(mean_cov),
+            "mean_set_size": float(mean_sz),
+            "shift_velocity": float(record.shift_velocity),
+            "disagreement": float(record.disagreement),
+        }
+        self._event_telemetry.append(event_dict)
+        self._last_event_telemetry = event_dict
+
+    def get_last_event_telemetry(self) -> Optional[Dict[str, Any]]:
+        """Return the most recently processed observation event telemetry (Task 7)."""
+        return self._last_event_telemetry
+
+    def get_event_telemetry(self) -> List[Dict[str, Any]]:
+        """Return full list of observation event telemetries (Task 7)."""
+        return list(self._event_telemetry)
 
     def update(
         self,

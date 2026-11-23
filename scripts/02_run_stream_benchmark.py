@@ -63,8 +63,8 @@ def main():
     parser.add_argument("--checkpoint", type=str, default=None)
     parser.add_argument("--spectral_stats", "--spectral-stats", dest="spectral_stats", type=str, default=None)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only"])
-    parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "static_cp", "mccf", "none"])
+    parser.add_argument("--method", type=str, default="tri_sacta", choices=["tri_sacta", "tent", "sar", "read", "source_only", "reliability_only", "full_adaptation"])
+    parser.add_argument("--conformal", type=str, default="online_aci", choices=["online_aci", "fixed_mask_aci", "dynamic_mask_aci", "global_aci", "static_cp", "mccf", "none"])
     parser.add_argument("--delay", type=int, default=0, help="Delayed feedback steps (0, 10, 50)")
     parser.add_argument("--protocol", type=str, default="prequential", choices=["prequential", "transductive"], help="Stream protocol (R3-06)")
     parser.add_argument("--data-mode", "--data_mode", dest="data_mode", type=str, default="synthetic", choices=["synthetic", "real"], help="Data mode (AUD-10)")
@@ -207,10 +207,19 @@ def main():
             stacked = {m: torch.cat(tensors, dim=0) for m, tensors in train_feats.items() if tensors}
             detector.register_source_stats(stacked)
 
-    # 4. Initialize TTA Method
+    # 4. Initialize TTA Method (Task 9: source_only, reliability_only, full_adaptation, tri_sacta)
     tta_method = None
     if args.method == "tri_sacta":
         tta_method = TriSACTA(model, detector, config)
+    elif args.method == "reliability_only":
+        rel_config = copy.deepcopy(config)
+        rel_config["tta"]["lr"] = 0.0
+        tta_method = TriSACTA(model, detector, rel_config)
+    elif args.method == "full_adaptation":
+        full_config = copy.deepcopy(config)
+        full_config["tta"]["theta_high"] = 0.0
+        full_config["tta"]["theta_low"] = 0.0
+        tta_method = TriSACTA(model, detector, full_config)
     elif args.method == "tent":
         tta_method = TENT(model, config)
     elif args.method == "sar":
@@ -220,11 +229,18 @@ def main():
     elif args.method == "source_only":
         model.eval()
 
-    # 5. Initialize Conformal Predictor
+    # 5. Initialize Conformal Predictor (Task 10: fixed_mask_aci, dynamic_mask_aci, global_aci, mccf, static_cp)
     conformal_predictor = None
-    if args.conformal == "online_aci":
+    if args.conformal in ["online_aci", "fixed_mask_aci", "dynamic_mask_aci", "global_aci"]:
         conf_cfg = dict(config.get("conformal", {}))
         conf_cfg["delay"] = args.delay
+        if args.conformal == "fixed_mask_aci":
+            conf_cfg["controller"] = "fixed_mask_aci"
+        elif args.conformal in ["online_aci", "dynamic_mask_aci"]:
+            conf_cfg["controller"] = "dynamic_mask_aci"
+        elif args.conformal == "global_aci":
+            conf_cfg["controller"] = "fixed_mask_aci"
+            conf_cfg["min_mask_support"] = 999999  # Force pooled global window
         conformal_predictor = OnlineACI(num_classes=num_classes, alpha=target_alpha, config=conf_cfg)
     elif args.conformal == "static_cp":
         conformal_predictor = SplitConformalPredictor(num_classes=num_classes, alpha=target_alpha)
@@ -273,6 +289,14 @@ def main():
     per_regime_adapted: Dict[str, int] = defaultdict(int)
     total_param_delta: float = 0.0
 
+    # Genuine abstention counters (Task 6)
+    total_abstained_count: int = 0
+    per_regime_abstained: Dict[str, int] = defaultdict(int)
+    non_abstained_preds: List[int] = []
+    non_abstained_trues: List[int] = []
+    if hasattr(model, "reset_counters"):
+        model.reset_counters()
+
     overall_tracker = MetricsTracker(num_classes=num_classes, target_coverage=(1.0 - target_alpha))
     regime_results = {}
     time_series_data = {
@@ -304,9 +328,17 @@ def main():
             labels = batch["labels"].to(device)
             bsz = labels.size(0)
 
-            # Update stream hash deterministically
+            # Update stream hash deterministically (Task 8: segment IDs, corrupted features, physical masks)
             stream_hasher.update(str(reg_idx).encode("utf-8"))
+            seg_ids_str = ",".join(batch.get("segment_ids", [str(i) for i in range(bsz)]))
+            stream_hasher.update(seg_ids_str.encode("utf-8"))
             stream_hasher.update(labels.detach().cpu().numpy().tobytes())
+            for m in sorted(batch["features"].keys()):
+                stream_hasher.update(m.encode("utf-8"))
+                stream_hasher.update(batch["features"][m].detach().cpu().numpy().tobytes())
+            for m in sorted(batch["modality_mask"].keys()):
+                stream_hasher.update(m.encode("utf-8"))
+                stream_hasher.update(batch["modality_mask"][m].detach().cpu().numpy().tobytes())
 
             latency.start()
 
@@ -366,7 +398,7 @@ def main():
                     m_key = get_mask_key(batch["modality_mask"], i)
                     sample_logits = logits[i : i + 1]
 
-                    if args.conformal == "online_aci":
+                    if args.conformal in ["online_aci", "fixed_mask_aci", "dynamic_mask_aci", "global_aci"]:
                         p_set = conformal_predictor.predict_set(
                             sample_logits,
                             m_key,
@@ -405,7 +437,7 @@ def main():
 
             latency_ms = latency.stop(num_samples=bsz)
 
-            # Per-event conformal and label telemetry (V6-09)
+            # Per-event conformal and label telemetry (V6-09, Task 6, Task 7)
             for i in range(bsz):
                 s_pred = int(logits[i].argmax().item())
                 s_true = int(labels[i].item())
@@ -417,16 +449,52 @@ def main():
                 all_true_labels.append(s_true)
                 all_modality_masks.append(m_str)
 
-                alpha_val = float(conformal_predictor.alphas[m_str]) if (conformal_predictor and hasattr(conformal_predictor, "alphas")) else float(target_alpha)
-                eta_val = float(getattr(conformal_predictor, "eta_0", 0.0))
-                if conformal_predictor and getattr(conformal_predictor, "controller_mode", "") == "dynamic_mask_aci":
-                    eta_val = float(np.clip(
-                        conformal_predictor.eta_0 * (1.0 + conformal_predictor.beta_1 * math.tanh(avg_shift_vel) + conformal_predictor.beta_2 * math.tanh(disagree)),
-                        conformal_predictor.eta_min, conformal_predictor.eta_max
-                    ))
+                # Abstention evaluation: check if sample had all modalities rejected (Task 6)
+                is_abstained = False
+                if args.protocol == "prequential":
+                    if "all_modalities_rejected" in out_pre:
+                        is_abstained = bool(out_pre["all_modalities_rejected"][i].item())
+                else:
+                    if step_res is not None and "all_modalities_rejected" in step_res:
+                        is_abstained = bool(step_res["all_modalities_rejected"][i].item())
+                    elif "all_modalities_rejected" in out_trans:
+                        is_abstained = bool(out_trans["all_modalities_rejected"][i].item())
+
+                if is_abstained:
+                    total_abstained_count += 1
+                    per_regime_abstained[f"regime_{reg_idx}"] += 1
+                else:
+                    non_abstained_preds.append(s_pred)
+                    non_abstained_trues.append(s_true)
+
+                # Pull precise telemetry directly from OnlineACI state (Task 7)
+                if conformal_predictor is not None and hasattr(conformal_predictor, "get_last_event_telemetry"):
+                    last_ev = conformal_predictor.get_last_event_telemetry()
+                    if last_ev is not None:
+                        alpha_before = last_ev["alpha_before"]
+                        alpha_val = last_ev["alpha_after"]
+                        eta_val = last_ev["eta_used"]
+                        quantile_val = last_ev["quantile"]
+                        residual_val = last_ev["clipping_residual"]
+                        event_id_val = last_ev["event_id"]
+                    else:
+                        alpha_before = float(target_alpha)
+                        alpha_val = float(conformal_predictor.alphas[m_str])
+                        eta_val = float(getattr(conformal_predictor, "eta_0", 0.0))
+                        quantile_val = 0.0
+                        residual_val = 0.0
+                        event_id_val = len(all_pred_labels)
+                else:
+                    alpha_before = float(target_alpha)
+                    alpha_val = float(target_alpha)
+                    eta_val = 0.0
+                    quantile_val = 0.0
+                    residual_val = 0.0
+                    event_id_val = len(all_pred_labels)
 
                 per_event_telemetry.append({
                     "t": len(all_pred_labels),
+                    "event_id": event_id_val,
                     "regime": reg_idx,
                     "regime_name": reg_name,
                     "mask": m_str,
@@ -435,8 +503,13 @@ def main():
                     "prediction_set": s_set,
                     "set_size": len(s_set),
                     "covered": is_hit,
+                    "is_abstained": is_abstained,
+                    "alpha_before": alpha_before,
+                    "alpha_after": alpha_val,
                     "alpha_t": alpha_val,
                     "eta_t": eta_val,
+                    "quantile": quantile_val,
+                    "clipping_residual": residual_val,
                     "shift_velocity": float(avg_shift_vel),
                     "disagreement": float(disagree),
                 })
@@ -469,6 +542,16 @@ def main():
 
     stream_hash_str = stream_hasher.hexdigest()
 
+    # Calculate selective prediction metrics on non-abstained predictions (Task 6)
+    from sklearn.metrics import accuracy_score, f1_score
+    if non_abstained_trues:
+        selective_acc = float(accuracy_score(non_abstained_trues, non_abstained_preds))
+        selective_f1 = float(f1_score(non_abstained_trues, non_abstained_preds, average="macro", zero_division=0))
+    else:
+        selective_acc = 0.0
+        selective_f1 = 0.0
+    rejection_rate = float(total_abstained_count / max(1, len(all_pred_labels)))
+
     final_results = {
         "dataset": dataset_name,
         "method": args.method,
@@ -492,8 +575,13 @@ def main():
             "total_param_delta": float(total_param_delta),
         },
         "abstention_counts": {
+            "total_emitted_predictions": len(all_pred_labels),
+            "total_abstain": total_abstained_count,
+            "rejection_rate": rejection_rate,
+            "selective_accuracy": selective_acc,
+            "selective_macro_f1": selective_f1,
+            "per_regime_abstained": dict(per_regime_abstained),
             "total_fallback": getattr(model, "fallback_count", 0),
-            "total_abstain": getattr(model, "abstain_count", 0),
             "empty_prediction_sets": getattr(conformal_predictor, "_empty_set_count", 0) if conformal_predictor else 0,
             "full_prediction_sets": getattr(conformal_predictor, "_full_set_count", 0) if conformal_predictor else 0,
         },

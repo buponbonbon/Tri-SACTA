@@ -26,9 +26,13 @@ model:
   num_classes: 7
 
 tta:
-  tau: 1.0
-  theta_high: 0.7
-  theta_low: 0.3
+  tau:
+    text: 3.3664
+    audio: 0.0369
+    visual: 0.0294
+    prosody: 0.0300
+  theta_high: 0.75
+  theta_low: 0.20
   lambda_align: 0.5
   lambda_reg: 0.01
   lr: 1.0e-4
@@ -54,5 +58,6 @@ training:
   batch_size: 32
   patience: 7
   class_weights: balanced
+  aux_weight: 0.05
   seeds: [42, 100, 2026, 777, 999]
   num_workers: 2
