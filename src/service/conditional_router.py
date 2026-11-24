@@ -66,29 +66,41 @@ class ConditionalUtilityRouter(BasePredictorPolicy):
         available_mods = [m for m in ["text", "audio", "visual"] if modality_mask.get(m, True)]
         if not available_mods:
             return {
-                "prediction": 0,
-                "probabilities": np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]),
-                "final_subset": "T",
-                "spent_cost": 1.0,
-                "spent_latency_ms": 1.0,
-                "acquisition_path": ["T"],
-                "routing_reason": "blackout_fallback",
+                "prediction": -1,
+                "probabilities": np.zeros(3, dtype=np.float32),
+                "final_subset": "NONE",
+                "spent_cost": 0.0,
+                "spent_latency_ms": 0.0,
+                "acquisition_path": [],
+                "routing_reason": "blackout_no_modalities",
+                "status": "REJECTED_BLACKOUT",
+                "budget_violated": False,
+                "deadline_violated": False,
             }
 
         # Step 1: Initialize with base available modality (prefer text)
-        if "text" in available_mods:
-            current_mods = ["text"]
-        elif "audio" in available_mods:
-            current_mods = ["audio"]
-        else:
-            current_mods = ["visual"]
-
+        base_mod = "text" if "text" in available_mods else available_mods[0]
+        current_mods = [base_mod]
         current_key = mods_to_subset_key(current_mods)
-        spent_cost = SUBSET_METADATA[current_key]["cost"]
-        spent_latency = SUBSET_METADATA[current_key]["latency_ms"]
-        acquisition_path = [current_key]
+        spent_cost = float(SUBSET_METADATA[current_key]["cost"])
+        spent_latency = float(SUBSET_METADATA[current_key]["latency_ms"])
 
-        probs, pred = self._predict_subset(current_key, features)
+        if cost_budget < spent_cost or deadline_ms < spent_latency:
+            return {
+                "prediction": -1,
+                "probabilities": np.zeros(3, dtype=np.float32),
+                "final_subset": "NONE",
+                "spent_cost": 0.0,
+                "spent_latency_ms": 0.0,
+                "acquisition_path": [],
+                "routing_reason": "infeasible_budget_or_deadline",
+                "status": "REJECTED_INFEASIBLE",
+                "budget_violated": False,
+                "deadline_violated": False,
+            }
+
+        acquisition_path = [current_key]
+        probs, pred = self._predict_subset(current_key, features, modality_mask)
 
         step_traces = []
 
@@ -148,7 +160,7 @@ class ConditionalUtilityRouter(BasePredictorPolicy):
             acquisition_path.append(current_key)
 
             # Re-predict with augmented subset
-            probs, pred = self._predict_subset(current_key, features)
+            probs, pred = self._predict_subset(current_key, features, modality_mask)
 
             if len(current_mods) == len(available_mods) or len(current_mods) == 3:
                 routing_reason = f"all_available_acquired_{current_key}"
@@ -163,4 +175,7 @@ class ConditionalUtilityRouter(BasePredictorPolicy):
             "acquisition_path": acquisition_path,
             "routing_reason": routing_reason,
             "step_traces": step_traces,
+            "status": "SUCCESS",
+            "budget_violated": False,
+            "deadline_violated": False,
         }
