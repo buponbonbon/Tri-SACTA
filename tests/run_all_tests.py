@@ -68,6 +68,9 @@ import tests.test_v13_1_utility as test_v13_1_utility
 import tests.test_v13_1_provenance as test_v13_1_provenance
 import tests.test_v13_1_accounting as test_v13_1_accounting
 import tests.test_v13_1_statistics as test_v13_1_statistics
+import tests.test_v13_2_evaluator_regression as test_v13_2_evaluator_regression
+import tests.test_v13_2_runtime_safety as test_v13_2_runtime_safety
+import tests.test_v13_2_verifier_adversarial as test_v13_2_verifier_adversarial
 
 
 def run_test_module(module, module_name):
@@ -161,6 +164,9 @@ def main():
         (test_v13_1_provenance, "V13.1 Provenance, Lineage & Unexposed Pool Suite"),
         (test_v13_1_accounting, "V13.1 Distributed Socket & Wire Byte Accounting Suite"),
         (test_v13_1_statistics, "V13.1 Fast Macro-F1 & Video Cluster Bootstrap Suite"),
+        (test_v13_2_evaluator_regression, "V13.2 Evaluator Correctness & Regression Suite"),
+        (test_v13_2_runtime_safety, "V13.2 Runtime Safety & Fair Distributed Transport Suite"),
+        (test_v13_2_verifier_adversarial, "V13.2 Automated Fail-Closed Verifier Adversarial Suite"),
     ]
 
     total_passed = 0

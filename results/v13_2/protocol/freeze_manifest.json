@@ -1,0 +1,84 @@
+{
+  "manifest_version": "13.2",
+  "timestamp_utc": "2026-11-24T13:19:03.854300+00:00",
+  "git_base_commit": "e71147fc511c5d50c218ded1fdad96953ae15b90",
+  "active_branch": "research/v13.2-final-systems-validation-release-candidate",
+  "candidate_policy": {
+    "name": "SequentialConfidence_0.55_0.45",
+    "type": "SequentialConfidenceRouter",
+    "tau_stage1": 0.55,
+    "tau_stage2": 0.45,
+    "audio_first": true
+  },
+  "primary_hypothesis": {
+    "statement": "The sequential confidence acquisition runtime (SequentialConfidence_0.55_0.45) achieves >= 15% application-protocol resource reduction with predictive 3-class Macro-F1 non-inferiority (margin >= -0.010) versus AlwaysOnFusion and Static_TA across 7 heterogeneous workloads.",
+    "non_inferiority_margin": -0.01,
+    "resource_reduction_threshold_pct": 15.0,
+    "primary_comparators": [
+      "AlwaysOnFusion",
+      "Static_TA"
+    ],
+    "operational_guardrails": {
+      "min_on_time_rate": 0.95,
+      "min_acceptance_rate": 0.98,
+      "max_budget_violation_rate": 0.0
+    }
+  },
+  "primary_estimand": {
+    "name": "unweighted_mean_per_workload_seed_macro_f1",
+    "label_set": [
+      0,
+      1,
+      2
+    ],
+    "rejection_handling": "counted_as_false_negative_for_true_class"
+  },
+  "secondary_estimand": {
+    "name": "pooled_confusion_macro_f1"
+  },
+  "evaluator_grid": {
+    "seeds": [
+      42,
+      100,
+      2026
+    ],
+    "workload_families": [
+      "CLEAN_MULTIMODAL",
+      "TEXT_EMBEDDING_NOISE",
+      "AUDIO_FEATURE_MASKING",
+      "VISUAL_ZERO_MASK",
+      "COMPOUND_FAULT",
+      "INTERMITTENT_MISSINGNESS",
+      "HETEROGENEOUS_DEADLINE_STRESS"
+    ],
+    "cost_budgets": [
+      1.0,
+      2.2,
+      3.5
+    ],
+    "deadlines_ms": [
+      15.0,
+      30.0,
+      50.0
+    ]
+  },
+  "candidate_holdout_pool": {
+    "source_asset": "data/cmu_mosei/raw/mosei.pkl",
+    "eligible_utterances": 4131,
+    "eligible_unique_video_clusters": 617,
+    "cross_split_video_overlap": 0,
+    "class_distribution": {
+      "negative (0)": 1132,
+      "neutral (1)": 900,
+      "positive (2)": 2099
+    },
+    "isolation_status": "FROZEN_BEFORE_HOLDOUT_ACCESS",
+    "inference_executed": false
+  },
+  "phase_i_contract": {
+    "phase": "PHASE_I",
+    "phase_status": "READY_FOR_HOLDOUT_REVIEW",
+    "phase_ii_authorization": "PENDING_AUTHOR_APPROVAL",
+    "boundary_rule": "STOP before extracting features or generating predictions on fresh holdout."
+  }
+}

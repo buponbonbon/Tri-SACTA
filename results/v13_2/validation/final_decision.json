@@ -1,0 +1,47 @@
+{
+  "verifier_version": "13.2",
+  "timestamp_utc": "2026-11-24T20:20:00Z",
+  "merge_recommendation": "REVIEWABLE_DEVELOPMENT_PROTOTYPE",
+  "scientific_status": "READY_FOR_HOLDOUT_REVIEW",
+  "gates": {
+    "G1_Provenance": {
+      "status": "PASS",
+      "reason": "Raw asset hashes verified on physical disk. 4,131 unexposed samples verified.",
+      "on_disk_sha256": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e",
+      "unexposed_count": 4131
+    },
+    "G2_Evaluator_Correctness": {
+      "status": "PASS",
+      "reason": "Traces verified with exact agreement (delta = 0.00000000). Evaluator checks pass.",
+      "recomputed_primary_f1": 0.5414508254504847
+    },
+    "G3_Statistical_Headroom": {
+      "status": "PASS",
+      "reason": "Non-inferiority verified: CI [-0.0036703521983604895, 0.031260495092902955] >= -0.010. Cost savings verified: CI [48.58429278821033, 51.76251568792376]% >= 15.0%.",
+      "f1_ci": [
+        -0.0036703521983604895,
+        0.031260495092902955
+      ],
+      "cost_saving_ci": [
+        48.58429278821033,
+        51.76251568792376
+      ]
+    },
+    "G4_Systems_Telemetry": {
+      "status": "PASS",
+      "reason": "Physical TCP stream telemetry verified: 63.48% wire byte reduction, 62.88% latency reduction.",
+      "measured_wire_bytes_saved_pct": 63.478739810530946,
+      "measured_latency_saved_pct": 62.877805103064354
+    },
+    "G5_Frozen_Protocol": {
+      "status": "PASS",
+      "reason": "Freeze manifest verified with content SHA-256: 54ef6b48f9aede4c0e119e0e1bda29bbfcc16e0c4c943241101a6e2e98fbe0f8",
+      "manifest_sha256": "54ef6b48f9aede4c0e119e0e1bda29bbfcc16e0c4c943241101a6e2e98fbe0f8"
+    },
+    "G6_Confirmatory_Execution": {
+      "status": "NOT_RUN",
+      "reason": "Phase I execution contract mandates stopping prior to holdout inference pending author approval."
+    }
+  },
+  "recommendation_rationale": "Phase I requirements completed: Data provenance reconciled with physical SHA-256 hashes; evaluator budget propagation corrected; fair transport baselines implemented and benchmarked; paired cluster bootstrap confirms predictive non-inferiority and >45% cost savings; physical TCP socket telemetry proves 63.48% wire byte reduction. Code is suitable for author review as an engineering development prototype. Confirmatory holdout access is locked pending author approval."
+}
