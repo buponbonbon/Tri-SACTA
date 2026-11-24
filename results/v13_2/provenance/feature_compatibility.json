@@ -1,0 +1,21 @@
+{
+  "text_modality": {
+    "representation": "Pretrained DeBERTa embeddings (mean-pooled)",
+    "dimension": 768,
+    "source": "MulT / MISA benchmark distribution (mosei.pkl)",
+    "dtype": "float32"
+  },
+  "audio_modality": {
+    "representation": "COVAREP acoustic features",
+    "dimension": 74,
+    "source": "mosei.pkl",
+    "dtype": "float32"
+  },
+  "visual_modality": {
+    "representation": "FACET visual action units & facial features",
+    "dimension": 35,
+    "source": "mosei.pkl",
+    "dtype": "float32"
+  },
+  "scope_disclosure": "mosei.pkl is a serialized benchmark artifact containing pre-extracted features and transcripts. It does NOT contain raw audiovisual waveform audio or high-resolution pixel video. All latency and bandwidth claims pertain to feature transmission and inference runtime, NOT raw audiovisual decoding or media ingestion."
+}

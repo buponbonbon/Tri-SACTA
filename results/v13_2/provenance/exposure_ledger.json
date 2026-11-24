@@ -1,0 +1,26 @@
+{
+  "audit_version": "13.2",
+  "timestamp_utc": "2026-11-24T13:01:37.178094+00:00",
+  "partitions": {
+    "train": {
+      "status": "DEVELOPMENT_FIT",
+      "access_history": "Used for subset MLP training (seeds 42, 100, 2026)"
+    },
+    "val": {
+      "status": "DEVELOPMENT_FIT",
+      "access_history": "Used for policy threshold selection & prior estimation"
+    },
+    "cal": {
+      "status": "DEVELOPMENT_FIT",
+      "access_history": "Used for conformal quantile calibration"
+    },
+    "test_historical_500": {
+      "status": "QUARANTINED",
+      "access_history": "Exposed across V7-V13; strictly quarantined"
+    },
+    "candidate_unexposed_4131": {
+      "status": "ELIGIBLE_FOR_CONFIRMATORY_FREEZE",
+      "access_history": "Untouched; metadata-only audit"
+    }
+  }
+}

@@ -1,0 +1,359 @@
+{
+  "audit_version": "13.2",
+  "timestamp_utc": "2026-11-24T13:01:37.178094+00:00",
+  "git_commit_base": "e71147fc511c5d50c218ded1fdad96953ae15b90",
+  "git_branch": "research/v13.2-final-systems-validation-release-candidate",
+  "dataset_name": "CMU-MOSEI",
+  "benchmark_task": "3-Class Sentiment Classification (negative: <0, neutral: ==0, positive: >0)",
+  "raw_assets": {
+    "mosei.pkl": {
+      "path": "data/cmu_mosei/raw/mosei.pkl",
+      "size_bytes": 507823345,
+      "sha256": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e"
+    },
+    "train.csv": {
+      "path": "data/cmu_mosei/raw/train.csv",
+      "size_bytes": 4649662,
+      "sha256": "e548cbf003c6ad84c2ba941c0e7626b953864f9632c745cb2171da4bc4411e40"
+    },
+    "val.csv": {
+      "path": "data/cmu_mosei/raw/val.csv",
+      "size_bytes": 552163,
+      "sha256": "6fb286af708543aa8c3bab193803fee78d36acf96a7fe07d401a21a0d3773778"
+    },
+    "test.csv": {
+      "path": "data/cmu_mosei/raw/test.csv",
+      "size_bytes": 1350962,
+      "sha256": "8723f3b6f1aac552dc6c2d2472d8e1329cf8f7b3b13ca51e3fa13b797b702b71"
+    },
+    "data_manifest.json": {
+      "path": "data/cmu_mosei/data_manifest.json",
+      "size_bytes": 1705676,
+      "sha256": "cb77d74b463aa754c562d228c785a1d516ef1d0f4c331459e1c09b6675f74f15"
+    }
+  },
+  "cached_splits": {
+    "train": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/train/text.pt",
+        "size_bytes": 1537101,
+        "sha256": "626f2cf800332a266f398b31d85f425702306bf3ffa7ffd46a6980431b476f11"
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/train/audio.pt",
+        "size_bytes": 149138,
+        "sha256": "44a9fde3dd4077c82476febad30d888cbb58a6a938424d695478b6abdd43c628"
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/train/visual.pt",
+        "size_bytes": 71127,
+        "sha256": "f1c12869cce46e0f573c7644aeecbd999140e078c553dcc753d4f52427541d47"
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/train/labels.pt",
+        "size_bytes": 9111,
+        "sha256": "5cabe0beef89445ef8d6c0fb65249ffe3a8eae88a73914366c35a63f12dc4e1c"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/train/meta.pt",
+        "size_bytes": 245972,
+        "sha256": "0c342f9fd9beab5582a772819a7f6a5547d5be9591b9743298868ee00535d832"
+      }
+    },
+    "val": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/val/text.pt",
+        "size_bytes": 385101,
+        "sha256": "6d10e938fbcabdbb0ea96c7cb7d4ea803899e6be9b58e0d40fbe395379135882"
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/val/audio.pt",
+        "size_bytes": 38162,
+        "sha256": "ed9d9ce4b62ece67e5e66521ce7e98429e665b3faef506dc9da2cc2cecb93d5b"
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/val/visual.pt",
+        "size_bytes": 18647,
+        "sha256": "f130eccfc5ff7056824bee31a9f6453eda7137cf7509b1d84bff18328c30517a"
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/val/labels.pt",
+        "size_bytes": 3159,
+        "sha256": "619ca9189997753329917ce5a16f371a31f3ec38a37830ce1b8d815f2c9c6639"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/val/meta.pt",
+        "size_bytes": 58900,
+        "sha256": "0966687ee9f0e112e4dd436d5040ebf706d32e90c6ca56bdf640b9998b356b9b"
+      }
+    },
+    "cal": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/text.pt",
+        "size_bytes": 385101,
+        "sha256": "90b9818f9decbcd312bdf97f4463c93246ffc68d940a653e6872d26efa5c0ed1"
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/audio.pt",
+        "size_bytes": 38162,
+        "sha256": "de8d73fe8e25c223885b09fa6a4755438910348b94c19ba0ed41e7d27f3b9039"
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/visual.pt",
+        "size_bytes": 18647,
+        "sha256": "8effc2a7ba92fec7f6a85324185cd4e91b14477438eacc4f515cff895d80e5ff"
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/labels.pt",
+        "size_bytes": 3159,
+        "sha256": "1ea04f173f4aca9f5c08cc8f12c0d5d6108c261196620c4344ec1ebfce81af6b"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/meta.pt",
+        "size_bytes": 66516,
+        "sha256": "1b65514483c418b9367df1e519c594c198c45d45c7cdf8f2fbe0a018020dd4e9"
+      }
+    },
+    "test": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/test/text.pt",
+        "size_bytes": 769101,
+        "sha256": "4501208dedf9d5c28d0d3f8f9e13cefba0b700801d7da78a4ffb7ae1c802abbe"
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/test/audio.pt",
+        "size_bytes": 75154,
+        "sha256": "42e1b443832b64d4a60c6d16aa79303067b01b5f1a1d8cfe5d5adb6c6e379f8e"
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/test/visual.pt",
+        "size_bytes": 36119,
+        "sha256": "0e0d88e33d45b449e53b38cf68bfc1b913a4aa6b7c1a57b99f83c94e88bbcf51"
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/test/labels.pt",
+        "size_bytes": 5143,
+        "sha256": "8b2712208bb1e57a94785c6ffba41cd4ecbcab52ef9dfee76864576d70ac20f5"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/test/meta.pt",
+        "size_bytes": 120404,
+        "sha256": "69534e394dbee93b8a6f59d23017c8707ca5fc1bc396e065fe8dc627ea3b684c"
+      }
+    }
+  },
+  "split_lineage_and_exposure": {
+    "train": {
+      "num_utterances": 1000,
+      "num_unique_video_groups": 112,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations do not provide verified human speaker IDs. All previous '0 shared speakers' claims were purely video prefix proxies. Statistical independence is strictly bounded to video-group disjointness."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 390,
+        "neutral (1)": 238,
+        "positive (2)": 372
+      },
+      "exposure_status": "DEVELOPMENT_FIT",
+      "exposure_history": "Authorized development partition (train, val, cal)."
+    },
+    "val": {
+      "num_utterances": 250,
+      "num_unique_video_groups": 29,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations do not provide verified human speaker IDs. All previous '0 shared speakers' claims were purely video prefix proxies. Statistical independence is strictly bounded to video-group disjointness."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 100,
+        "neutral (1)": 65,
+        "positive (2)": 85
+      },
+      "exposure_status": "DEVELOPMENT_FIT",
+      "exposure_history": "Authorized development partition (train, val, cal)."
+    },
+    "cal": {
+      "num_utterances": 250,
+      "num_unique_video_groups": 46,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations do not provide verified human speaker IDs. All previous '0 shared speakers' claims were purely video prefix proxies. Statistical independence is strictly bounded to video-group disjointness."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 43,
+        "neutral (1)": 66,
+        "positive (2)": 141
+      },
+      "exposure_status": "DEVELOPMENT_FIT",
+      "exposure_history": "Authorized development partition (train, val, cal)."
+    },
+    "test": {
+      "num_utterances": 500,
+      "num_unique_video_groups": 58,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations do not provide verified human speaker IDs. All previous '0 shared speakers' claims were purely video prefix proxies. Statistical independence is strictly bounded to video-group disjointness."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 213,
+        "neutral (1)": 117,
+        "positive (2)": 170
+      },
+      "exposure_status": "QUARANTINED_HISTORICAL_BENCHMARK",
+      "exposure_history": "Exposed across V7-V13 iterations; quarantined from confirmatory validation."
+    }
+  },
+  "cross_split_video_overlap": {
+    "train": {
+      "val": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "cal": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "test": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      }
+    },
+    "val": {
+      "train": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "cal": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "test": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      }
+    },
+    "cal": {
+      "train": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "val": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "test": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      }
+    },
+    "test": {
+      "train": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "val": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      },
+      "cal": {
+        "shared_video_groups": 0,
+        "disjoint": true
+      }
+    }
+  },
+  "unexposed_pool_audit": {
+    "raw_test_pool_size": 4643,
+    "historical_test_consumed": 500,
+    "intra_video_segments_excluded": 12,
+    "unexposed_available_utterances": 4131,
+    "unexposed_unique_video_clusters": 617,
+    "cross_split_video_overlap_with_train_val_cal_test": 0,
+    "class_distribution_3class": {
+      "negative (0)": 1132,
+      "neutral (1)": 900,
+      "positive (2)": 2099
+    },
+    "feasibility_status": "AVAILABLE_FOR_CONFIRMATORY_FREEZE",
+    "phase_i_isolation_assertion": "No model inference, feature extraction, or threshold tuning has been executed on this pool. Only metadata inventory was inspected for eligibility determination."
+  },
+  "discrepancy_reconciliation": {
+    "audit_item": "V13.1 Markdown vs JSON Inconsistency Reconciliation",
+    "mosei_pkl_sha256": {
+      "on_disk_actual": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e",
+      "v13_1_json": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e",
+      "v13_1_markdown_erroneous": "950662d08a0ef91e6b360a6e0c608f6d63e9f3b14d8e5792900c6d70ffef4ae4",
+      "verdict": "V13.1 JSON and on-disk raw asset agree perfectly. Markdown contained an obsolete copy-paste error."
+    },
+    "label_counts_reconciliation": {
+      "root_cause": "The actual models, data loader (src/data/loader.py), and evaluation scripts used the standard continuous sentiment thresholding (<0 for negative, ==0 for neutral, >0 for positive). The values in provenance_audit.json (390/238/372 for train, 100/65/85 for val, 43/66/141 for cal, 213/117/170 for test, 1132/900/2099 for unexposed) are mathematically verified from raw tensors. The Markdown values (245/167/588, etc.) were transcribed from a legacy draft table and did NOT correspond to the actual dataset tensors.",
+      "table_comparison": [
+        {
+          "split": "train",
+          "markdown_old": "245/167/588",
+          "verified_real": "390/238/372",
+          "status": "RECONCILED"
+        },
+        {
+          "split": "val",
+          "markdown_old": "68/44/138",
+          "verified_real": "100/65/85",
+          "status": "RECONCILED"
+        },
+        {
+          "split": "cal",
+          "markdown_old": "59/36/155",
+          "verified_real": "43/66/141",
+          "status": "RECONCILED"
+        },
+        {
+          "split": "test",
+          "markdown_old": "129/82/289",
+          "verified_real": "213/117/170",
+          "status": "RECONCILED"
+        },
+        {
+          "split": "unused_pool",
+          "markdown_old": "984/621/2526",
+          "verified_real": "1132/900/2099",
+          "status": "RECONCILED"
+        }
+      ]
+    }
+  },
+  "feature_compatibility": {
+    "text_modality": {
+      "representation": "Pretrained DeBERTa embeddings (mean-pooled)",
+      "dimension": 768,
+      "source": "MulT / MISA benchmark distribution (mosei.pkl)",
+      "dtype": "float32"
+    },
+    "audio_modality": {
+      "representation": "COVAREP acoustic features",
+      "dimension": 74,
+      "source": "mosei.pkl",
+      "dtype": "float32"
+    },
+    "visual_modality": {
+      "representation": "FACET visual action units & facial features",
+      "dimension": 35,
+      "source": "mosei.pkl",
+      "dtype": "float32"
+    },
+    "scope_disclosure": "mosei.pkl is a serialized benchmark artifact containing pre-extracted features and transcripts. It does NOT contain raw audiovisual waveform audio or high-resolution pixel video. All latency and bandwidth claims pertain to feature transmission and inference runtime, NOT raw audiovisual decoding or media ingestion."
+  },
+  "gate_i_a_verdict": {
+    "gate": "GATE_I_A_PROVENANCE_AND_EXPOSURE",
+    "status": "PASS",
+    "rationale": "All raw and cached SHA-256 hashes verified on physical disk. Markdown discrepancies reconciled with mathematical proof. Speaker identity schema corrected to disclose proxy limitations. Candidate unexposed pool of 4,131 utterances across 617 video clusters verified with 0 cross-split leakage.",
+    "timestamp_utc": "2026-11-24T13:01:37.178094+00:00"
+  }
+}
