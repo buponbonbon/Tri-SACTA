@@ -1,0 +1,81 @@
+{
+  "benchmark_version": "13.2",
+  "transport": "Real TCP Stream Sockets (ports 8765, 8766)",
+  "network_topology": "Localhost loopback with physical serialization and OS network stack",
+  "sample_count": 250,
+  "seed": 42,
+  "baseline_fairness": {
+    "always_on_direct_tav": true,
+    "static_ta_direct": true,
+    "sequential_pays_intermediate_overhead": true
+  },
+  "bandwidth_reduction": {
+    "always_on_application_protocol_bytes": 181560,
+    "sequential_application_protocol_bytes": 66308,
+    "bytes_saved": 115252,
+    "bandwidth_savings_percentage": 63.478739810530946,
+    "latency_reduction_percentage": 62.877805103064354
+  },
+  "policies": {
+    "AlwaysOn_Direct_TAV": {
+      "policy_mode": "always_on",
+      "macro_f1": 0.5686455532807694,
+      "total_application_protocol_bytes": 181560,
+      "mean_application_protocol_bytes": 726.24,
+      "total_payload_bytes": 109000,
+      "mean_wall_ms": 12.891805603634566,
+      "p50_wall_ms": 13.856899982783943,
+      "p95_wall_ms": 32.08789998898282,
+      "p99_wall_ms": 46.00959799601692,
+      "mean_network_rtt_ms": 12.166147994808853,
+      "mean_inference_ms": 0.375871601048857,
+      "on_time_rate": 0.996,
+      "num_samples": 250
+    },
+    "Static_TA_Direct": {
+      "policy_mode": "static_ta",
+      "macro_f1": 0.5828833251513664,
+      "total_application_protocol_bytes": 110030,
+      "mean_application_protocol_bytes": 440.12,
+      "total_payload_bytes": 74000,
+      "mean_wall_ms": 6.10448440304026,
+      "p50_wall_ms": 1.8090999801643193,
+      "p95_wall_ms": 21.858119999524202,
+      "p99_wall_ms": 26.472058993531384,
+      "mean_network_rtt_ms": 5.439246796537191,
+      "mean_inference_ms": 0.4437700007110834,
+      "on_time_rate": 0.996,
+      "num_samples": 250
+    },
+    "SequentialConfidence_0.55_0.45": {
+      "policy_mode": "sequential_confidence",
+      "macro_f1": 0.599244602669561,
+      "total_application_protocol_bytes": 66308,
+      "mean_application_protocol_bytes": 265.232,
+      "total_payload_bytes": 43492,
+      "mean_wall_ms": 4.785721201915294,
+      "p50_wall_ms": 1.4396999613381922,
+      "p95_wall_ms": 23.877715045819055,
+      "p99_wall_ms": 28.293508994393033,
+      "mean_network_rtt_ms": 4.007659200578928,
+      "mean_inference_ms": 0.5907959914766252,
+      "on_time_rate": 1.0,
+      "num_samples": 250
+    },
+    "Unimodal_Text": {
+      "policy_mode": "unimodal_text",
+      "macro_f1": 0.5635541044497592,
+      "total_application_protocol_bytes": 0,
+      "mean_application_protocol_bytes": 0.0,
+      "total_payload_bytes": 0,
+      "mean_wall_ms": 0.23553999979048967,
+      "p50_wall_ms": 0.2367999986745417,
+      "p95_wall_ms": 0.3235099022276699,
+      "p99_wall_ms": 0.41529801674187167,
+      "mean_network_rtt_ms": 0.0,
+      "mean_inference_ms": 0.2310787974856794,
+      "on_time_rate": 1.0,
+      "num_samples": 250
+    }
+  }
+}
