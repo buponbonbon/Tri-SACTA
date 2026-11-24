@@ -206,3 +206,307 @@ class MatchedBudgetRandomPolicy(BasePredictorPolicy):
             "acquisition_path": [final_key],
             "routing_reason": f"random_acquisition_{final_key}",
         }
+
+
+class DerivedThresholdRouter(BasePredictorPolicy):
+    """
+    Derived-Threshold Sequential Policy.
+    Proves structural equivalence by executing the exact algebraic confidence thresholds:
+    tau(S, m, lambda) = (gamma - lambda * Delta C) / (gamma + nu)
+    derived from V13's Expected Utility formulation.
+    """
+
+    def __init__(
+        self,
+        predictor_bank: Dict[str, nn.Module],
+        device: torch.device,
+        lambda_utility: float = 0.05,
+        tau_stop_confidence: float = 0.75,
+        custom_priors: Optional[Dict[Tuple[str, str], Dict[str, float]]] = None,
+    ):
+        super().__init__(predictor_bank, device)
+        self.lambda_utility = float(lambda_utility)
+        self.tau_stop_confidence = float(tau_stop_confidence)
+
+        # Default to historical V13 priors if not specified
+        if custom_priors is not None:
+            self.priors = custom_priors
+        else:
+            from src.service.utility_router import EMPIRICAL_PRIORS
+            self.priors = EMPIRICAL_PRIORS
+
+        # Precompute algebraic thresholds tau(S, m, lambda)
+        self.thresholds: Dict[Tuple[str, str], float] = {}
+        for (src, mod), p_dict in self.priors.items():
+            g = p_dict["gamma"]
+            n = p_dict["nu"]
+            c = MODALITY_COSTS[mod]
+            if g + n > 0.0:
+                tau = (g - self.lambda_utility * c) / (g + n)
+            else:
+                tau = 0.0
+            self.thresholds[(src, mod)] = tau
+
+    def route_single_query(
+        self,
+        features: Dict[str, torch.Tensor],
+        modality_mask: Dict[str, bool],
+        deadline_ms: float = 50.0,
+        cost_budget: float = 3.5,
+    ) -> Dict[str, Any]:
+        available_mods = [m for m in ["text", "audio", "visual"] if modality_mask.get(m, True)]
+        if not available_mods:
+            return {
+                "prediction": 0,
+                "probabilities": np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]),
+                "final_subset": "T",
+                "spent_cost": 1.0,
+                "spent_latency_ms": 1.0,
+                "acquisition_path": ["T"],
+                "routing_reason": "blackout_fallback",
+            }
+
+        if "text" in available_mods:
+            current_mods = ["text"]
+        elif "audio" in available_mods:
+            current_mods = ["audio"]
+        else:
+            current_mods = ["visual"]
+
+        current_key = mods_to_subset_key(current_mods)
+        spent_cost = SUBSET_METADATA[current_key]["cost"]
+        spent_latency = SUBSET_METADATA[current_key]["latency_ms"]
+        acquisition_path = [current_key]
+
+        probs, pred = self._predict_subset(current_key, features)
+
+        while True:
+            p_max = float(np.max(probs))
+            if p_max >= self.tau_stop_confidence:
+                routing_reason = f"confident_stopping_{current_key}_pmax_{p_max:.3f}"
+                break
+
+            candidates = [m for m in available_mods if m not in current_mods]
+            feasible_candidates = [
+                m for m in candidates
+                if (spent_cost + MODALITY_COSTS[m] <= cost_budget)
+                and (spent_latency + MODALITY_LATENCIES[m] <= deadline_ms)
+            ]
+
+            if not feasible_candidates:
+                routing_reason = f"budget_or_availability_exhausted_{current_key}"
+                break
+
+            # Rank candidates by linear marginal utility
+            candidate_scores = {}
+            for m in feasible_candidates:
+                p_dict = self.priors.get((current_key, m), {"gamma": 0.20, "nu": 0.20})
+                g, n = p_dict["gamma"], p_dict["nu"]
+                c = MODALITY_COSTS[m]
+                score = (g - (g + n) * p_max) / c
+                candidate_scores[m] = score
+
+            best_mod = max(candidate_scores, key=candidate_scores.get)
+            tau = self.thresholds.get((current_key, best_mod), 0.0)
+
+            # Equivalence condition: acquire iff p_max <= tau (and tau > 0)
+            if p_max > tau or candidate_scores[best_mod] < self.lambda_utility:
+                best_u = candidate_scores[best_mod]
+                routing_reason = f"utility_threshold_unmet_{current_key}_best_{best_mod}_{best_u:.4f}"
+                break
+
+            current_mods.append(best_mod)
+            current_key = mods_to_subset_key(current_mods)
+            spent_cost += MODALITY_COSTS[best_mod]
+            spent_latency += MODALITY_LATENCIES[best_mod]
+            acquisition_path.append(current_key)
+
+            probs, pred = self._predict_subset(current_key, features)
+            if len(current_mods) == len(available_mods) or len(current_mods) == 3:
+                routing_reason = f"all_available_acquired_{current_key}"
+                break
+
+        return {
+            "prediction": pred,
+            "probabilities": probs,
+            "final_subset": current_key,
+            "spent_cost": float(spent_cost),
+            "spent_latency_ms": float(spent_latency),
+            "acquisition_path": acquisition_path,
+            "routing_reason": routing_reason,
+        }
+
+
+class SequentialConfidenceRouter(BasePredictorPolicy):
+    """
+    Fair Sequential Confidence Routing Policy.
+    Uses the exact same sequential action space and constraints as candidate utility policies:
+    Starts at initial available modality (Text preferred), checks confidence threshold tau_stage1.
+    If below tau_stage1, acquires next modality (Audio preferred, Visual fallback).
+    Re-predicts with augmented subset; if below tau_stage2, acquires remaining modality.
+    """
+
+    def __init__(
+        self,
+        predictor_bank: Dict[str, nn.Module],
+        device: torch.device,
+        tau_stage1: float = 0.65,
+        tau_stage2: float = 0.55,
+        audio_first: bool = True,
+    ):
+        super().__init__(predictor_bank, device)
+        self.tau_stage1 = float(tau_stage1)
+        self.tau_stage2 = float(tau_stage2)
+        self.audio_first = bool(audio_first)
+
+    def route_single_query(
+        self,
+        features: Dict[str, torch.Tensor],
+        modality_mask: Dict[str, bool],
+        deadline_ms: float = 50.0,
+        cost_budget: float = 3.5,
+    ) -> Dict[str, Any]:
+        available_mods = [m for m in ["text", "audio", "visual"] if modality_mask.get(m, True)]
+        if not available_mods:
+            return {
+                "prediction": 0,
+                "probabilities": np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]),
+                "final_subset": "T",
+                "spent_cost": 1.0,
+                "spent_latency_ms": 1.0,
+                "acquisition_path": ["T"],
+                "routing_reason": "blackout_fallback",
+            }
+
+        # Step 1: Initialize with base available modality (prefer text)
+        if "text" in available_mods:
+            current_mods = ["text"]
+        elif "audio" in available_mods:
+            current_mods = ["audio"]
+        else:
+            current_mods = ["visual"]
+
+        current_key = mods_to_subset_key(current_mods)
+        spent_cost = SUBSET_METADATA[current_key]["cost"]
+        spent_latency = SUBSET_METADATA[current_key]["latency_ms"]
+        acquisition_path = [current_key]
+
+        probs, pred = self._predict_subset(current_key, features)
+        p_max = float(np.max(probs))
+
+        # Check stage 1 stopping
+        if p_max >= self.tau_stage1:
+            return {
+                "prediction": pred,
+                "probabilities": probs,
+                "final_subset": current_key,
+                "spent_cost": float(spent_cost),
+                "spent_latency_ms": float(spent_latency),
+                "acquisition_path": acquisition_path,
+                "routing_reason": f"stage1_confident_{current_key}_{p_max:.3f}",
+            }
+
+        # Step 2: Acquire secondary modality if budget/deadline permits
+        candidates = [m for m in available_mods if m not in current_mods]
+        if self.audio_first:
+            ordered_candidates = [m for m in ["audio", "visual", "text"] if m in candidates]
+        else:
+            ordered_candidates = [m for m in ["visual", "audio", "text"] if m in candidates]
+
+        acquired_stage2 = False
+        for mod in ordered_candidates:
+            if (spent_cost + MODALITY_COSTS[mod] <= cost_budget) and (spent_latency + MODALITY_LATENCIES[mod] <= deadline_ms):
+                current_mods.append(mod)
+                current_key = mods_to_subset_key(current_mods)
+                spent_cost += MODALITY_COSTS[mod]
+                spent_latency += MODALITY_LATENCIES[mod]
+                acquisition_path.append(current_key)
+                probs, pred = self._predict_subset(current_key, features)
+                p_max = float(np.max(probs))
+                acquired_stage2 = True
+                break
+
+        if not acquired_stage2 or p_max >= self.tau_stage2:
+            return {
+                "prediction": pred,
+                "probabilities": probs,
+                "final_subset": current_key,
+                "spent_cost": float(spent_cost),
+                "spent_latency_ms": float(spent_latency),
+                "acquisition_path": acquisition_path,
+                "routing_reason": f"stage2_stop_{current_key}_{p_max:.3f}",
+            }
+
+        # Step 3: Acquire tertiary modality if remaining and affordable
+        remaining_candidates = [m for m in available_mods if m not in current_mods]
+        for mod in remaining_candidates:
+            if (spent_cost + MODALITY_COSTS[mod] <= cost_budget) and (spent_latency + MODALITY_LATENCIES[mod] <= deadline_ms):
+                current_mods.append(mod)
+                current_key = mods_to_subset_key(current_mods)
+                spent_cost += MODALITY_COSTS[mod]
+                spent_latency += MODALITY_LATENCIES[mod]
+                acquisition_path.append(current_key)
+                probs, pred = self._predict_subset(current_key, features)
+                break
+
+        return {
+            "prediction": pred,
+            "probabilities": probs,
+            "final_subset": current_key,
+            "spent_cost": float(spent_cost),
+            "spent_latency_ms": float(spent_latency),
+            "acquisition_path": acquisition_path,
+            "routing_reason": f"final_exhaustion_{current_key}",
+        }
+
+
+class StaticSubsetPolicy(BasePredictorPolicy):
+    """
+    Static Subset Policy (e.g. TA, TV, TAV).
+    Acquires the target subset directly. Under missingness, falls back to largest available subset.
+    """
+
+    def __init__(self, predictor_bank: Dict[str, nn.Module], device: torch.device, target_subset: str = "TA"):
+        super().__init__(predictor_bank, device)
+        self.target_subset = target_subset
+        self.desired_mods = SUBSET_METADATA[target_subset]["mods"]
+
+    def route_single_query(
+        self,
+        features: Dict[str, torch.Tensor],
+        modality_mask: Dict[str, bool],
+        deadline_ms: float = 50.0,
+        cost_budget: float = 3.5,
+    ) -> Dict[str, Any]:
+        # Filter desired mods by availability
+        feasible_mods = [m for m in self.desired_mods if modality_mask.get(m, True)]
+        if not feasible_mods:
+            # Fallback to any available
+            available = [m for m in ["text", "audio", "visual"] if modality_mask.get(m, True)]
+            if not available:
+                return {
+                    "prediction": 0, "probabilities": np.array([1/3, 1/3, 1/3]),
+                    "final_subset": "T", "spent_cost": 1.0, "spent_latency_ms": 1.0,
+                    "acquisition_path": ["T"], "routing_reason": "blackout",
+                }
+            feasible_mods = [available[0]]
+
+        # Respect budget/deadline
+        subset_key = mods_to_subset_key(feasible_mods)
+        if SUBSET_METADATA[subset_key]["cost"] > cost_budget or SUBSET_METADATA[subset_key]["latency_ms"] > deadline_ms:
+            # Reduce to single text if possible
+            if "text" in feasible_mods:
+                feasible_mods = ["text"]
+                subset_key = "T"
+
+        probs, pred = self._predict_subset(subset_key, features)
+        return {
+            "prediction": pred,
+            "probabilities": probs,
+            "final_subset": subset_key,
+            "spent_cost": float(SUBSET_METADATA[subset_key]["cost"]),
+            "spent_latency_ms": float(SUBSET_METADATA[subset_key]["latency_ms"]),
+            "acquisition_path": [subset_key],
+            "routing_reason": f"static_{self.target_subset}_actual_{subset_key}",
+        }
+
