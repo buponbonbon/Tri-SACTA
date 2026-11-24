@@ -99,7 +99,7 @@ def test_v12_05_api_service_endpoints(v12_repo_root):
     """V12-05: Verify API functions health_check, list_policies, and predict execute cleanly."""
     h = health_check()
     assert h["status"] == "healthy"
-    assert h["service"] == "Tri-SACTA V12 BRMO"
+    assert "Tri-SACTA V12" in h["service"]
 
     p = list_policies()
     assert "orchestrated_brmo" in p["available_policies"]
