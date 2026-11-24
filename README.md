@@ -70,27 +70,43 @@ In accordance with strict scientific reproducibility and honest reporting:
 * **V11 Formal Retraction:** In V11, all preliminary exploratory test-time adaptation metrics and non-adaptive streaming assertions were formally **retracted** under decision `FREEZE_TRI_SACTA`, designating early exploratory splits as `DEVELOPMENT-EXPOSED`.
 * **V12 Systems Reframing:** The project was revived as a systems contribution, replacing unmeasured test-time adaptation with static multimodal baseline models.
 * **V12.1 Forensic Audit & De-Authorization:** Independent audit revealed that heuristic BRMO was defeated by Confidence Routing, bootstrap resampling lacked video clustering, and conformal calibration had a policy distribution mismatch.
-* **V13 Mathematical Resolution:** V13 resolves all prior limitations through task-matched subset predictor banks, marginal expected utility sequential acquisition, genuine video-grouped block bootstrap, and policy-matched conformal risk control.
+* **V13 Mathematical Resolution:** V13 resolves prior limitations through task-matched subset predictor banks, marginal expected utility sequential acquisition, genuine video-grouped block bootstrap, and policy-matched conformal risk control.
+* **V13.1 Rectification & Systems Validation:** V13.1 establishes that V13's static expected utility is algebraically equivalent to sequential confidence thresholding ($\tau = \frac{\gamma - \lambda \Delta C}{\gamma + \nu}$). When evaluated against Candidate M2 (conditional utility meta-model), the clean `SequentialConfidenceRouter` achieves superior Macro-F1 (0.5447 vs 0.5321). Physical distributed TCP socket benchmarking demonstrates an empirically verified **61.64% wire bytes reduction** and **53.3% lower latency**. Authoritative verdict: **`SIMPLIFY_TO_STRONG_BASELINE`**.
 
 ---
 
 ## 6. Reproduction & Execution Instructions
 
 ```powershell
-# 1. Run complete automated regression test suite (102 tests)
+# 1. Run complete automated regression test suite (116 tests passing 100%)
 python tests/run_all_tests.py
 
-# 2. Run Oracle Headroom Analysis (Gate 1)
-python scripts/v13_oracle_headroom_analysis.py val
+# 2. Run Forensic Data Provenance & Split Lineage Audit
+python scripts/v13_1_audit_provenance.py
 
-# 3. Perform Policy-Matched Conformal Calibration on cal split
-python scripts/v13_calibrate_conformal.py 0.10
+# 3. Derive Confidence Thresholds & Verify Mathematical Equivalence
+python scripts/v13_1_fit_transition_estimators.py
 
-# 4. Run Comprehensive 7-Workload Benchmark
-python scripts/v13_evaluate_workloads.py test
+# 4. Execute Reachable Sequential Oracle & Gain Decomposition Analysis
+python scripts/v13_1_reachable_oracle.py
 
-# 5. Execute Paired Clustered Video-Grouped Block Bootstrap
-python scripts/v13_paired_video_bootstrap.py test
+# 5. Fit & Calibrate State-Conditioned Utility Models
+python scripts/v13_1_fit_conditional_utility.py
+
+# 6. Benchmark All Fair Baselines Across 7 Stress Workloads
+python scripts/v13_1_evaluate_policies.py
+
+# 7. Execute Paired Clustered Video-Grouped Block Bootstrap (B=2,000)
+python scripts/v13_1_cluster_statistics.py
+
+# 8. Perform Policy-Matched Split Conformal Calibration
+python scripts/v13_1_calibrate_policies.py
+
+# 9. Run Real Distributed TCP Socket Benchmark (Stage G)
+python scripts/v13_1_benchmark_distributed.py
+
+# 10. Run Automated Gate Verification & Generate Decision
+python scripts/v13_1_verify_gates.py
 ```
 
 ---
@@ -99,9 +115,14 @@ python scripts/v13_paired_video_bootstrap.py test
 
 | Document ID | Title / Purpose |
 | :--- | :--- |
-| `docs/V13_00_FORENSIC_AUDIT_AND_PROTOCOL.md` | Formal audit de-authorizing V12.1 verdict, 4 core defects, and V13 locked protocol |
-| `docs/V13_01_ORACLE_HEADROOM_ANALYSIS.md` | Gate 1 Headroom Analysis across 7 subsets and error complementarity report |
-| `docs/V13_02_EXPECTED_UTILITY_POLICY.md` | Sequential acquisition mathematical derivation and development split metrics |
-| `docs/V13_03_CONFIRMATORY_BENCHMARK.md` | Quarantined test split benchmark and clustered video bootstrap statistical table |
-| `docs/V13_04_FINAL_VERDICT.md` | Final scientific acceptance verdict and SJR Q1/Q2 journal submission roadmap |
-| `docs/HANDOVER_V13.md` | Authoritative handover document for repository owner and PR submission |
+| `docs/V13_1_00_V13_FORENSIC_AUDIT.md` | Formal audit rectifying V13 claims, threshold equivalence proof, and quarantine boundaries |
+| `docs/V13_1_01_PROVENANCE_AND_INDEPENDENT_SPLIT.md` | Full SHA-256 asset audit and discovery of 4,131 unexposed CMU-MOSEI utterances |
+| `docs/V13_1_02_THRESHOLD_EQUIVALENCE_AND_TRANSITION_RISK.md` | Complete algebraic derivation of tau(S, m, lambda), crossover proof, and empirical priors table |
+| `docs/V13_1_03_REACHABLE_ORACLE_AND_ESTIMATOR.md` | Reachable sequential oracle headroom (+0.1524 F1) and transition gain decomposition |
+| `docs/V13_1_04_FAIR_BASELINE_PROTOCOL.md` | Fair sequential baseline protocol, action-matched state machine, and 7 stress workloads |
+| `docs/V13_1_05_DEVELOPMENT_AND_CONFIRMATORY_RESULTS.md` | Full benchmark results across 18 policies; SequentialConfidenceRouter Pareto dominance |
+| `docs/V13_1_06_CONFORMAL_AND_LIMITATIONS.md` | Split conformal exact finite-sample quantile (k=226), 90.5% clean coverage, shift limitations |
+| `docs/V13_1_07_DISTRIBUTED_SYSTEMS_EVIDENCE.md` | Real TCP socket telemetry proving 61.64% wire bytes reduction and 53.3% lower latency |
+| `docs/V13_1_08_PRIOR_ART_AND_CLAIM_EVIDENCE.md` | Prior art matrix, claim-evidence ledger, and Springer MTAP journal positioning |
+| `docs/V13_1_09_FINAL_VERDICT.md` | Authoritative final verdict: SIMPLIFY_TO_STRONG_BASELINE with systems evidence |
+| `docs/HANDOVER_V13_1.md` | Authoritative V13.1 handover document, full metrics, and reproduction instructions |

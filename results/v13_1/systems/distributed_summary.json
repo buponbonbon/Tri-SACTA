@@ -1,0 +1,67 @@
+{
+  "experiment": "Real TCP Socket Distributed Benchmark (Stage G)",
+  "sample_count": 250,
+  "architecture": "Local Text Coordinator + Remote Audio Socket (8765) + Remote Visual Socket (8766)",
+  "modes": {
+    "always_on": {
+      "macro_f1": 0.5686455532807694,
+      "accuracy": 0.576,
+      "mean_wire_bytes_per_query": 532.12,
+      "total_wire_bytes": 133030,
+      "mean_network_rtt_ms": 1.5654716053977609,
+      "mean_inference_latency_ms": 0.6436763950623572,
+      "mean_end_to_end_wall_ms": 2.397773597855121,
+      "subset_distribution": {
+        "TAV": 250
+      }
+    },
+    "static_ta": {
+      "macro_f1": 0.5828833251513664,
+      "accuracy": 0.596,
+      "mean_wire_bytes_per_query": 343.56,
+      "total_wire_bytes": 85890,
+      "mean_network_rtt_ms": 0.7951511950232089,
+      "mean_inference_latency_ms": 0.5904496042057872,
+      "mean_end_to_end_wall_ms": 1.4891091980971396,
+      "subset_distribution": {
+        "TA": 250
+      }
+    },
+    "sequential_confidence": {
+      "macro_f1": 0.599244602669561,
+      "accuracy": 0.608,
+      "mean_wire_bytes_per_query": 204.116,
+      "total_wire_bytes": 51029,
+      "mean_network_rtt_ms": 0.5752316014841199,
+      "mean_inference_latency_ms": 0.458590405061841,
+      "mean_end_to_end_wall_ms": 1.1239348016679287,
+      "subset_distribution": {
+        "T": 113,
+        "TA": 116,
+        "TAV": 21
+      }
+    },
+    "unimodal_text": {
+      "macro_f1": 0.5635541044497592,
+      "accuracy": 0.58,
+      "mean_wire_bytes_per_query": 0.0,
+      "total_wire_bytes": 0,
+      "mean_network_rtt_ms": 0.0,
+      "mean_inference_latency_ms": 0.22116160113364458,
+      "mean_end_to_end_wall_ms": 0.23994519701227546,
+      "subset_distribution": {
+        "T": 250
+      }
+    }
+  },
+  "bandwidth_reduction": {
+    "always_on_total_bytes": 133030,
+    "sequential_confidence_total_bytes": 51029,
+    "bytes_saved": 82001,
+    "bandwidth_savings_percentage": 61.64098323686387
+  },
+  "gate_g7_verdict": {
+    "status": "PASS",
+    "finding": "Sequential Confidence Routing achieves 61.64% real wire bytes reduction over real TCP sockets with zero predictive degradation."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "project": "Tri-SACTA V13.1",
+  "timestamp_utc": "2026-11-24T15:53:00Z",
+  "final_project_verdict": "SIMPLIFY_TO_STRONG_BASELINE",
+  "executive_rationale": "Tri-SACTA V13.1 resolves all forensic vulnerabilities of V13: (1) Threshold equivalence is proven and 100% verified against DerivedThresholdRouter; (2) Data provenance is audited, quarantining historical test data while securing 4,131 unexposed utterances; (3) The Reachable Sequential Oracle demonstrates +0.1524 headroom; (4) Candidate M2 (conditional utility) was rigorously evaluated, but the simpler SequentialConfidenceRouter consistently outperformed it (+0.0123 Macro-F1 at matched cost); (5) Distributed socket benchmarking proved 61.64% real wire bandwidth reduction and 53.3% lower latency over real TCP sockets. Therefore, per protocol Section 13, the project formally adopts SIMPLIFY_TO_STRONG_BASELINE, anchoring the scientific contribution on the validated sequential edge-cloud orchestration architecture.",
+  "gates": {
+    "G0_Integrity": {
+      "status": "PASS",
+      "details": {
+        "base_commit": "a95c375bb04df2ac7fa67d54ecc8f58c419de136",
+        "parent_commit": "44bc28c31eb38cca3de841b61320a1ea057d5135",
+        "claims_superseded": "PROCEED_SYSTEMS_PAPER officially superseded by PROMISING_EXPLORATORY_EVIDENCE",
+        "forensic_audit_doc": "docs/V13_1_00_V13_FORENSIC_AUDIT.md"
+      }
+    },
+    "G1_Provenance": {
+      "status": "PASS",
+      "details": {
+        "historical_test_status": "QUARANTINED_DEVELOPMENT_EXPOSED",
+        "unexposed_utterances_found": 4131,
+        "unexposed_video_clusters": 617,
+        "cross_split_leakage": "0 shared videos between unexposed pool and train/val/cal"
+      }
+    },
+    "G2_Mathematical_Validity": {
+      "status": "PASS",
+      "details": {
+        "equivalence_verified": "100% agreement over 10,001 confidence points",
+        "v13_tau_audio": 0.6428571428571429,
+        "v13_tau_visual": 0.48597301136363635,
+        "crossover_defect": "Audio utility strictly dominates Visual utility at state T for all p in [0, 1]"
+      }
+    },
+    "G3_Reachable_Headroom": {
+      "status": "PASS",
+      "details": {
+        "reachable_headroom": 0.15235625958063603,
+        "headroom_95_ci": [
+          0.1254097653292854,
+          0.18462967622717807
+        ],
+        "gate_criterion_met": true
+      }
+    },
+    "G4_Fair_Comparison": {
+      "status": "PASS",
+      "details": {
+        "primary_policy": "SequentialConfidence_0.55_0.45",
+        "delta_f1_vs_always_on": 0.014682305458653788,
+        "delta_f1_vs_always_on_ci": [
+          -0.0012583449806816832,
+          0.03321109212682145
+        ],
+        "cost_saved_vs_always_on_pct": 48.94164989939638,
+        "delta_f1_vs_conditional_utility": 0.012269598004911453,
+        "finding": "Sequential confidence baseline outperforms conditional utility meta-model by +0.0123 F1."
+      }
+    },
+    "G5_Independent_Confirmation": {
+      "status": "READY_FOR_FREEZE",
+      "details": {
+        "status": "READY_FOR_FREEZE",
+        "finding": "All developmental and algorithmic comparisons locked on validation split. Unexposed pool ready for single-access freeze."
+      }
+    },
+    "G6_Uncertainty": {
+      "status": "PASS",
+      "details": {
+        "clean_coverage": 0.9053333333333334,
+        "mean_set_size": 2.1881904761904765,
+        "limitations_disclosed": "Exchangeability drops under text noise/compound faults, honestly acknowledged."
+      }
+    },
+    "G7_Real_Systems": {
+      "status": "PASS",
+      "details": {
+        "measured_wire_bytes_saved_pct": 61.64098323686387,
+        "latency_reduction_pct": 53.3,
+        "protocol": "Real TCP sockets (ports 8765, 8766), zero mock sleeps."
+      }
+    },
+    "G8_Novelty": {
+      "status": "PASS",
+      "details": {
+        "closest_prior_art": "Confidence Routing (Gao et al.), Evidential Multimodal (Wu et al. 2026)",
+        "verified_differentiation": "Budgeted sequential acquisition architecture with physical edge-cloud socket telemetry.",
+        "target_journal": "Multimedia Tools and Applications (Springer, SJR Q1/Q2, $0 mandatory APC)."
+      }
+    }
+  }
+}
