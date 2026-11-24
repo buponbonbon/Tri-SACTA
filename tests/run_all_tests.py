@@ -63,6 +63,7 @@ import tests.test_v10_regression as test_v10_regression
 import tests.test_v11_integrity as test_v11_integrity
 import tests.test_v12_systems as test_v12_systems
 import tests.test_v12_1_systems as test_v12_1_systems
+import tests.test_v13_utility as test_v13_utility
 
 
 def run_test_module(module, module_name):
@@ -131,6 +132,7 @@ def main():
         (test_v11_integrity, "V11 Scientific Triage & Go/No-Go Suite (V11-01 to V11-06)"),
         (test_v12_systems, "V12 Systems Research Reframing Suite (V12-01 to V12-06)"),
         (test_v12_1_systems, "V12.1 Budgeted Modality Orchestration & Systems Rectification Suite (V12_1-01 to V12_1-06)"),
+        (test_v13_utility, "V13 Utility-Driven Multimodal Orchestration Suite (V13-01 to V13-08)"),
     ]
 
     total_passed = 0

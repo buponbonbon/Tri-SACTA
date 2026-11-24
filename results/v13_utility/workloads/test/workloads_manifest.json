@@ -1,0 +1,44 @@
+{
+  "CLEAN_MULTIMODAL": {
+    "description": "Standard unaltered multimodal features from CMU-MOSEI",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\CLEAN_MULTIMODAL.pt"
+  },
+  "TEXT_EMBEDDING_NOISE": {
+    "description": "Emulates ASR transcription errors and acoustic drift via Gaussian noise on text embeddings (sigma=0.40)",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\TEXT_EMBEDDING_NOISE.pt"
+  },
+  "AUDIO_FEATURE_MASKING": {
+    "description": "Acoustic sensor failure / microphone mute: audio features masked to zero",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\AUDIO_FEATURE_MASKING.pt"
+  },
+  "VISUAL_ZERO_MASK": {
+    "description": "Visual camera occlusion / frame corruption: visual features masked to zero",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\VISUAL_ZERO_MASK.pt"
+  },
+  "COMPOUND_FAULT": {
+    "description": "Simultaneous severe text noise (sigma=0.50) + acoustic channel masking",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\COMPOUND_FAULT.pt"
+  },
+  "INTERMITTENT_MISSINGNESS": {
+    "description": "Dynamic Bernoulli sensor packet drop: Audio p_drop=0.30, Visual p_drop=0.40, Text p_drop=0.10",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\INTERMITTENT_MISSINGNESS.pt"
+  },
+  "HETEROGENEOUS_DEADLINE_STRESS": {
+    "description": "Heterogeneous dynamic QoS stress cycling through 15 ms, 30 ms, and 50 ms deadlines",
+    "num_samples": 500,
+    "num_video_clusters": 58,
+    "artifact_path": "C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_utility\\workloads\\test\\HETEROGENEOUS_DEADLINE_STRESS.pt"
+  }
+}
