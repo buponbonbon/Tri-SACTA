@@ -1,10 +1,14 @@
 """
-src/service/distributed_coordinator.py: Distributed Systems Coordinator (Stage G).
+src/service/distributed_coordinator.py: Distributed Systems Coordinator for Tri-SACTA V13.2 (Stage D/G).
 
-Coordinates edge-cloud multimodal acquisition:
-- Retains Text locally.
-- Selectively queries remote Audio and Visual socket providers over TCP only when the policy demands.
-- Accurately measures wire bytes, socket RTT, serialization overhead, and end-to-end latency.
+Rectifies Baseline Transport Fairness and Safety:
+1. Gives Always-On an optimized direct path: fetches remote modalities and predicts directly
+   on TAV without a redundant initial Text-only forward pass.
+2. Gives Static TA a direct path: fetches remote Audio and predicts directly on TA without redundant Text pass.
+3. Sequential routing pays all intermediate inference passes and sequential decision overhead.
+4. Enforces monotonic absolute deadlines, remaining-time calculation, socket timeouts,
+   and exact-length recv_exact reads.
+5. Accurately reports payload bytes, application-protocol wire bytes, socket RTT, and inference wall-clock.
 """
 
 from __future__ import annotations
@@ -16,7 +20,7 @@ import struct
 import json
 import time
 import logging
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple, List
 import numpy as np
 import torch
 import torch.nn as nn
@@ -26,12 +30,24 @@ if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
 from src.service.utility_router import SUBSET_METADATA, mods_to_subset_key
+from src.service.distributed_providers import recv_exact
 
 logger = logging.getLogger(__name__)
 
 
+class ModalityFetchResult(tuple):
+    """
+    3-tuple containing (feat_tensor, rtt_ms, total_app_bytes).
+    Carries payload_bytes as an attribute for detailed accounting while preserving 3-tuple unpacking compatibility.
+    """
+    def __new__(cls, feat_tensor: torch.Tensor, rtt_ms: float, total_app_bytes: int, payload_bytes: int = 0):
+        obj = super().__new__(cls, (feat_tensor, rtt_ms, total_app_bytes))
+        obj.payload_bytes = payload_bytes
+        return obj
+
+
 class DistributedCoordinator:
-    """Orchestrates sequential acquisition over real TCP sockets."""
+    """Orchestrates edge-cloud multimodal acquisition with fair baseline execution."""
 
     def __init__(
         self,
@@ -52,47 +68,50 @@ class DistributedCoordinator:
             m.eval()
             m.to(self.device)
 
-    def fetch_remote_modality(self, modality: str, sample_idx: int) -> Tuple[torch.Tensor, float, int]:
+    def fetch_remote_modality(
+        self,
+        modality: str,
+        sample_idx: int,
+        timeout_s: float = 2.0,
+    ) -> ModalityFetchResult:
         """
         Sends TCP socket request to remote provider and receives binary feature tensor.
-        Returns: (feature_tensor, rtt_ms, wire_bytes)
+        Returns ModalityFetchResult (unpackable as (feature_tensor, rtt_ms, application_protocol_bytes),
+        with .payload_bytes attribute).
         """
         host, port = self.provider_endpoints[modality]
         req_obj = {"sample_idx": int(sample_idx), "modality": modality}
         req_bytes = json.dumps(req_obj).encode("utf-8")
-        req_msg = struct.pack("!I", len(req_bytes)) + req_bytes
+        req_hdr = struct.pack("!I", len(req_bytes))
+        full_req = req_hdr + req_bytes
 
         t_start = time.perf_counter()
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.settimeout(max(0.001, timeout_s))
             sock.connect((host, port))
-            sock.sendall(req_msg)
+            sock.sendall(full_req)
 
-            # Receive 4-byte payload length header
-            resp_header = sock.recv(4)
-            if not resp_header or len(resp_header) < 4:
-                raise RuntimeError(f"Connection closed by {modality} provider without payload header.")
-            payload_len = struct.unpack("!I", resp_header)[0]
+            # Receive 12-byte response header: [status_code (4B), meta_len (4B), payload_len (4B)]
+            raw_hdr = recv_exact(sock, 12, timeout_s=timeout_s)
+            status_code, meta_len, payload_len = struct.unpack("!III", raw_hdr)
 
-            # Receive payload
-            chunks = []
-            bytes_received = 0
-            while bytes_received < payload_len:
-                chunk = sock.recv(min(4096, payload_len - bytes_received))
-                if not chunk:
-                    break
-                chunks.append(chunk)
-                bytes_received += len(chunk)
+            # Receive metadata JSON
+            raw_meta = recv_exact(sock, meta_len, timeout_s=timeout_s)
+            meta = json.loads(raw_meta.decode("utf-8"))
 
-            raw_payload = b"".join(chunks)
-        t_end = time.perf_counter()
+            if status_code != 200 or meta.get("status") != "OK":
+                err_msg = meta.get("message", f"Provider error code {status_code}")
+                raise RuntimeError(f"Remote {modality} provider returned error: {err_msg}")
 
-        rtt_ms = (t_end - t_start) * 1000.0
-        total_wire_bytes = len(req_msg) + 4 + len(raw_payload)
+            # Receive binary float32 payload
+            raw_payload = recv_exact(sock, payload_len, timeout_s=timeout_s)
+            rtt_ms = (time.perf_counter() - t_start) * 1000.0
 
-        # Deserialize float32 numpy array
-        feat_arr = np.frombuffer(raw_payload, dtype=np.float32)
+        total_app_bytes = len(full_req) + 12 + meta_len + payload_len
+        feat_arr = np.frombuffer(raw_payload, dtype=np.float32).copy()
         feat_tensor = torch.from_numpy(feat_arr).unsqueeze(0).to(self.device)
-        return feat_tensor, rtt_ms, total_wire_bytes
+
+        return ModalityFetchResult(feat_tensor, rtt_ms, total_app_bytes, payload_len)
 
     def _predict(self, subset_key: str, features: Dict[str, torch.Tensor]) -> Tuple[np.ndarray, int]:
         model = self.predictor_bank[subset_key]
@@ -114,104 +133,183 @@ class DistributedCoordinator:
         tau_stage1: float = 0.55,
         tau_stage2: float = 0.45,
         deadline_ms: float = 50.0,
+        cost_budget: float = 3.5,
     ) -> Dict[str, Any]:
         """
-        Processes query end-to-end measuring real network bytes, RTT, and model inference latency.
+        Executes query end-to-end measuring real physical network bytes, RTT, and inference latency.
+        Enforces monotonic deadline checking before each network hop and inference stage.
         """
         t_wall_start = time.perf_counter()
-        total_wire_bytes = 0
+        t_deadline_monotonic = t_wall_start + (deadline_ms / 1000.0)
+
+        total_app_bytes = 0
+        total_payload_bytes = 0
         total_network_rtt_ms = 0.0
+        total_inference_ms = 0.0
         features: Dict[str, torch.Tensor] = {"text": text_feature.to(self.device)}
-        current_mods = ["text"]
-        current_key = "T"
-        acquisition_path = ["T"]
+        acquisition_path: List[str] = []
+        network_transactions: List[Dict[str, Any]] = []
 
-        # Step 1: Local inference on Text
-        t_inf_start = time.perf_counter()
-        probs, pred = self._predict(current_key, features)
-        t_inf_ms = (time.perf_counter() - t_inf_start) * 1000.0
-
-        p_max = float(np.max(probs))
-
+        # =====================================================================
+        # Policy Mode 1: Optimized Always-On Full Fusion (Direct TAV)
+        # =====================================================================
         if policy_mode == "always_on":
-            # Always fetch Audio and Visual over network
-            aud_feat, aud_rtt, aud_bytes = self.fetch_remote_modality("audio", sample_idx)
-            total_wire_bytes += aud_bytes
+            # Direct path: Fetch Audio and Visual, then execute ONE forward pass on TAV.
+            # Does NOT execute redundant 1st Text inference pass.
+            rem_s = t_deadline_monotonic - time.perf_counter()
+            aud_res = self.fetch_remote_modality("audio", sample_idx, timeout_s=rem_s)
+            aud_feat, aud_rtt, aud_app_b = aud_res
+            aud_pay_b = aud_res.payload_bytes
+            total_app_bytes += aud_app_b
+            total_payload_bytes += aud_pay_b
             total_network_rtt_ms += aud_rtt
             features["audio"] = aud_feat
+            network_transactions.append({"modality": "audio", "rtt_ms": aud_rtt, "app_bytes": aud_app_b})
 
-            vis_feat, vis_rtt, vis_bytes = self.fetch_remote_modality("visual", sample_idx)
-            total_wire_bytes += vis_bytes
+            rem_s = t_deadline_monotonic - time.perf_counter()
+            vis_res = self.fetch_remote_modality("visual", sample_idx, timeout_s=rem_s)
+            vis_feat, vis_rtt, vis_app_b = vis_res
+            vis_pay_b = vis_res.payload_bytes
+            total_app_bytes += vis_app_b
+            total_payload_bytes += vis_pay_b
             total_network_rtt_ms += vis_rtt
             features["visual"] = vis_feat
+            network_transactions.append({"modality": "visual", "rtt_ms": vis_rtt, "app_bytes": vis_app_b})
 
-            current_key = "TAV"
-            acquisition_path.append("TAV")
-            t_inf_start2 = time.perf_counter()
-            probs, pred = self._predict(current_key, features)
-            t_inf_ms += (time.perf_counter() - t_inf_start2) * 1000.0
+            final_subset = "TAV"
+            acquisition_path = ["TAV"]
+            t_inf_start = time.perf_counter()
+            probs, pred = self._predict(final_subset, features)
+            total_inference_ms = (time.perf_counter() - t_inf_start) * 1000.0
+            routing_reason = "always_on_direct_tav"
 
+        # =====================================================================
+        # Policy Mode 2: Optimized Static TA (Direct TA)
+        # =====================================================================
         elif policy_mode == "static_ta":
-            # Always fetch Audio
-            aud_feat, aud_rtt, aud_bytes = self.fetch_remote_modality("audio", sample_idx)
-            total_wire_bytes += aud_bytes
+            # Direct path: Fetch Audio, then execute ONE forward pass on TA.
+            rem_s = t_deadline_monotonic - time.perf_counter()
+            aud_res = self.fetch_remote_modality("audio", sample_idx, timeout_s=rem_s)
+            aud_feat, aud_rtt, aud_app_b = aud_res
+            aud_pay_b = aud_res.payload_bytes
+            total_app_bytes += aud_app_b
+            total_payload_bytes += aud_pay_b
             total_network_rtt_ms += aud_rtt
             features["audio"] = aud_feat
+            network_transactions.append({"modality": "audio", "rtt_ms": aud_rtt, "app_bytes": aud_app_b})
 
-            current_key = "TA"
-            acquisition_path.append("TA")
-            t_inf_start2 = time.perf_counter()
-            probs, pred = self._predict(current_key, features)
-            t_inf_ms += (time.perf_counter() - t_inf_start2) * 1000.0
+            final_subset = "TA"
+            acquisition_path = ["TA"]
+            t_inf_start = time.perf_counter()
+            probs, pred = self._predict(final_subset, features)
+            total_inference_ms = (time.perf_counter() - t_inf_start) * 1000.0
+            routing_reason = "static_ta_direct"
 
+        # =====================================================================
+        # Policy Mode 3: Unimodal Text-Only
+        # =====================================================================
         elif policy_mode == "unimodal_text":
-            # Never fetch over network
-            pass
+            final_subset = "T"
+            acquisition_path = ["T"]
+            t_inf_start = time.perf_counter()
+            probs, pred = self._predict(final_subset, features)
+            total_inference_ms = (time.perf_counter() - t_inf_start) * 1000.0
+            routing_reason = "unimodal_text_local"
 
+        # =====================================================================
+        # Policy Mode 4: Candidate Sequential Confidence Router
+        # =====================================================================
         elif policy_mode == "sequential_confidence":
-            # Sequential Confidence Routing: acquire only if p_max < tau_stage1
-            if p_max < tau_stage1:
-                # Acquire Audio over socket
-                aud_feat, aud_rtt, aud_bytes = self.fetch_remote_modality("audio", sample_idx)
-                total_wire_bytes += aud_bytes
-                total_network_rtt_ms += aud_rtt
-                features["audio"] = aud_feat
+            # Step 1: Local inference on Text (pays intermediate inference)
+            current_subset = "T"
+            acquisition_path.append(current_subset)
+            t_inf_start = time.perf_counter()
+            probs, pred = self._predict(current_subset, features)
+            total_inference_ms += (time.perf_counter() - t_inf_start) * 1000.0
 
-                current_mods.append("audio")
-                current_key = mods_to_subset_key(current_mods)
-                acquisition_path.append(current_key)
+            p_max = float(np.max(probs))
 
-                t_inf_start2 = time.perf_counter()
-                probs, pred = self._predict(current_key, features)
-                t_inf_ms += (time.perf_counter() - t_inf_start2) * 1000.0
-                p_max2 = float(np.max(probs))
+            if p_max >= tau_stage1:
+                routing_reason = f"confident_stage1_text_pmax_{p_max:.3f}"
+                final_subset = "T"
+            else:
+                # Step 2: Acquire Audio over TCP if budget and deadline allow
+                rem_s = t_deadline_monotonic - time.perf_counter()
+                if rem_s <= 0.001 or cost_budget < 2.2:
+                    routing_reason = f"stage1_constrained_stayed_T_rem_{rem_s*1000:.1f}ms_budget_{cost_budget}"
+                    final_subset = "T"
+                else:
+                    aud_res = self.fetch_remote_modality(
+                        "audio", sample_idx, timeout_s=rem_s
+                    )
+                    aud_feat, aud_rtt, aud_app_b = aud_res
+                    aud_pay_b = aud_res.payload_bytes
+                    total_app_bytes += aud_app_b
+                    total_payload_bytes += aud_pay_b
+                    total_network_rtt_ms += aud_rtt
+                    features["audio"] = aud_feat
+                    network_transactions.append({"modality": "audio", "rtt_ms": aud_rtt, "app_bytes": aud_app_b})
 
-                # Check stage 2: acquire Visual if still uncertain
-                if p_max2 < tau_stage2:
-                    vis_feat, vis_rtt, vis_bytes = self.fetch_remote_modality("visual", sample_idx)
-                    total_wire_bytes += vis_bytes
-                    total_network_rtt_ms += vis_rtt
-                    features["visual"] = vis_feat
+                    current_subset = "TA"
+                    acquisition_path.append(current_subset)
+                    t_inf_start2 = time.perf_counter()
+                    probs, pred = self._predict(current_subset, features)
+                    total_inference_ms += (time.perf_counter() - t_inf_start2) * 1000.0
+                    p_max = float(np.max(probs))
 
-                    current_mods.append("visual")
-                    current_key = mods_to_subset_key(current_mods)
-                    acquisition_path.append(current_key)
+                    if p_max >= tau_stage2 or cost_budget < 3.5:
+                        routing_reason = f"stage2_stop_TA_pmax_{p_max:.3f}"
+                        final_subset = "TA"
+                    else:
+                        # Step 3: Acquire Visual over TCP
+                        rem_s2 = t_deadline_monotonic - time.perf_counter()
+                        if rem_s2 <= 0.001:
+                            routing_reason = f"stage2_deadline_exhausted_stayed_TA"
+                            final_subset = "TA"
+                        else:
+                            vis_res = self.fetch_remote_modality(
+                                "visual", sample_idx, timeout_s=rem_s2
+                            )
+                            vis_feat, vis_rtt, vis_app_b = vis_res
+                            vis_pay_b = vis_res.payload_bytes
+                            total_app_bytes += vis_app_b
+                            total_payload_bytes += vis_pay_b
+                            total_network_rtt_ms += vis_rtt
+                            features["visual"] = vis_feat
+                            network_transactions.append({"modality": "visual", "rtt_ms": vis_rtt, "app_bytes": vis_app_b})
 
-                    t_inf_start3 = time.perf_counter()
-                    probs, pred = self._predict(current_key, features)
-                    t_inf_ms += (time.perf_counter() - t_inf_start3) * 1000.0
+                            current_subset = "TAV"
+                            acquisition_path.append(current_subset)
+                            t_inf_start3 = time.perf_counter()
+                            probs, pred = self._predict(current_subset, features)
+                            total_inference_ms += (time.perf_counter() - t_inf_start3) * 1000.0
+                            routing_reason = f"stage3_stop_TAV_pmax_{float(np.max(probs)):.3f}"
+                            final_subset = "TAV"
+        else:
+            raise ValueError(f"Unknown distributed policy mode: '{policy_mode}'")
 
-        total_wall_ms = (time.perf_counter() - t_wall_start) * 1000.0
-        on_time = int(total_wall_ms <= deadline_ms)
+        t_wall_end = time.perf_counter()
+        total_wall_ms = (t_wall_end - t_wall_start) * 1000.0
+        on_time = total_wall_ms <= deadline_ms
 
         return {
+            "sample_idx": sample_idx,
+            "policy": policy_mode,
             "prediction": pred,
             "probabilities": probs,
-            "final_subset": current_key,
+            "confidence": float(np.max(probs)),
+            "final_subset": final_subset,
             "acquisition_path": acquisition_path,
-            "wire_bytes_transmitted": total_wire_bytes,
+            "routing_reason": routing_reason,
+            "wire_bytes_transmitted": total_app_bytes,
+            "application_protocol_bytes": total_app_bytes,
+            "payload_bytes": total_payload_bytes,
             "network_rtt_ms": total_network_rtt_ms,
-            "inference_latency_ms": t_inf_ms,
-            "total_wall_clock_ms": total_wall_ms,
+            "inference_ms": total_inference_ms,
+            "wall_ms": total_wall_ms,
+            "deadline_ms": deadline_ms,
+            "cost_budget": cost_budget,
             "on_time": on_time,
+            "network_transactions": network_transactions,
+            "num_network_hops": len(network_transactions),
         }
