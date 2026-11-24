@@ -1,0 +1,4268 @@
+{
+  "ConditionalUtility_0.05": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5662676864989004,
+          0.5655034250204843,
+          0.5729434186189415
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.576,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.78,
+          1.5252,
+          1.468
+        ],
+        "mean_latency_seeds": [
+          5.8,
+          4.232,
+          3.88
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5682381767127754,
+        "macro_f1_std": 0.0033417061459184608,
+        "accuracy_mean": 0.5746666666666665,
+        "mean_cost_mean": 1.5910666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.47312061735614436,
+          0.47399913200002847,
+          0.485344276592059
+        ],
+        "accuracy_seeds": [
+          0.48,
+          0.484,
+          0.496
+        ],
+        "mean_cost_seeds": [
+          1.5355999999999999,
+          1.3484,
+          1.3692
+        ],
+        "mean_latency_seeds": [
+          4.296,
+          3.144,
+          3.272
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4774880086494106,
+        "macro_f1_std": 0.005566785816183526,
+        "accuracy_mean": 0.48666666666666664,
+        "mean_cost_mean": 1.4177333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5662676864989004,
+          0.5655034250204843,
+          0.5729434186189415
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.576,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.78,
+          1.5252,
+          1.468
+        ],
+        "mean_latency_seeds": [
+          5.8,
+          4.232,
+          3.88
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5682381767127754,
+        "macro_f1_std": 0.0033417061459184608,
+        "accuracy_mean": 0.5746666666666665,
+        "mean_cost_mean": 1.5910666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.40514777889635817,
+          0.4491228070175439,
+          0.42181071842830375
+        ],
+        "accuracy_seeds": [
+          0.408,
+          0.456,
+          0.428
+        ],
+        "mean_cost_seeds": [
+          1.5095999999999998,
+          1.3744,
+          1.3328000000000002
+        ],
+        "mean_latency_seeds": [
+          4.136,
+          3.304,
+          3.048
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4253604347807353,
+        "macro_f1_std": 0.018127348384909276,
+        "accuracy_mean": 0.4306666666666667,
+        "mean_cost_mean": 1.4056,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.545253207969271,
+          0.5320006092418622,
+          0.5701363713901603
+        ],
+        "accuracy_seeds": [
+          0.556,
+          0.548,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.42,
+          1.2952000000000001,
+          1.2432
+        ],
+        "mean_latency_seeds": [
+          3.8,
+          3.032,
+          2.712
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5491300628670978,
+        "macro_f1_std": 0.015808364696830463,
+        "accuracy_mean": 0.5626666666666668,
+        "mean_cost_mean": 1.3194666666666668,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5662676864989004,
+          0.5655034250204843,
+          0.5729434186189415
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.576,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.78,
+          1.5252,
+          1.468
+        ],
+        "mean_latency_seeds": [
+          5.8,
+          4.232,
+          3.88
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5682381767127754,
+        "macro_f1_std": 0.0033417061459184608,
+        "accuracy_mean": 0.5746666666666665,
+        "mean_cost_mean": 1.5910666666666666,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.532106192991973,
+      "macro_f1_std": 0.054177597288389494,
+      "accuracy_mean": 0.540952380952381,
+      "accuracy_std": 0.05541056817755649,
+      "mean_cost": 1.4165714285714286,
+      "mean_latency_ms": 3.594285714285714,
+      "on_time_rate": 1.0
+    }
+  },
+  "ConditionalUtility_0.02": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5527948234833163,
+          0.5391511954493168,
+          0.5435157400500458
+        ],
+        "accuracy_seeds": [
+          0.552,
+          0.548,
+          0.548
+        ],
+        "mean_cost_seeds": [
+          2.1408,
+          1.8155999999999999,
+          1.8656000000000001
+        ],
+        "mean_latency_seeds": [
+          7.944,
+          6.0,
+          6.26
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5451539196608929,
+        "macro_f1_std": 0.005689163430627338,
+        "accuracy_mean": 0.5493333333333333,
+        "mean_cost_mean": 1.9406666666666668,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4646368562833454,
+          0.47949448532693495,
+          0.4753797826596687
+        ],
+        "accuracy_seeds": [
+          0.468,
+          0.492,
+          0.484
+        ],
+        "mean_cost_seeds": [
+          1.9652000000000003,
+          1.6076,
+          1.6172
+        ],
+        "mean_latency_seeds": [
+          6.892,
+          4.72,
+          4.76
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.47317037475664964,
+        "macro_f1_std": 0.006263566484608756,
+        "accuracy_mean": 0.48133333333333334,
+        "mean_cost_mean": 1.7299999999999998,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5392899498162657,
+          0.5550989524219534
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.548,
+          0.56
+        ],
+        "mean_cost_seeds": [
+          2.1024000000000003,
+          1.806,
+          1.832
+        ],
+        "mean_latency_seeds": [
+          7.784,
+          5.96,
+          6.12
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5466615926680783,
+        "macro_f1_std": 0.006497843500381061,
+        "accuracy_mean": 0.5506666666666667,
+        "mean_cost_mean": 1.9134666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.40371940102479026,
+          0.4534134971081591,
+          0.4113933989634448
+        ],
+        "accuracy_seeds": [
+          0.404,
+          0.46,
+          0.416
+        ],
+        "mean_cost_seeds": [
+          1.8372,
+          1.6552000000000002,
+          1.6188
+        ],
+        "mean_latency_seeds": [
+          6.152,
+          5.032,
+          4.808
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4228420990321314,
+        "macro_f1_std": 0.021843081991526615,
+        "accuracy_mean": 0.4266666666666667,
+        "mean_cost_mean": 1.7037333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5514612867157979,
+          0.5162028176084842,
+          0.5521570723569174
+        ],
+        "accuracy_seeds": [
+          0.56,
+          0.532,
+          0.564
+        ],
+        "mean_cost_seeds": [
+          1.632,
+          1.456,
+          1.4708
+        ],
+        "mean_latency_seeds": [
+          5.076,
+          4.012,
+          4.084
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5399403922270665,
+        "macro_f1_std": 0.01678740333293922,
+        "accuracy_mean": 0.552,
+        "mean_cost_mean": 1.5195999999999998,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5527948234833163,
+          0.5391511954493168,
+          0.5435157400500458
+        ],
+        "accuracy_seeds": [
+          0.552,
+          0.548,
+          0.548
+        ],
+        "mean_cost_seeds": [
+          2.1408,
+          1.8155999999999999,
+          1.8656000000000001
+        ],
+        "mean_latency_seeds": [
+          7.944,
+          6.0,
+          6.26
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5451539196608929,
+        "macro_f1_std": 0.005689163430627338,
+        "accuracy_mean": 0.5493333333333333,
+        "mean_cost_mean": 1.9406666666666668,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5201389446448503,
+      "macro_f1_std": 0.04963830047580307,
+      "accuracy_mean": 0.5274285714285715,
+      "accuracy_std": 0.051244113649017965,
+      "mean_cost": 1.6783047619047617,
+      "mean_latency_ms": 5.181333333333335,
+      "on_time_rate": 1.0
+    }
+  },
+  "ConditionalUtility_0.08": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.562241031566185,
+          0.5668377764971221,
+          0.5675127970560111
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.2235999999999998,
+          1.1508000000000003,
+          1.1300000000000003
+        ],
+        "mean_latency_seeds": [
+          2.376,
+          1.928,
+          1.8
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5655305350397728,
+        "macro_f1_std": 0.0023422977345319176,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.1681333333333335,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4500486593509849,
+          0.4737940630797774,
+          0.47910361406876506
+        ],
+        "accuracy_seeds": [
+          0.464,
+          0.488,
+          0.488
+        ],
+        "mean_cost_seeds": [
+          1.1248000000000002,
+          1.0832,
+          1.0832
+        ],
+        "mean_latency_seeds": [
+          1.768,
+          1.512,
+          1.512
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4676487788331758,
+        "macro_f1_std": 0.012632523824549362,
+        "accuracy_mean": 0.48,
+        "mean_cost_mean": 1.0970666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.562241031566185,
+          0.5668377764971221,
+          0.5675127970560111
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.2235999999999998,
+          1.1508000000000003,
+          1.1300000000000003
+        ],
+        "mean_latency_seeds": [
+          2.376,
+          1.928,
+          1.8
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5655305350397728,
+        "macro_f1_std": 0.0023422977345319176,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.1681333333333335,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.43203504490479067,
+          0.424947933213315,
+          0.4250104469173693
+        ],
+        "accuracy_seeds": [
+          0.44,
+          0.432,
+          0.432
+        ],
+        "mean_cost_seeds": [
+          1.1664,
+          1.0936,
+          1.078
+        ],
+        "mean_latency_seeds": [
+          2.024,
+          1.576,
+          1.48
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4273311416784917,
+        "macro_f1_std": 0.003326259777647003,
+        "accuracy_mean": 0.4346666666666667,
+        "mean_cost_mean": 1.1126666666666667,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5422916425582464,
+          0.5415180304795185,
+          0.5534090037925421
+        ],
+        "accuracy_seeds": [
+          0.56,
+          0.56,
+          0.572
+        ],
+        "mean_cost_seeds": [
+          1.134,
+          1.0976000000000001,
+          1.0872
+        ],
+        "mean_latency_seeds": [
+          2.04,
+          1.816,
+          1.752
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5457395589434356,
+        "macro_f1_std": 0.0054323050437300475,
+        "accuracy_mean": 0.5640000000000001,
+        "mean_cost_mean": 1.1062666666666667,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.562241031566185,
+          0.5668377764971221,
+          0.5675127970560111
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.2235999999999998,
+          1.1508000000000003,
+          1.1300000000000003
+        ],
+        "mean_latency_seeds": [
+          2.376,
+          1.928,
+          1.8
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5655305350397728,
+        "macro_f1_std": 0.0023422977345319176,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.1681333333333335,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5293373427260947,
+      "macro_f1_std": 0.05365532778099571,
+      "accuracy_mean": 0.5419047619047618,
+      "accuracy_std": 0.05539288656575107,
+      "mean_cost": 1.1172,
+      "mean_latency_ms": 1.7519999999999998,
+      "on_time_rate": 1.0
+    }
+  },
+  "SequentialConfidence_0.65_0.55": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5813287725031713,
+          0.5956925144392978,
+          0.606401314734648
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.608,
+          0.616
+        ],
+        "mean_cost_seeds": [
+          2.2527999999999997,
+          1.9367999999999999,
+          2.0416
+        ],
+        "mean_latency_seeds": [
+          6.964,
+          5.544,
+          6.208
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5944742005590391,
+        "macro_f1_std": 0.010272010839182336,
+        "accuracy_mean": 0.6053333333333333,
+        "mean_cost_mean": 2.0770666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.48666148595361713,
+          0.48032618078539285,
+          0.4970645363408521
+        ],
+        "accuracy_seeds": [
+          0.504,
+          0.492,
+          0.508
+        ],
+        "mean_cost_seeds": [
+          1.8683999999999998,
+          1.5268,
+          1.7375999999999998
+        ],
+        "mean_latency_seeds": [
+          4.98,
+          3.412,
+          4.652
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4880174010266207,
+        "macro_f1_std": 0.006900338925934111,
+        "accuracy_mean": 0.5013333333333333,
+        "mean_cost_mean": 1.7109333333333332,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5444769979209871,
+          0.5460407647907648,
+          0.5613602092575865
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.556,
+          0.568
+        ],
+        "mean_cost_seeds": [
+          1.9516000000000004,
+          1.6656,
+          1.6552
+        ],
+        "mean_latency_seeds": [
+          6.856,
+          5.096,
+          5.032
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5506259906564461,
+        "macro_f1_std": 0.0076170391639863895,
+        "accuracy_mean": 0.556,
+        "mean_cost_mean": 1.7574666666666667,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5796167326811704,
+          0.5736975636881798,
+          0.5788024326793385
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.8783999999999996,
+          1.6144,
+          1.6048
+        ],
+        "mean_latency_seeds": [
+          4.66,
+          3.56,
+          3.52
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 1.6992,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.41458051557363534,
+          0.4534134971081591,
+          0.4141510009499656
+        ],
+        "accuracy_seeds": [
+          0.416,
+          0.46,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          1.6656000000000002,
+          1.4888,
+          1.4628
+        ],
+        "mean_latency_seeds": [
+          5.096,
+          4.008,
+          3.848
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4273816712105867,
+        "macro_f1_std": 0.01840811578940347,
+        "accuracy_mean": 0.432,
+        "mean_cost_mean": 1.5390666666666668,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5272722351540086,
+          0.555661351548329,
+          0.5937456707094368
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.572,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.8976000000000002,
+          1.6628,
+          1.6847999999999999
+        ],
+        "mean_latency_seeds": [
+          5.604,
+          4.512,
+          4.676
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5588930858039248,
+        "macro_f1_std": 0.02723371058522278,
+        "accuracy_mean": 0.5746666666666668,
+        "mean_cost_mean": 1.7484000000000002,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5813287725031713,
+          0.5956925144392978,
+          0.606401314734648
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.608,
+          0.616
+        ],
+        "mean_cost_seeds": [
+          2.2527999999999997,
+          1.9367999999999999,
+          2.0416
+        ],
+        "mean_latency_seeds": [
+          6.964,
+          5.544,
+          6.208
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5944742005590391,
+        "macro_f1_std": 0.010272010839182336,
+        "accuracy_mean": 0.6053333333333333,
+        "mean_cost_mean": 2.0770666666666666,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5416055418331266,
+      "macro_f1_std": 0.0592482844075715,
+      "accuracy_mean": 0.5516190476190476,
+      "accuracy_std": 0.06074966289577344,
+      "mean_cost": 1.8013142857142856,
+      "mean_latency_ms": 5.0925714285714285,
+      "on_time_rate": 1.0
+    }
+  },
+  "SequentialConfidence_0.75_0.60": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5723992622211452,
+          0.5891115552678939,
+          0.5846905568870758
+        ],
+        "accuracy_seeds": [
+          0.584,
+          0.604,
+          0.596
+        ],
+        "mean_cost_seeds": [
+          2.6256,
+          2.2875999999999994,
+          2.4935999999999994
+        ],
+        "mean_latency_seeds": [
+          8.848,
+          7.264,
+          8.484
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5820671247920384,
+        "macro_f1_std": 0.007070454096122157,
+        "accuracy_mean": 0.5946666666666666,
+        "mean_cost_mean": 2.4689333333333328,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.48138812092300465,
+          0.48835261579213896,
+          0.4931594652533153
+        ],
+        "accuracy_seeds": [
+          0.496,
+          0.504,
+          0.504
+        ],
+        "mean_cost_seeds": [
+          2.2383999999999995,
+          1.9276,
+          2.0804
+        ],
+        "mean_latency_seeds": [
+          6.78,
+          5.392,
+          6.38
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.48763340065615296,
+        "macro_f1_std": 0.004832465874654993,
+        "accuracy_mean": 0.5013333333333333,
+        "mean_cost_mean": 2.082133333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5520833333333334,
+          0.5511020020198419
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.56,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.1752000000000007,
+          1.9048000000000003,
+          1.9308
+        ],
+        "mean_latency_seeds": [
+          8.232,
+          6.568,
+          6.728
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5495937370397304,
+        "macro_f1_std": 0.0028551618587638124,
+        "accuracy_mean": 0.5533333333333333,
+        "mean_cost_mean": 2.0036000000000005,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.0847999999999995,
+          1.8351999999999997,
+          1.8591999999999997
+        ],
+        "mean_latency_seeds": [
+          5.52,
+          4.48,
+          4.58
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 1.9263999999999994,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4120132030311671,
+          0.44905575780229307,
+          0.4155946612155161
+        ],
+        "accuracy_seeds": [
+          0.412,
+          0.456,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          1.9464000000000001,
+          1.7384000000000002,
+          1.676
+        ],
+        "mean_latency_seeds": [
+          6.824,
+          5.544,
+          5.16
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4255545406829921,
+        "macro_f1_std": 0.016682068521778188,
+        "accuracy_mean": 0.42933333333333334,
+        "mean_cost_mean": 1.7869333333333335,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5293768081945421,
+          0.5490829874297153,
+          0.5862238456898504
+        ],
+        "accuracy_seeds": [
+          0.548,
+          0.564,
+          0.6
+        ],
+        "mean_cost_seeds": [
+          2.1404,
+          1.8791999999999998,
+          1.9671999999999998
+        ],
+        "mean_latency_seeds": [
+          6.812,
+          5.548,
+          6.08
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5548945471047025,
+        "macro_f1_std": 0.023568723447119497,
+        "accuracy_mean": 0.5706666666666668,
+        "mean_cost_mean": 1.9955999999999998,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5723992622211452,
+          0.5891115552678939,
+          0.5846905568870758
+        ],
+        "accuracy_seeds": [
+          0.584,
+          0.604,
+          0.596
+        ],
+        "mean_cost_seeds": [
+          2.6256,
+          2.2875999999999994,
+          2.4935999999999994
+        ],
+        "mean_latency_seeds": [
+          8.848,
+          7.264,
+          8.484
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5820671247920384,
+        "macro_f1_std": 0.007070454096122157,
+        "accuracy_mean": 0.5946666666666666,
+        "mean_cost_mean": 2.4689333333333328,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5368924013875868,
+      "macro_f1_std": 0.05602100313388787,
+      "accuracy_mean": 0.5470476190476189,
+      "accuracy_std": 0.058161086803296486,
+      "mean_cost": 2.104647619047619,
+      "mean_latency_ms": 6.658095238095239,
+      "on_time_rate": 1.0
+    }
+  },
+  "SequentialConfidence_0.55_0.45": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.599244602669561,
+          0.5878918653592768,
+          0.589769647696477
+        ],
+        "accuracy_seeds": [
+          0.608,
+          0.6,
+          0.6
+        ],
+        "mean_cost_seeds": [
+          1.7668,
+          1.4427999999999999,
+          1.4596
+        ],
+        "mean_latency_seeds": [
+          4.412,
+          3.0,
+          3.132
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.592302038575105,
+        "macro_f1_std": 0.0049686291724980675,
+        "accuracy_mean": 0.6026666666666666,
+        "mean_cost_mean": 1.5564,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.49194291872800694,
+          0.47720364741641336,
+          0.504644434841064
+        ],
+        "accuracy_seeds": [
+          0.508,
+          0.488,
+          0.516
+        ],
+        "mean_cost_seeds": [
+          1.4448,
+          1.2355999999999998,
+          1.2832
+        ],
+        "mean_latency_seeds": [
+          2.936,
+          1.992,
+          2.304
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4912636669951615,
+        "macro_f1_std": 0.011212946113270048,
+        "accuracy_mean": 0.504,
+        "mean_cost_mean": 1.3212,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5648838247197809,
+          0.5725165104047091,
+          0.5803698965714507
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.584,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.7124000000000001,
+          1.3952,
+          1.3796
+        ],
+        "mean_latency_seeds": [
+          5.384,
+          3.432,
+          3.336
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5725900772319802,
+        "macro_f1_std": 0.006322376367966157,
+        "accuracy_mean": 0.58,
+        "mean_cost_mean": 1.4957333333333331,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5747279262639432,
+          0.5855292050944225,
+          0.5732914830740917
+        ],
+        "accuracy_seeds": [
+          0.588,
+          0.596,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.6576,
+          1.3648,
+          1.3504
+        ],
+        "mean_latency_seeds": [
+          3.74,
+          2.52,
+          2.46
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5778495381441524,
+        "macro_f1_std": 0.005461916977870201,
+        "accuracy_mean": 0.5893333333333333,
+        "mean_cost_mean": 1.4576,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.41739034233801037,
+          0.44110778369318737,
+          0.42947310947310946
+        ],
+        "accuracy_seeds": [
+          0.424,
+          0.448,
+          0.436
+        ],
+        "mean_cost_seeds": [
+          1.3796000000000002,
+          1.2652,
+          1.2495999999999998
+        ],
+        "mean_latency_seeds": [
+          3.336,
+          2.632,
+          2.536
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4293237451681024,
+        "macro_f1_std": 0.00968318089544177,
+        "accuracy_mean": 0.436,
+        "mean_cost_mean": 1.2981333333333334,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5402663339188069,
+          0.5650872093023257,
+          0.5657119621610764
+        ],
+        "accuracy_seeds": [
+          0.556,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          1.6483999999999999,
+          1.3608000000000002,
+          1.3856
+        ],
+        "mean_latency_seeds": [
+          4.328,
+          3.016,
+          3.14
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.557021835127403,
+        "macro_f1_std": 0.011850673527893665,
+        "accuracy_mean": 0.5720000000000001,
+        "mean_cost_mean": 1.4649333333333334,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.599244602669561,
+          0.5878918653592768,
+          0.589769647696477
+        ],
+        "accuracy_seeds": [
+          0.608,
+          0.6,
+          0.6
+        ],
+        "mean_cost_seeds": [
+          1.7668,
+          1.4427999999999999,
+          1.4596
+        ],
+        "mean_latency_seeds": [
+          4.412,
+          3.0,
+          3.132
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.592302038575105,
+        "macro_f1_std": 0.0049686291724980675,
+        "accuracy_mean": 0.6026666666666666,
+        "mean_cost_mean": 1.5564,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5446647056881441,
+      "macro_f1_std": 0.057578157258375284,
+      "accuracy_mean": 0.5552380952380952,
+      "accuracy_std": 0.058418771250918315,
+      "mean_cost": 1.450057142857143,
+      "mean_latency_ms": 3.246666666666667,
+      "on_time_rate": 1.0
+    }
+  },
+  "DerivedThreshold_V13": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5947722892480461,
+          0.576583320061581,
+          0.5980857665122001
+        ],
+        "accuracy_seeds": [
+          0.604,
+          0.584,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.942,
+          1.6671999999999998,
+          1.7107999999999999
+        ],
+        "mean_latency_seeds": [
+          5.08,
+          3.904,
+          4.22
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5898137919406091,
+        "macro_f1_std": 0.009452647689098597,
+        "accuracy_mean": 0.5986666666666666,
+        "mean_cost_mean": 1.7733333333333332,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4998583286602258,
+          0.4699735735107983,
+          0.4796633598959181
+        ],
+        "accuracy_seeds": [
+          0.516,
+          0.48,
+          0.496
+        ],
+        "mean_cost_seeds": [
+          1.7071999999999998,
+          1.4184,
+          1.4948000000000001
+        ],
+        "mean_latency_seeds": [
+          3.988,
+          2.764,
+          3.196
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4831650873556474,
+        "macro_f1_std": 0.012449128991940882,
+        "accuracy_mean": 0.49733333333333335,
+        "mean_cost_mean": 1.5401333333333334,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5691703827573393,
+          0.5599400599400599,
+          0.5742730017479739
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.572,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.4264,
+          1.1924000000000001,
+          1.1976
+        ],
+        "mean_latency_seeds": [
+          3.624,
+          2.184,
+          2.216
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.567794481481791,
+        "macro_f1_std": 0.005931730127447574,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.2721333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5796167326811704,
+          0.5736975636881798,
+          0.5788024326793385
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.8639999999999999,
+          1.6048,
+          1.5808
+        ],
+        "mean_latency_seeds": [
+          4.6,
+          3.52,
+          3.42
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 1.6832,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.43532623920394237,
+          0.444896115627823,
+          0.42543779325537234
+        ],
+        "accuracy_seeds": [
+          0.444,
+          0.452,
+          0.432
+        ],
+        "mean_cost_seeds": [
+          1.2288000000000001,
+          1.1196,
+          1.104
+        ],
+        "mean_latency_seeds": [
+          2.408,
+          1.736,
+          1.64
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.43522004936237924,
+        "macro_f1_std": 0.007944181711558543,
+        "accuracy_mean": 0.4426666666666667,
+        "mean_cost_mean": 1.1508,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5428883640454664,
+          0.5625620365504759,
+          0.5582376458780863
+        ],
+        "accuracy_seeds": [
+          0.56,
+          0.576,
+          0.572
+        ],
+        "mean_cost_seeds": [
+          1.696,
+          1.492,
+          1.504
+        ],
+        "mean_latency_seeds": [
+          4.392,
+          3.48,
+          3.592
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5545626821580095,
+        "macro_f1_std": 0.00844165727080105,
+        "accuracy_mean": 0.5693333333333334,
+        "mean_cost_mean": 1.564,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5947722892480461,
+          0.576583320061581,
+          0.5980857665122001
+        ],
+        "accuracy_seeds": [
+          0.604,
+          0.584,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.942,
+          1.6671999999999998,
+          1.7107999999999999
+        ],
+        "mean_latency_seeds": [
+          5.08,
+          3.904,
+          4.22
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5898137919406091,
+        "macro_f1_std": 0.009452647689098597,
+        "accuracy_mean": 0.5986666666666666,
+        "mean_cost_mean": 1.7733333333333332,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5425345896078965,
+      "macro_f1_std": 0.0560845008070541,
+      "accuracy_mean": 0.5529523809523809,
+      "accuracy_std": 0.05610744470633038,
+      "mean_cost": 1.536704761904762,
+      "mean_latency_ms": 3.484190476190476,
+      "on_time_rate": 1.0
+    }
+  },
+  "DerivedThreshold_Corrected_M1": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5652133785437692,
+          0.5547139746746264,
+          0.5698668640352738
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.568,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.0588000000000002,
+          1.0288000000000002,
+          1.0144000000000002
+        ],
+        "mean_latency_seeds": [
+          1.276,
+          1.12,
+          1.06
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5632647390845564,
+        "macro_f1_std": 0.006337739386695441,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.034,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.46646748555944567,
+          0.47828512163388437,
+          0.4763521068001669
+        ],
+        "accuracy_seeds": [
+          0.484,
+          0.492,
+          0.488
+        ],
+        "mean_cost_seeds": [
+          1.034,
+          1.0,
+          1.0248
+        ],
+        "mean_latency_seeds": [
+          1.152,
+          1.0,
+          1.124
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.47370157133116564,
+        "macro_f1_std": 0.005175785563647572,
+        "accuracy_mean": 0.488,
+        "mean_cost_mean": 1.0195999999999998,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5652133785437692,
+          0.5547139746746264,
+          0.5698668640352738
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.568,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.0432000000000001,
+          1.0288000000000002,
+          1.0144000000000002
+        ],
+        "mean_latency_seeds": [
+          1.18,
+          1.12,
+          1.06
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5632647390845564,
+        "macro_f1_std": 0.006337739386695441,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.0288000000000002,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4467607177099027,
+          0.4296745502324641,
+          0.44258742001216916
+        ],
+        "accuracy_seeds": [
+          0.456,
+          0.44,
+          0.448
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4396742293181786,
+        "macro_f1_std": 0.007273206068918761,
+        "accuracy_mean": 0.448,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5519345294610191,
+          0.5366521152896259,
+          0.5482923497267759
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.556,
+          0.568
+        ],
+        "mean_cost_seeds": [
+          1.0484,
+          1.0288,
+          1.0191999999999999
+        ],
+        "mean_latency_seeds": [
+          1.456,
+          1.364,
+          1.324
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5456263314924735,
+        "macro_f1_std": 0.00651760618866181,
+        "accuracy_mean": 0.5653333333333334,
+        "mean_cost_mean": 1.0321333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5652133785437692,
+          0.5547139746746264,
+          0.5698668640352738
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.568,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.0588000000000002,
+          1.0288000000000002,
+          1.0144000000000002
+        ],
+        "mean_latency_seeds": [
+          1.276,
+          1.12,
+          1.06
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5632647390845564,
+        "macro_f1_std": 0.006337739386695441,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.034,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5309780948433898,
+      "macro_f1_std": 0.04870200957685817,
+      "accuracy_mean": 0.545142857142857,
+      "accuracy_std": 0.05053832653521079,
+      "mean_cost": 1.021219047619048,
+      "mean_latency_ms": 1.1281904761904764,
+      "on_time_rate": 1.0
+    }
+  },
+  "UtilityRouter_V13": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5947722892480461,
+          0.576583320061581,
+          0.5980857665122001
+        ],
+        "accuracy_seeds": [
+          0.604,
+          0.584,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.942,
+          1.6671999999999998,
+          1.7107999999999999
+        ],
+        "mean_latency_seeds": [
+          5.08,
+          3.904,
+          4.22
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5898137919406091,
+        "macro_f1_std": 0.009452647689098597,
+        "accuracy_mean": 0.5986666666666666,
+        "mean_cost_mean": 1.7733333333333332,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4998583286602258,
+          0.4699735735107983,
+          0.4796633598959181
+        ],
+        "accuracy_seeds": [
+          0.516,
+          0.48,
+          0.496
+        ],
+        "mean_cost_seeds": [
+          1.7071999999999998,
+          1.4184,
+          1.4948000000000001
+        ],
+        "mean_latency_seeds": [
+          3.988,
+          2.764,
+          3.196
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4831650873556474,
+        "macro_f1_std": 0.012449128991940882,
+        "accuracy_mean": 0.49733333333333335,
+        "mean_cost_mean": 1.5401333333333334,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5691703827573393,
+          0.5599400599400599,
+          0.5742730017479739
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.572,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.4264,
+          1.1924000000000001,
+          1.1976
+        ],
+        "mean_latency_seeds": [
+          3.624,
+          2.184,
+          2.216
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.567794481481791,
+        "macro_f1_std": 0.005931730127447574,
+        "accuracy_mean": 0.5773333333333333,
+        "mean_cost_mean": 1.2721333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5796167326811704,
+          0.5736975636881798,
+          0.5788024326793385
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.8639999999999999,
+          1.6048,
+          1.5808
+        ],
+        "mean_latency_seeds": [
+          4.6,
+          3.52,
+          3.42
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 1.6832,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.43532623920394237,
+          0.444896115627823,
+          0.42543779325537234
+        ],
+        "accuracy_seeds": [
+          0.444,
+          0.452,
+          0.432
+        ],
+        "mean_cost_seeds": [
+          1.2288000000000001,
+          1.1196,
+          1.104
+        ],
+        "mean_latency_seeds": [
+          2.408,
+          1.736,
+          1.64
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.43522004936237924,
+        "macro_f1_std": 0.007944181711558543,
+        "accuracy_mean": 0.4426666666666667,
+        "mean_cost_mean": 1.1508,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5428883640454664,
+          0.5625620365504759,
+          0.5582376458780863
+        ],
+        "accuracy_seeds": [
+          0.56,
+          0.576,
+          0.572
+        ],
+        "mean_cost_seeds": [
+          1.696,
+          1.492,
+          1.504
+        ],
+        "mean_latency_seeds": [
+          4.392,
+          3.48,
+          3.592
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5545626821580095,
+        "macro_f1_std": 0.00844165727080105,
+        "accuracy_mean": 0.5693333333333334,
+        "mean_cost_mean": 1.564,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5947722892480461,
+          0.576583320061581,
+          0.5980857665122001
+        ],
+        "accuracy_seeds": [
+          0.604,
+          0.584,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.942,
+          1.6671999999999998,
+          1.7107999999999999
+        ],
+        "mean_latency_seeds": [
+          5.08,
+          3.904,
+          4.22
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5898137919406091,
+        "macro_f1_std": 0.009452647689098597,
+        "accuracy_mean": 0.5986666666666666,
+        "mean_cost_mean": 1.7733333333333332,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5425345896078965,
+      "macro_f1_std": 0.0560845008070541,
+      "accuracy_mean": 0.5529523809523809,
+      "accuracy_std": 0.05610744470633038,
+      "mean_cost": 1.536704761904762,
+      "mean_latency_ms": 3.484190476190476,
+      "on_time_rate": 1.0
+    }
+  },
+  "ConfidenceRouting_0.55": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.578513855682999,
+          0.5922073252170339,
+          0.5815501397616325
+        ],
+        "accuracy_seeds": [
+          0.588,
+          0.608,
+          0.592
+        ],
+        "mean_cost_seeds": [
+          2.37,
+          1.76,
+          1.73
+        ],
+        "mean_latency_seeds": [
+          8.124,
+          4.952,
+          4.796
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5840904402205551,
+        "macro_f1_std": 0.005871832296997115,
+        "accuracy_mean": 0.596,
+        "mean_cost_mean": 1.9533333333333331,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.5019165428406477,
+          0.4783670862981208,
+          0.5046576519716687
+        ],
+        "accuracy_seeds": [
+          0.516,
+          0.492,
+          0.512
+        ],
+        "mean_cost_seeds": [
+          1.84,
+          1.48,
+          1.46
+        ],
+        "mean_latency_seeds": [
+          5.368,
+          3.496,
+          3.392
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4949804270368124,
+        "macro_f1_std": 0.011800585795966339,
+        "accuracy_mean": 0.5066666666666667,
+        "mean_cost_mean": 1.5933333333333335,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5648838247197809,
+          0.5725165104047091,
+          0.5803698965714507
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.584,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.7124000000000001,
+          1.3952,
+          1.3796
+        ],
+        "mean_latency_seeds": [
+          5.384,
+          3.432,
+          3.336
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5725900772319802,
+        "macro_f1_std": 0.006322376367966157,
+        "accuracy_mean": 0.58,
+        "mean_cost_mean": 1.4957333333333331,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5747279262639432,
+          0.5855292050944225,
+          0.5732914830740917
+        ],
+        "accuracy_seeds": [
+          0.588,
+          0.596,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.6576,
+          1.3648,
+          1.3504
+        ],
+        "mean_latency_seeds": [
+          3.74,
+          2.52,
+          2.46
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5778495381441524,
+        "macro_f1_std": 0.005461916977870201,
+        "accuracy_mean": 0.5893333333333333,
+        "mean_cost_mean": 1.4576,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.41739034233801037,
+          0.44110778369318737,
+          0.42947310947310946
+        ],
+        "accuracy_seeds": [
+          0.424,
+          0.448,
+          0.436
+        ],
+        "mean_cost_seeds": [
+          1.3796000000000002,
+          1.2652,
+          1.2495999999999998
+        ],
+        "mean_latency_seeds": [
+          3.336,
+          2.632,
+          2.536
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4293237451681024,
+        "macro_f1_std": 0.00968318089544177,
+        "accuracy_mean": 0.436,
+        "mean_cost_mean": 1.2981333333333334,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5078129713423831,
+          0.5551602012445386,
+          0.5810795960175115
+        ],
+        "accuracy_seeds": [
+          0.528,
+          0.576,
+          0.596
+        ],
+        "mean_cost_seeds": [
+          1.8771999999999998,
+          1.4751999999999998,
+          1.4636
+        ],
+        "mean_latency_seeds": [
+          5.736,
+          3.72,
+          3.62
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5480175895348111,
+        "macro_f1_std": 0.0303343836742893,
+        "accuracy_mean": 0.5666666666666668,
+        "mean_cost_mean": 1.605333333333333,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.578513855682999,
+          0.5922073252170339,
+          0.5815501397616325
+        ],
+        "accuracy_seeds": [
+          0.588,
+          0.608,
+          0.592
+        ],
+        "mean_cost_seeds": [
+          2.37,
+          1.76,
+          1.73
+        ],
+        "mean_latency_seeds": [
+          8.124,
+          4.952,
+          4.796
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5840904402205551,
+        "macro_f1_std": 0.005871832296997115,
+        "accuracy_mean": 0.596,
+        "mean_cost_mean": 1.9533333333333331,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5415631796509957,
+      "macro_f1_std": 0.05605833865554663,
+      "accuracy_mean": 0.5529523809523811,
+      "accuracy_std": 0.057369708441929665,
+      "mean_cost": 1.6224,
+      "mean_latency_ms": 4.3072380952380955,
+      "on_time_rate": 1.0
+    }
+  },
+  "ConfidenceRouting_0.65": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5647371091767829,
+          0.5797676578164382,
+          0.5825810529556833
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.596,
+          0.592
+        ],
+        "mean_cost_seeds": [
+          2.83,
+          2.28,
+          2.26
+        ],
+        "mean_latency_seeds": [
+          10.516,
+          7.656,
+          7.552
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5756952733163015,
+        "macro_f1_std": 0.007833254710265943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 2.4566666666666666,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4879411128597846,
+          0.4730787641138486,
+          0.491719535378629
+        ],
+        "accuracy_seeds": [
+          0.5,
+          0.492,
+          0.5
+        ],
+        "mean_cost_seeds": [
+          2.43,
+          1.87,
+          1.93
+        ],
+        "mean_latency_seeds": [
+          8.436,
+          5.524,
+          5.836
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4842464707840874,
+        "macro_f1_std": 0.00804600826029487,
+        "accuracy_mean": 0.49733333333333335,
+        "mean_cost_mean": 2.0766666666666667,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5444769979209871,
+          0.5460407647907648,
+          0.5613602092575865
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.556,
+          0.568
+        ],
+        "mean_cost_seeds": [
+          1.9516000000000004,
+          1.6656,
+          1.6552
+        ],
+        "mean_latency_seeds": [
+          6.856,
+          5.096,
+          5.032
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5506259906564461,
+        "macro_f1_std": 0.0076170391639863895,
+        "accuracy_mean": 0.556,
+        "mean_cost_mean": 1.7574666666666667,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5796167326811704,
+          0.5736975636881798,
+          0.5788024326793385
+        ],
+        "accuracy_seeds": [
+          0.592,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.8783999999999996,
+          1.6144,
+          1.6048
+        ],
+        "mean_latency_seeds": [
+          4.66,
+          3.56,
+          3.52
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 1.6992,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.41458051557363534,
+          0.4534134971081591,
+          0.4141510009499656
+        ],
+        "accuracy_seeds": [
+          0.416,
+          0.46,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          1.6656000000000002,
+          1.4888,
+          1.4628
+        ],
+        "mean_latency_seeds": [
+          5.096,
+          4.008,
+          3.848
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4273816712105867,
+        "macro_f1_std": 0.01840811578940347,
+        "accuracy_mean": 0.432,
+        "mean_cost_mean": 1.5390666666666668,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5035643573849553,
+          0.5366230009204721,
+          0.5902699651202644
+        ],
+        "accuracy_seeds": [
+          0.52,
+          0.556,
+          0.604
+        ],
+        "mean_cost_seeds": [
+          2.1056,
+          1.7772,
+          1.7471999999999999
+        ],
+        "mean_latency_seeds": [
+          6.884,
+          5.216,
+          5.06
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5434857744752306,
+        "macro_f1_std": 0.035728502616587436,
+        "accuracy_mean": 0.56,
+        "mean_cost_mean": 1.8766666666666663,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5647371091767829,
+          0.5797676578164382,
+          0.5825810529556833
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.596,
+          0.592
+        ],
+        "mean_cost_seeds": [
+          2.83,
+          2.28,
+          2.26
+        ],
+        "mean_latency_seeds": [
+          10.516,
+          7.656,
+          7.552
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5756952733163015,
+        "macro_f1_std": 0.007833254710265943,
+        "accuracy_mean": 0.5866666666666666,
+        "mean_cost_mean": 2.4566666666666666,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5335003852535976,
+      "macro_f1_std": 0.05533457334045654,
+      "accuracy_mean": 0.5436190476190476,
+      "accuracy_std": 0.05671522529308467,
+      "mean_cost": 1.980342857142857,
+      "mean_latency_ms": 6.194285714285715,
+      "on_time_rate": 1.0
+    }
+  },
+  "FixedFallback": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4672321445861291,
+          0.47828512163388437,
+          0.4710187734668336
+        ],
+        "accuracy_seeds": [
+          0.484,
+          0.492,
+          0.484
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.47217867989561574,
+        "macro_f1_std": 0.004586292082368844,
+        "accuracy_mean": 0.48666666666666664,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4467607177099027,
+          0.4296745502324641,
+          0.44258742001216916
+        ],
+        "accuracy_seeds": [
+          0.456,
+          0.44,
+          0.448
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4396742293181786,
+        "macro_f1_std": 0.007273206068918761,
+        "accuracy_mean": 0.448,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5500205515057001,
+          0.5438119095386412,
+          0.548433974148505
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.564,
+          0.568
+        ],
+        "mean_cost_seeds": [
+          1.0144,
+          1.0144,
+          1.0144
+        ],
+        "mean_latency_seeds": [
+          1.304,
+          1.304,
+          1.304
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5474221450642821,
+        "macro_f1_std": 0.0026337118724391764,
+        "accuracy_mean": 0.568,
+        "mean_cost_mean": 1.0144,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5330680446158631,
+      "macro_f1_std": 0.050315007674916985,
+      "accuracy_mean": 0.5476190476190476,
+      "accuracy_std": 0.052225223052683005,
+      "mean_cost": 1.0020571428571428,
+      "mean_latency_ms": 1.0434285714285714,
+      "on_time_rate": 1.0
+    }
+  },
+  "AlwaysOnFusion": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5686455532807694,
+          0.5638231561514896,
+          0.5710131853869687
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5678272982730759,
+        "macro_f1_std": 0.0029917983493736723,
+        "accuracy_mean": 0.5786666666666666,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.48638250727443183,
+          0.4867535582191172,
+          0.4802831280767686
+        ],
+        "accuracy_seeds": [
+          0.5,
+          0.508,
+          0.488
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4844730645234392,
+        "macro_f1_std": 0.0029666024642388523,
+        "accuracy_mean": 0.49866666666666665,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5353902953586499,
+          0.5516670621066784
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.544,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4046242916101697,
+          0.44220079676555263,
+          0.4156051437819394
+        ],
+        "accuracy_seeds": [
+          0.404,
+          0.448,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4208100773858872,
+        "macro_f1_std": 0.015775866279209703,
+        "accuracy_mean": 0.424,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5108416869214211,
+          0.5235585618282009,
+          0.5911119224372237
+        ],
+        "accuracy_seeds": [
+          0.528,
+          0.54,
+          0.604
+        ],
+        "mean_cost_seeds": [
+          2.58,
+          2.58,
+          2.58
+        ],
+        "mean_latency_seeds": [
+          9.336,
+          9.336,
+          9.336
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5418373903956152,
+        "macro_f1_std": 0.03522701953319634,
+        "accuracy_mean": 0.5573333333333333,
+        "mean_cost_mean": 2.58,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5686455532807694,
+          0.5638231561514896,
+          0.5710131853869687
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5678272982730759,
+        "macro_f1_std": 0.0029917983493736723,
+        "accuracy_mean": 0.5786666666666666,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5290613154152849,
+      "macro_f1_std": 0.0547213910194663,
+      "accuracy_mean": 0.5386666666666667,
+      "accuracy_std": 0.056330092890739696,
+      "mean_cost": 2.84,
+      "mean_latency_ms": 10.762285714285715,
+      "on_time_rate": 1.0
+    }
+  },
+  "Static_T": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4672321445861291,
+          0.47828512163388437,
+          0.4710187734668336
+        ],
+        "accuracy_seeds": [
+          0.484,
+          0.492,
+          0.484
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.47217867989561574,
+        "macro_f1_std": 0.004586292082368844,
+        "accuracy_mean": 0.48666666666666664,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4467607177099027,
+          0.4296745502324641,
+          0.44258742001216916
+        ],
+        "accuracy_seeds": [
+          0.456,
+          0.44,
+          0.448
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4396742293181786,
+        "macro_f1_std": 0.007273206068918761,
+        "accuracy_mean": 0.448,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5500205515057001,
+          0.5438119095386412,
+          0.548433974148505
+        ],
+        "accuracy_seeds": [
+          0.572,
+          0.564,
+          0.568
+        ],
+        "mean_cost_seeds": [
+          1.0144,
+          1.0144,
+          1.0144
+        ],
+        "mean_latency_seeds": [
+          1.304,
+          1.304,
+          1.304
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5474221450642821,
+        "macro_f1_std": 0.0026337118724391764,
+        "accuracy_mean": 0.568,
+        "mean_cost_mean": 1.0144,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5330680446158631,
+      "macro_f1_std": 0.050315007674916985,
+      "accuracy_mean": 0.5476190476190476,
+      "accuracy_std": 0.052225223052683005,
+      "mean_cost": 1.0020571428571428,
+      "mean_latency_ms": 1.0434285714285714,
+      "on_time_rate": 1.0
+    }
+  },
+  "Static_TA": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.48933333333333334,
+          0.48040432635343316,
+          0.4933397865922291
+        ],
+        "accuracy_seeds": [
+          0.508,
+          0.488,
+          0.508
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4876924820929986,
+        "macro_f1_std": 0.0054068368751701065,
+        "accuracy_mean": 0.5013333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4467607177099027,
+          0.4296745502324641,
+          0.44258742001216916
+        ],
+        "accuracy_seeds": [
+          0.456,
+          0.44,
+          0.448
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4396742293181786,
+        "macro_f1_std": 0.007273206068918761,
+        "accuracy_mean": 0.448,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5419555764484664,
+          0.5480324074074073,
+          0.5432480262356457
+        ],
+        "accuracy_seeds": [
+          0.564,
+          0.56,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          1.8207999999999998,
+          1.8207999999999998,
+          1.8207999999999998
+        ],
+        "mean_latency_seeds": [
+          4.664,
+          4.664,
+          4.664
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5444120033638398,
+        "macro_f1_std": 0.0026138223214423025,
+        "accuracy_mean": 0.56,
+        "mean_cost_mean": 1.8207999999999995,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5384482904599449,
+      "macro_f1_std": 0.05048322791212314,
+      "accuracy_mean": 0.5497142857142856,
+      "accuracy_std": 0.050905274174445896,
+      "mean_cost": 1.8029714285714287,
+      "mean_latency_ms": 4.380571428571429,
+      "on_time_rate": 1.0
+    }
+  },
+  "Static_TV": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5353902953586499,
+          0.5516670621066784
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.544,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.4449738509888886,
+          0.46444496444496447,
+          0.4634821682296107
+        ],
+        "accuracy_seeds": [
+          0.448,
+          0.476,
+          0.472
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4576336612211546,
+        "macro_f1_std": 0.0089604628033681,
+        "accuracy_mean": 0.4653333333333333,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5353902953586499,
+          0.5516670621066784
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.544,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5635541044497592,
+          0.565215299205447,
+          0.5753815398695178
+        ],
+        "accuracy_seeds": [
+          0.58,
+          0.58,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_latency_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "mean_cost_mean": 1.0,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4046242916101697,
+          0.44220079676555263,
+          0.4156051437819394
+        ],
+        "accuracy_seeds": [
+          0.404,
+          0.448,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4208100773858872,
+        "macro_f1_std": 0.015775866279209703,
+        "accuracy_mean": 0.424,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5553589599435346,
+          0.5260904672669379,
+          0.562399315918066
+        ],
+        "accuracy_seeds": [
+          0.564,
+          0.54,
+          0.572
+        ],
+        "mean_cost_seeds": [
+          1.7352,
+          1.7352,
+          1.7352
+        ],
+        "mean_latency_seeds": [
+          5.816,
+          5.816,
+          5.816
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5479495810428462,
+        "macro_f1_std": 0.01572168978117191,
+        "accuracy_mean": 0.5586666666666668,
+        "mean_cost_mean": 1.7352,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5353902953586499,
+          0.5516670621066784
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.544,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5181566953413533,
+      "macro_f1_std": 0.05249886253446955,
+      "accuracy_mean": 0.524952380952381,
+      "accuracy_std": 0.054229210359692935,
+      "mean_cost": 2.0335999999999994,
+      "mean_latency_ms": 7.402285714285715,
+      "on_time_rate": 1.0
+    }
+  },
+  "Static_TAV": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5686455532807694,
+          0.5638231561514896,
+          0.5710131853869687
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5678272982730759,
+        "macro_f1_std": 0.0029917983493736723,
+        "accuracy_mean": 0.5786666666666666,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.48638250727443183,
+          0.4867535582191172,
+          0.4802831280767686
+        ],
+        "accuracy_seeds": [
+          0.5,
+          0.508,
+          0.488
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4844730645234392,
+        "macro_f1_std": 0.0029666024642388523,
+        "accuracy_mean": 0.49866666666666665,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5455958757660159,
+          0.5353902953586499,
+          0.5516670621066784
+        ],
+        "accuracy_seeds": [
+          0.544,
+          0.544,
+          0.556
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5828833251513664,
+          0.5665923298227777,
+          0.579833348962213
+        ],
+        "accuracy_seeds": [
+          0.596,
+          0.572,
+          0.588
+        ],
+        "mean_cost_seeds": [
+          2.1999999999999997,
+          2.1999999999999997,
+          2.1999999999999997
+        ],
+        "mean_latency_seeds": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "mean_cost_mean": 2.1999999999999997,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.4046242916101697,
+          0.44220079676555263,
+          0.4156051437819394
+        ],
+        "accuracy_seeds": [
+          0.404,
+          0.448,
+          0.42
+        ],
+        "mean_cost_seeds": [
+          2.3,
+          2.3,
+          2.3
+        ],
+        "mean_latency_seeds": [
+          9.0,
+          9.0,
+          9.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.4208100773858872,
+        "macro_f1_std": 0.015775866279209703,
+        "accuracy_mean": 0.424,
+        "mean_cost_mean": 2.3,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5108416869214211,
+          0.5235585618282009,
+          0.5911119224372237
+        ],
+        "accuracy_seeds": [
+          0.528,
+          0.54,
+          0.604
+        ],
+        "mean_cost_seeds": [
+          2.58,
+          2.58,
+          2.58
+        ],
+        "mean_latency_seeds": [
+          9.336,
+          9.336,
+          9.336
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5418373903956152,
+        "macro_f1_std": 0.03522701953319634,
+        "accuracy_mean": 0.5573333333333333,
+        "mean_cost_mean": 2.58,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5686455532807694,
+          0.5638231561514896,
+          0.5710131853869687
+        ],
+        "accuracy_seeds": [
+          0.576,
+          0.58,
+          0.58
+        ],
+        "mean_cost_seeds": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "mean_latency_seeds": [
+          14.0,
+          14.0,
+          14.0
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5678272982730759,
+        "macro_f1_std": 0.0029917983493736723,
+        "accuracy_mean": 0.5786666666666666,
+        "mean_cost_mean": 3.5,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5290613154152849,
+      "macro_f1_std": 0.0547213910194663,
+      "accuracy_mean": 0.5386666666666667,
+      "accuracy_std": 0.056330092890739696,
+      "mean_cost": 2.84,
+      "mean_latency_ms": 10.762285714285715,
+      "on_time_rate": 1.0
+    }
+  },
+  "MatchedBudgetRandom": {
+    "workloads": {
+      "CLEAN_MULTIMODAL": {
+        "macro_f1_seeds": [
+          0.5759896753295749,
+          0.5609962406015038,
+          0.6011228619924273
+        ],
+        "accuracy_seeds": [
+          0.588,
+          0.572,
+          0.608
+        ],
+        "mean_cost_seeds": [
+          1.8772,
+          1.8772,
+          1.8772
+        ],
+        "mean_latency_seeds": [
+          5.492,
+          5.492,
+          5.492
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5793695926411687,
+        "macro_f1_std": 0.016555045894178565,
+        "accuracy_mean": 0.5893333333333333,
+        "mean_cost_mean": 1.8772,
+        "on_time_rate_mean": 1.0
+      },
+      "TEXT_EMBEDDING_NOISE": {
+        "macro_f1_seeds": [
+          0.47977814438354055,
+          0.46679250302261316,
+          0.5051461533475922
+        ],
+        "accuracy_seeds": [
+          0.488,
+          0.48,
+          0.512
+        ],
+        "mean_cost_seeds": [
+          1.9224,
+          1.9224,
+          1.9224
+        ],
+        "mean_latency_seeds": [
+          5.732,
+          5.732,
+          5.732
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.48390560025124857,
+        "macro_f1_std": 0.01592749284031857,
+        "accuracy_mean": 0.49333333333333335,
+        "mean_cost_mean": 1.9224000000000003,
+        "on_time_rate_mean": 1.0
+      },
+      "AUDIO_FEATURE_MASKING": {
+        "macro_f1_seeds": [
+          0.5483526744030945,
+          0.5513798757277578,
+          0.5714714714714715
+        ],
+        "accuracy_seeds": [
+          0.556,
+          0.564,
+          0.584
+        ],
+        "mean_cost_seeds": [
+          1.4576,
+          1.4576,
+          1.4576
+        ],
+        "mean_latency_seeds": [
+          3.816,
+          3.816,
+          3.816
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5570680072007747,
+        "macro_f1_std": 0.010259493951553417,
+        "accuracy_mean": 0.5680000000000001,
+        "mean_cost_mean": 1.4576,
+        "on_time_rate_mean": 1.0
+      },
+      "VISUAL_ZERO_MASK": {
+        "macro_f1_seeds": [
+          0.5841027801742876,
+          0.5658058004171994,
+          0.58606533539775
+        ],
+        "accuracy_seeds": [
+          0.6,
+          0.58,
+          0.596
+        ],
+        "mean_cost_seeds": [
+          1.3791999999999998,
+          1.3791999999999998,
+          1.3791999999999998
+        ],
+        "mean_latency_seeds": [
+          2.58,
+          2.58,
+          2.58
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5786579719964123,
+        "macro_f1_std": 0.0091231077116456,
+        "accuracy_mean": 0.592,
+        "mean_cost_mean": 1.3791999999999998,
+        "on_time_rate_mean": 1.0
+      },
+      "COMPOUND_FAULT": {
+        "macro_f1_seeds": [
+          0.41909807373870755,
+          0.44085156450639956,
+          0.43477866329992904
+        ],
+        "accuracy_seeds": [
+          0.424,
+          0.452,
+          0.44
+        ],
+        "mean_cost_seeds": [
+          1.442,
+          1.442,
+          1.442
+        ],
+        "mean_latency_seeds": [
+          3.72,
+          3.72,
+          3.72
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.43157610051501205,
+        "macro_f1_std": 0.009165002143608287,
+        "accuracy_mean": 0.4386666666666667,
+        "mean_cost_mean": 1.442,
+        "on_time_rate_mean": 1.0
+      },
+      "INTERMITTENT_MISSINGNESS": {
+        "macro_f1_seeds": [
+          0.5356630776971478,
+          0.5498159778459651,
+          0.547009465105711
+        ],
+        "accuracy_seeds": [
+          0.552,
+          0.568,
+          0.56
+        ],
+        "mean_cost_seeds": [
+          1.5896,
+          1.5896,
+          1.5896
+        ],
+        "mean_latency_seeds": [
+          4.3,
+          4.3,
+          4.3
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5441628402162747,
+        "macro_f1_std": 0.0061184747882386085,
+        "accuracy_mean": 0.56,
+        "mean_cost_mean": 1.5896,
+        "on_time_rate_mean": 1.0
+      },
+      "HETEROGENEOUS_DEADLINE_STRESS": {
+        "macro_f1_seeds": [
+          0.5604695039521188,
+          0.5518428602957405,
+          0.5321165697491831
+        ],
+        "accuracy_seeds": [
+          0.568,
+          0.56,
+          0.54
+        ],
+        "mean_cost_seeds": [
+          1.9036,
+          1.9036,
+          1.9036
+        ],
+        "mean_latency_seeds": [
+          5.788,
+          5.788,
+          5.788
+        ],
+        "on_time_rate_seeds": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "macro_f1_mean": 0.5481429779990141,
+        "macro_f1_std": 0.011867014964070853,
+        "accuracy_mean": 0.556,
+        "mean_cost_mean": 1.9036,
+        "on_time_rate_mean": 1.0
+      }
+    },
+    "aggregate": {
+      "macro_f1_mean": 0.5318404415457008,
+      "macro_f1_std": 0.0518709038336964,
+      "accuracy_mean": 0.5424761904761904,
+      "accuracy_std": 0.05333061217547889,
+      "mean_cost": 1.653085714285714,
+      "mean_latency_ms": 4.489714285714284,
+      "on_time_rate": 1.0
+    }
+  }
+}
