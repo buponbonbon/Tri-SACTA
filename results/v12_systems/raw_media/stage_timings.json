@@ -1,0 +1,19 @@
+{
+  "audit_version": "v12.0",
+  "description": "Real Raw Multimedia Ingestion Breakdown vs Forward Pass",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 2050 Laptop GPU",
+    "cpu_cores": 6,
+    "ram_gb": 15.32
+  },
+  "stages": {
+    "video_demux_and_decoding_ms": 46.33,
+    "audio_decoding_and_acoustic_extraction_ms": 2.43,
+    "text_tokenization_and_embedding_ms": 1.83,
+    "neural_fusion_forward_pass_ms": 653.94,
+    "total_end_to_end_pipeline_ms": 704.52
+  },
+  "real_throughput_fps": 1.42,
+  "forward_only_throughput_fps": 1.53,
+  "finding": "SYSTEMS_INSIGHT: Real end-to-end ingestion takes 704.5ms (1.4 FPS), of which video decoding accounts for 6.6% of runtime. The ~653.9ms neural forward pass represents only 92.8% of total end-to-end cost."
+}

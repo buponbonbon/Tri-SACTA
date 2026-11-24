@@ -1,0 +1,95 @@
+{
+  "majority_class": {
+    "accuracy_mean": 0.4,
+    "macro_f1_mean": 0.19047619047619047,
+    "bootstrap_acc_ci95": [
+      0.2974978988653873,
+      0.4950103211009174
+    ],
+    "bootstrap_f1_ci95": [
+      0.15285722215283848,
+      0.22073886369698584
+    ]
+  },
+  "text_only_logistic_regression": {
+    "accuracy_mean": 0.56,
+    "macro_f1_mean": 0.5420253010014829,
+    "bootstrap_acc_ci95": [
+      0.48333333333333334,
+      0.6244857594936709
+    ],
+    "bootstrap_f1_ci95": [
+      0.4615955414576047,
+      0.6151350647326718
+    ]
+  },
+  "multimodal_concat_logistic_regression": {
+    "accuracy_mean": 0.544,
+    "macro_f1_mean": 0.5357099957099957,
+    "bootstrap_acc_ci95": [
+      0.4470451436388509,
+      0.6233344155844155
+    ],
+    "bootstrap_f1_ci95": [
+      0.43358240016988275,
+      0.6119808235250325
+    ]
+  },
+  "text_only_mlp": {
+    "accuracy_mean": 0.5866666666666666,
+    "accuracy_std": 0.004988876515698593,
+    "macro_f1_mean": 0.5697109564906024,
+    "macro_f1_std": 0.0048407575206655395,
+    "ece_mean": 0.08140765261650086,
+    "brier_mean": 0.556057890256246,
+    "nll_mean": 0.9538442333275116,
+    "per_seed_accuracy": [
+      0.58,
+      0.592,
+      0.588
+    ],
+    "per_seed_macro_f1": [
+      0.5635541044497592,
+      0.5701972251525302,
+      0.5753815398695178
+    ]
+  },
+  "multimodal_concat_mlp": {
+    "accuracy_mean": 0.58,
+    "accuracy_std": 0.0032659863237109073,
+    "macro_f1_mean": 0.5683915829349884,
+    "macro_f1_std": 0.0036308657629500482,
+    "ece_mean": 0.0932983068227768,
+    "brier_mean": 0.5663961966832479,
+    "nll_mean": 0.9765281730754006,
+    "per_seed_accuracy": [
+      0.576,
+      0.58,
+      0.584
+    ],
+    "per_seed_macro_f1": [
+      0.5686455532807694,
+      0.5638231561514896,
+      0.572706039372706
+    ]
+  },
+  "multimodal_fusion_model_directly_trained": {
+    "accuracy_mean": 0.572,
+    "accuracy_std": 0.014236104336041732,
+    "macro_f1_mean": 0.5618296424881778,
+    "macro_f1_std": 0.012808111238777755,
+    "ece_mean": 0.13908350467681885,
+    "brier_mean": 0.5806446671485901,
+    "nll_mean": 0.9907211996124058,
+    "per_seed_accuracy": [
+      0.564,
+      0.592,
+      0.56
+    ],
+    "per_seed_macro_f1": [
+      0.5498911657559199,
+      0.5795961750458729,
+      0.5560015866627407
+    ]
+  }
+}

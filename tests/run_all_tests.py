@@ -61,6 +61,7 @@ import tests.test_v8_regression as test_v8_regression
 import tests.test_v9_regression as test_v9_regression
 import tests.test_v10_regression as test_v10_regression
 import tests.test_v11_integrity as test_v11_integrity
+import tests.test_v12_systems as test_v12_systems
 
 
 def run_test_module(module, module_name):
@@ -127,6 +128,7 @@ def main():
         (test_v9_regression, "V9 Scientific Evidence & Negative Transfer Suite (P0 and P1)"),
         (test_v10_regression, "V10 Independent Scientific Audit & Causal Validation Suite (V10-01 to V10-06)"),
         (test_v11_integrity, "V11 Scientific Triage & Go/No-Go Suite (V11-01 to V11-06)"),
+        (test_v12_systems, "V12 Systems Research Reframing Suite (V12-01 to V12-06)"),
     ]
 
     total_passed = 0
