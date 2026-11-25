@@ -1,58 +1,25 @@
-# Tri-SACTA V13.2: Distributed Runtime Architecture & Fair Transport Baselines
+# Tri-SACTA V13.2: Runtime Architecture, Sensitivity Studies & Fault Stress Evidence
 
-**Audit Timestamp:** 2026-11-24 UTC  
-**Active Branch:** `research/v13.2-final-systems-validation-release-candidate`  
-**Components:** [distributed_providers.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/src/service/distributed_providers.py) & [distributed_coordinator.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/src/service/distributed_coordinator.py)  
-**Test Suite:** [test_v13_2_runtime_safety.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_runtime_safety.py)
+**Generated from:** [distributed_summary.json](../results/v13_2/systems/distributed_summary.json) & [distributed_fault_benchmark.csv](../results/v13_2/systems/distributed_fault_benchmark.csv)  
+**Scope:** `Single-host localhost TCP loopback sockets (ports 8765, 8766); threaded providers; NOT multi-device WAN or link-layer energy/TCP-IP packet capture.`  
+**Quantile Convention:** `numpy.quantile(method='linear')`
 
----
+## 1. Non-Persistent TCP Sensitivity (Per-Request Connect, `CLEAN_MULTIMODAL`, Seed 42, N=250)
 
-## 1. System Topology & Transport Scope
+| Policy | Mean App Bytes/q | Mean Wall (ms) | p50 (ms) | p95 (ms) | p99 (ms) | On-Time Rate |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| `AlwaysOn_Direct_Serial` | 726.2 | 18.66 | 16.81 | 32.77 | 39.16 | 100.0% |
+| `AlwaysOn_Direct_Parallel` | 726.2 | 6.18 | 2.99 | 18.41 | 25.47 | 100.0% |
+| `Static_TA_Direct` | 440.1 | 8.70 | 3.42 | 21.52 | 26.86 | 100.0% |
+| `OneShot_ConfidenceRouting_0.55` | 398.0 | 3.57 | 2.52 | 16.72 | 25.48 | 100.0% |
+| `SequentialConfidence_0.55_0.45` | 265.2 | 5.31 | 2.18 | 16.77 | 32.05 | 100.0% |
+| `Unimodal_Text` | 0.0 | 0.20 | 0.18 | 0.30 | 0.41 | 100.0% |
 
-Tri-SACTA evaluates feature-level edge-cloud multimodal acquisition:
-- **Local Edge Coordinator:** Hosts the local unimodal Text feature and the common PyTorch predictor bank.
-- **Remote Providers:** Standalone TCP socket servers hosting acoustic features (`AudioProvider` on port 8765) and visual features (`VisualProvider` on port 8766).
-- **Physical Transport:** Communicates via standard TCP stream sockets using an explicit binary framed protocol.
+## 2. Concurrency = 4 Workers (`CLEAN_MULTIMODAL`, Persistent TCP)
 
-> [!NOTE]
-> **Transport Scope Disclosure:**  
-> Measurements reflect physical loopback TCP stream transactions with pre-extracted feature tensors. They do NOT represent raw-media ingestion (e.g., MP4 decoding, video frame capture, or Opus audio decompression).  
-> Wire byte metrics measure **application-protocol bytes** (request framing + metadata JSON + float32 binary payload). Link-layer (IP/TCP) headers add approximately 40–60 bytes per packet.
-
----
-
-## 2. P0 Defect: Baseline Transport Fairness Rectification
-
-### Defect Identified in V13.1
-In V13.1's distributed benchmark, Always-On Full Fusion and Static TA were implemented as sequential mutations of Text inference:
-1. They executed a full forward pass on local Text.
-2. They fetched remote modalities sequentially.
-3. They executed a *second* forward pass on TAV or TA.
-
-This unfairly penalized Always-On and Static TA with a redundant inference pass (inflating their measured wall time by ~0.24 ms) and forced serial socket queries.
-
-### Rectification in V13.2
-In Tri-SACTA V13.2:
-- **Always-On (`always_on`):** Fetches Audio and Visual remotely, then executes **exactly one direct forward pass on TAV**.
-- **Static TA (`static_ta`):** Fetches Audio remotely, then executes **exactly one direct forward pass on TA**.
-- **Sequential Confidence (`sequential_confidence`):** Pays the intermediate inference passes and sequential branching overhead:
-  - Text inference -> threshold check -> Audio fetch -> TA inference -> threshold check -> Visual fetch -> TAV inference.
-
-This ensures a strictly fair, unskewed wall-clock and latency comparison between static and adaptive paradigms.
-
----
-
-## 3. Protocol Safety & Defect Hardening
-
-1. **Strict Sample ID Validation (NO Modulo Indexing):**
-   - V13.1 used `sample_idx = int(req["sample_idx"]) % total_samples`. If a malformed ID was queried, it silently returned a completely different valid utterance!
-   - V13.2 enforces strict bounds checking: requests with $s < 0$ or $s \ge N$ return `400 Bad Request` with `OUT_OF_BOUNDS_SAMPLE_ID`.
-2. **Exact-Length TCP Reads (`recv_exact`):**
-   - Stream sockets handle fragmentation and network buffering via dedicated loops for both the 12-byte framing header and the binary payload.
-3. **Finite Float Verification:**
-   - Serialized feature payloads are checked via `np.all(np.isfinite(feat_np))`. If NaN or Inf values are detected, transmission is halted with `NON_FINITE_FEATURES`.
-4. **Monotonic Deadlines & Latency Reserve:**
-   - Deadlines are tracked via `time.perf_counter()`.
-   - Remaining time is computed before each network hop:
-     $$\Delta t_{\text{remaining}} = t_{\text{deadline\_monotonic}} - t_{\text{now}}$$
-   - If $\Delta t_{\text{remaining}} \le 1.0\text{ ms}$, remote fetching is aborted, setting `status = "DEADLINE_EXHAUSTED"` and serving the query from local features.
+| Policy | Mean Wall (ms) | p95 (ms) | p99 (ms) | On-Time |
+| :--- | :---: | :---: | :---: | :---: |
+| `AlwaysOn_Direct_Parallel` | 5.68 | 7.46 | 13.05 | 100.0% |
+| `Static_TA_Direct` | 3.69 | 5.41 | 6.16 | 100.0% |
+| `OneShot_ConfidenceRouting_0.55` | 4.49 | 8.24 | 12.87 | 100.0% |
+| `SequentialConfidence_0.55_0.45` | 3.51 | 7.85 | 9.96 | 100.0% |

@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-11-25T05:23:52.842248+00:00",
+  "timestamp_utc": "2026-11-25T05:27:02.819589+00:00",
   "v13_2_unittest": {
     "command": "C:\\Program Files\\Python310\\python.exe -m unittest -v tests/test_v13_2_evaluator_regression.py tests/test_v13_2_runtime_safety.py tests/test_v13_2_verifier_adversarial.py",
     "exit_code": 0,
@@ -13,6 +13,7 @@
     "passed": 166,
     "failed": 0
   },
+  "phase2_unapproved_refusal_exit_code": 1,
   "exit_code": 0,
   "passed": 166,
   "failed": 0,

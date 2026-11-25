@@ -1,0 +1,10 @@
+{
+  "schema_version": "13.2",
+  "approved": false,
+  "allowed_operation": "NONE_PENDING_AUTHOR_APPROVAL",
+  "scientific_source_commit_sha": "fc373797145afa32895ed407cfad485cd121a019",
+  "freeze_package_commit_sha": "<VERIFY_GITHUB_FREEZE_PACKAGE_COMMIT_SHA>",
+  "manifest_sha256": "4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09",
+  "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e",
+  "instructions": "To authorize Phase II, repository author replaces approved=true, allowed_operation='PHASE_II_CONFIRMATORY_EXECUTION', and sets freeze_package_commit_sha after reviewing on GitHub."
+}

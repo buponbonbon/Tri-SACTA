@@ -2,8 +2,8 @@
 
 **Audit Timestamp:** 2026-11-24 UTC  
 **Active Branch:** `research/v13.2-final-systems-validation-release-candidate`  
-**Execution Script:** [test_v13_2_evaluator_regression.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_evaluator_regression.py)  
-**Policy Implementations:** [baseline_policies.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/src/service/baseline_policies.py) & [conditional_router.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/src/service/conditional_router.py)
+**Execution Script:** [test_v13_2_evaluator_regression.py](../tests/test_v13_2_evaluator_regression.py)  
+**Policy Implementations:** [baseline_policies.py](../src/service/baseline_policies.py) & [conditional_router.py](../src/service/conditional_router.py)
 
 ---
 
@@ -66,7 +66,7 @@ If all modalities are unavailable (`modality_mask = {"text": False, "audio": Fal
 To ensure that unacquired or masked features are never read or leaked:
 - `BasePredictorPolicy._predict_subset` verifies that every required modality $m \in \text{SUBSET\_METADATA}[K][\text{"mods"}]$ is marked available in `modality_mask`.
 - If an unavailable modality is queried, a `MaskedFeatureAccessViolation` is raised immediately.
-- Verified in [test_v13_2_evaluator_regression.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_evaluator_regression.py).
+- Verified in [test_v13_2_evaluator_regression.py](../tests/test_v13_2_evaluator_regression.py).
 
 ---
 

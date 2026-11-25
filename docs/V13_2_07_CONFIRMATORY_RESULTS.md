@@ -2,7 +2,7 @@
 
 **Status:** **NOT_RUN / PENDING_AUTHOR_APPROVAL**  
 **Phase Contract:** Phase I Pre-Holdout Boundary  
-**Locked Manifest:** [freeze_manifest.json](file:///c:/Users/ASUS/Desktop/Tri-SACTA/results/v13_2/protocol/freeze_manifest.json)  
+**Locked Manifest:** [freeze_manifest.json](../results/v13_2/protocol/freeze_manifest.json)  
 **Manifest SHA-256:** `54ef6b48f9aede4c0e119e0e1bda29bbfcc16e0c4c943241101a6e2e98fbe0f8`
 
 ---

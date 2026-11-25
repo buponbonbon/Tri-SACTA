@@ -33,12 +33,12 @@ Every identified defect was resolved through rigorous code modification and regr
 
 | Defect Area | V13.1 Vulnerability | V13.2 Rectification | Verification Evidence |
 | :--- | :--- | :--- | :--- |
-| **Provenance** | Stale hash & label typos in Markdown. | Exact `hashlib.sha256()` verification; physical count reconciliation (`390/238/372`). | [v13_2_audit_provenance.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/scripts/v13_2_audit_provenance.py) |
-| **Identity** | Claimed speaker independence via video proxy. | Schema updated: `video_group_id`, `speaker_id_verified: null`, `speaker_overlap_status: UNKNOWN`. | [V13_2_01_PROVENANCE_RECONCILIATION.md](file:///c:/Users/ASUS/Desktop/Tri-SACTA/docs/V13_2_01_PROVENANCE_RECONCILIATION.md) |
-| **Budget Flow** | `cost_budget=3.5` passed unconditionally. | Per-query `w_budgets[i]` propagated; infeasible initial budget rejects with `-1` and 0 cost. | [test_v13_2_evaluator_regression.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_evaluator_regression.py) |
-| **Transport** | Always-On executed redundant Text forward pass. | Optimized direct paths: Always-On runs direct TAV; Static TA runs direct TA. | [test_v13_2_runtime_safety.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_runtime_safety.py) |
-| **Socket Safety** | Modulo indexing on sample IDs. | Strict bounds check; invalid/out-of-bounds IDs return `400 Bad Request`. | [test_v13_2_runtime_safety.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_runtime_safety.py) |
-| **Gate Verifier** | Hardcoded boolean passes and cosmetic summary. | Recomputes metrics from raw traces; passes 7 adversarial corruption tests. | [test_v13_2_verifier_adversarial.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/tests/test_v13_2_verifier_adversarial.py) |
+| **Provenance** | Stale hash & label typos in Markdown. | Exact `hashlib.sha256()` verification; physical count reconciliation (`390/238/372`). | [v13_2_audit_provenance.py](../scripts/v13_2_audit_provenance.py) |
+| **Identity** | Claimed speaker independence via video proxy. | Schema updated: `video_group_id`, `speaker_id_verified: null`, `speaker_overlap_status: UNKNOWN`. | [V13_2_01_PROVENANCE_RECONCILIATION.md](../docs/V13_2_01_PROVENANCE_RECONCILIATION.md) |
+| **Budget Flow** | `cost_budget=3.5` passed unconditionally. | Per-query `w_budgets[i]` propagated; infeasible initial budget rejects with `-1` and 0 cost. | [test_v13_2_evaluator_regression.py](../tests/test_v13_2_evaluator_regression.py) |
+| **Transport** | Always-On executed redundant Text forward pass. | Optimized direct paths: Always-On runs direct TAV; Static TA runs direct TA. | [test_v13_2_runtime_safety.py](../tests/test_v13_2_runtime_safety.py) |
+| **Socket Safety** | Modulo indexing on sample IDs. | Strict bounds check; invalid/out-of-bounds IDs return `400 Bad Request`. | [test_v13_2_runtime_safety.py](../tests/test_v13_2_runtime_safety.py) |
+| **Gate Verifier** | Hardcoded boolean passes and cosmetic summary. | Recomputes metrics from raw traces; passes 7 adversarial corruption tests. | [test_v13_2_verifier_adversarial.py](../tests/test_v13_2_verifier_adversarial.py) |
 
 ---
 

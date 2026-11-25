@@ -1,47 +1,104 @@
 {
   "verifier_version": "13.2",
-  "timestamp_utc": "2026-11-24T20:20:00Z",
-  "merge_recommendation": "REVIEWABLE_DEVELOPMENT_PROTOTYPE",
+  "timestamp_utc": "2026-11-25T05:27:08.541230+00:00",
+  "engineering_merge_recommendation": "RELEASE_CANDIDATE_REVIEWABLE",
+  "merge_recommendation": "RELEASE_CANDIDATE_REVIEWABLE",
   "scientific_status": "READY_FOR_HOLDOUT_REVIEW",
+  "development_effect_status": "SUPPORTED",
+  "novelty_status": "OVERLAP_IDENTIFIED",
+  "phase_ii_authorization": "PENDING_AUTHOR_APPROVAL",
+  "confirmatory_execution_status": "NOT_RUN",
+  "reasons": {
+    "G1_Provenance": "Raw SHA256 verified, speaker proxy limitation enforced, 4131 unique eligible IDs verified.",
+    "G2_Evaluator_Correctness": "Verified full 84,000-row grid across all 16 policies, exact pairing, domain, and zero discrepancies.",
+    "G4_Systems_Telemetry": "Recomputed all distributed CSV policy metrics, client/server byte agreement, fault scenarios, and test execution logs.",
+    "G3_Statistical_Headroom": "Bootstrap recomputation verified; joint non-inferiority & >=15% measured byte savings vs AlwaysOn (serial & parallel) and Static_TA_Direct PASS with guardrails.",
+    "G5_Frozen_Protocol": "Strict schema, 21 checkpoint hashes, code inventory, dependency lock, and detached digest verified.",
+    "G6_Confirmatory_Boundary": "Verified holdout_access_ledger.json and filesystem scan: zero fresh holdout features/predictions exist (NOT_RUN).",
+    "G7_Claims_and_Novelty": "Prior art verified (6 works); honest novelty_status=OVERLAP_IDENTIFIED."
+  },
+  "unresolved_blockers": [],
   "gates": {
     "G1_Provenance": {
       "status": "PASS",
-      "reason": "Raw asset hashes verified on physical disk. 4,131 unexposed samples verified.",
-      "on_disk_sha256": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e",
-      "unexposed_count": 4131
+      "reason": "Raw SHA256 verified, speaker proxy limitation enforced, 4131 unique eligible IDs verified.",
+      "on_disk_raw_sha256": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e",
+      "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e",
+      "eligible_count": 4131
     },
     "G2_Evaluator_Correctness": {
       "status": "PASS",
-      "reason": "Traces verified with exact agreement (delta = 0.00000000). Evaluator checks pass.",
-      "recomputed_primary_f1": 0.5414508254504847
-    },
-    "G3_Statistical_Headroom": {
-      "status": "PASS",
-      "reason": "Non-inferiority verified: CI [-0.0036703521983604895, 0.031260495092902955] >= -0.010. Cost savings verified: CI [48.58429278821033, 51.76251568792376]% >= 15.0%.",
-      "f1_ci": [
-        -0.0036703521983604895,
-        0.031260495092902955
-      ],
-      "cost_saving_ci": [
-        48.58429278821033,
-        51.76251568792376
-      ]
+      "reason": "Verified full 84,000-row grid across all 16 policies, exact pairing, domain, and zero discrepancies.",
+      "total_rows_verified": 84000,
+      "recomputed_candidate_sq_f1": 0.5414508254504847
     },
     "G4_Systems_Telemetry": {
       "status": "PASS",
-      "reason": "Physical TCP stream telemetry verified: 63.48% wire byte reduction, 62.88% latency reduction.",
-      "measured_wire_bytes_saved_pct": 63.478739810530946,
-      "measured_latency_saved_pct": 62.877805103064354
+      "reason": "Recomputed all distributed CSV policy metrics, client/server byte agreement, fault scenarios, and test execution logs.",
+      "client_vs_server_byte_diff": 1121,
+      "total_csv_rows_verified": 42000,
+      "candidate_mean_app_bytes": 133.05828571428572
+    },
+    "G3_Statistical_Headroom": {
+      "status": "PASS",
+      "integrity_status": "PASS",
+      "effect_status": "SUPPORTED",
+      "reason": "Bootstrap recomputation verified; joint non-inferiority & >=15% measured byte savings vs AlwaysOn (serial & parallel) and Static_TA_Direct PASS with guardrails.",
+      "primary_resource_unit": "application_protocol_bytes",
+      "primary_comparators": {
+        "AlwaysOn_Direct_Serial": {
+          "delta_f1_ci": [
+            -0.0036703521983604895,
+            0.031260495092902955
+          ],
+          "app_bytes_saved_ci_pct": [
+            72.07985175657049,
+            77.5035872339565
+          ]
+        },
+        "AlwaysOn_Direct_Parallel": {
+          "delta_f1_ci": [
+            -0.0036703521983604895,
+            0.03126027729251029
+          ],
+          "app_bytes_saved_ci_pct": [
+            72.07408638032851,
+            77.49307601722779
+          ]
+        },
+        "Static_TA_Direct": {
+          "delta_f1_ci": [
+            -0.0046956284061169,
+            0.015768234591362777
+          ],
+          "app_bytes_saved_ci_pct": [
+            46.88964681932427,
+            57.271863225954924
+          ]
+        }
+      },
+      "guardrails": {
+        "useful_on_time_rate": 0.9977142857142857,
+        "acceptance_rate": 0.9977142857142857,
+        "budget_violation_rate": 0.0
+      }
     },
     "G5_Frozen_Protocol": {
       "status": "PASS",
-      "reason": "Freeze manifest verified with content SHA-256: 54ef6b48f9aede4c0e119e0e1bda29bbfcc16e0c4c943241101a6e2e98fbe0f8",
-      "manifest_sha256": "54ef6b48f9aede4c0e119e0e1bda29bbfcc16e0c4c943241101a6e2e98fbe0f8"
+      "reason": "Strict schema, 21 checkpoint hashes, code inventory, dependency lock, and detached digest verified.",
+      "manifest_sha256": "4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09",
+      "scientific_source_commit_sha": "fc373797145afa32895ed407cfad485cd121a019"
     },
-    "G6_Confirmatory_Execution": {
-      "status": "NOT_RUN",
-      "reason": "Phase I execution contract mandates stopping prior to holdout inference pending author approval."
+    "G6_Confirmatory_Boundary": {
+      "status": "PASS",
+      "confirmatory_execution_status": "NOT_RUN",
+      "phase_ii_authorization": "PENDING_AUTHOR_APPROVAL",
+      "reason": "Verified holdout_access_ledger.json and filesystem scan: zero fresh holdout features/predictions exist (NOT_RUN)."
+    },
+    "G7_Claims_and_Novelty": {
+      "status": "PASS",
+      "novelty_status": "OVERLAP_IDENTIFIED",
+      "reason": "Prior art verified (6 works); honest novelty_status=OVERLAP_IDENTIFIED."
     }
-  },
-  "recommendation_rationale": "Phase I requirements completed: Data provenance reconciled with physical SHA-256 hashes; evaluator budget propagation corrected; fair transport baselines implemented and benchmarked; paired cluster bootstrap confirms predictive non-inferiority and >45% cost savings; physical TCP socket telemetry proves 63.48% wire byte reduction. Code is suitable for author review as an engineering development prototype. Confirmatory holdout access is locked pending author approval."
+  }
 }

@@ -3,8 +3,8 @@
 **Audit Timestamp:** 2026-11-24 UTC  
 **Active Branch:** `research/v13.2-final-systems-validation-release-candidate`  
 **Base Commit:** `e71147fc511c5d50c218ded1fdad96953ae15b90`  
-**Execution Script:** [v13_2_audit_provenance.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/scripts/v13_2_audit_provenance.py)  
-**Output Artifact:** [provenance_audit.json](file:///c:/Users/ASUS/Desktop/Tri-SACTA/results/v13_2/provenance/provenance_audit.json)
+**Execution Script:** [v13_2_audit_provenance.py](../scripts/v13_2_audit_provenance.py)  
+**Output Artifact:** [provenance_audit.json](../results/v13_2/provenance/provenance_audit.json)
 
 ---
 
@@ -16,8 +16,8 @@ An independent scientific audit identified contradictions between the textual Ma
 3. Historical claims of "0 shared speakers" were based on a synthetic string prefix `spk_id = f"mosei_spk_{vid[:8]}"`, which is a video-derived proxy rather than a verified human speaker identifier.
 
 ### Mathematical & Forensic Reconciliation
-- **On-Disk Reality:** The on-disk file `data/cmu_mosei/raw/mosei.pkl` (507,823,345 bytes) has SHA-256 `90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e`. The V13.1 JSON artifact [provenance_audit.json](file:///c:/Users/ASUS/Desktop/Tri-SACTA/results/v13_1/provenance/provenance_audit.json) accurately recorded this hash. The Markdown file suffered from a stale copy-paste transcription error.
-- **Label Distribution Reality:** The data loader [loader.py](file:///c:/Users/ASUS/Desktop/Tri-SACTA/src/data/loader.py), model checkpoints, and evaluation scripts all use the continuous sentiment thresholding standard in CMU-MOSEI benchmarks:
+- **On-Disk Reality:** The on-disk file `data/cmu_mosei/raw/mosei.pkl` (507,823,345 bytes) has SHA-256 `90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e`. The V13.1 JSON artifact [provenance_audit.json](../results/v13_1/provenance/provenance_audit.json) accurately recorded this hash. The Markdown file suffered from a stale copy-paste transcription error.
+- **Label Distribution Reality:** The data loader [loader.py](../src/data/loader.py), model checkpoints, and evaluation scripts all use the continuous sentiment thresholding standard in CMU-MOSEI benchmarks:
   $$\text{class} = \begin{cases} 0 \ (\text{Negative}), & \text{raw\_sentiment} < 0.0 \\ 1 \ (\text{Neutral}), & \text{raw\_sentiment} = 0.0 \\ 2 \ (\text{Positive}), & \text{raw\_sentiment} > 0.0 \end{cases}$$
   Under this exact formula, the physical tensors yield the counts below. The Markdown numbers were transcribed from an obsolete legacy draft and are hereby formally superseded.
 
