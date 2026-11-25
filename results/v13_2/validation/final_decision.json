@@ -1,6 +1,6 @@
 {
   "verifier_version": "13.2",
-  "timestamp_utc": "2026-11-25T05:52:31.466796+00:00",
+  "timestamp_utc": "2026-11-25T06:14:37.152331+00:00",
   "engineering_merge_recommendation": "RELEASE_CANDIDATE_REVIEWABLE",
   "merge_recommendation": "RELEASE_CANDIDATE_REVIEWABLE",
   "scientific_status": "READY_FOR_HOLDOUT_REVIEW",
@@ -86,8 +86,8 @@
     "G5_Frozen_Protocol": {
       "status": "PASS",
       "reason": "Strict schema, 21 checkpoint hashes, code inventory, dependency lock, and detached digest verified.",
-      "manifest_sha256": "b5e004f17c75dcfeff65bdb9f51841ef2c1deecdc427c036f904a8db3e34d008",
-      "scientific_source_commit_sha": "f51a9edc819623b10339c9b0c8232a85b09643a9"
+      "manifest_sha256": "b107b139d6bbeace4c12b95fa6a90fa24abd6a49f60ea7f5385fe2cd2182c4ed",
+      "scientific_source_commit_sha": "4dce9d980a93e2e78ccb42a897cf9b8cddc7b7f5"
     },
     "G6_Confirmatory_Boundary": {
       "status": "PASS",

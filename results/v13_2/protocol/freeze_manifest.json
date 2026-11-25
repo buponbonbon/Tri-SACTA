@@ -1,8 +1,8 @@
 {
   "manifest_version": "13.2",
-  "timestamp_utc": "2026-11-25T05:52:08.251188+00:00",
+  "timestamp_utc": "2026-11-25T06:14:13.919813+00:00",
   "audited_base_sha": "1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e",
-  "scientific_source_commit_sha": "f51a9edc819623b10339c9b0c8232a85b09643a9",
+  "scientific_source_commit_sha": "4dce9d980a93e2e78ccb42a897cf9b8cddc7b7f5",
   "active_branch": "research/v13.2-final-systems-validation-release-candidate",
   "candidate_policy": {
     "name": "SequentialConfidence_0.55_0.45",
@@ -402,8 +402,8 @@
     "src/service/__init__.py": {
       "path": "src/service/__init__.py",
       "role": "source",
-      "size_bytes": 145,
-      "sha256": "b9a7141ce3d5d50a15858f7ca62cae77c3f04708ef2bb3e6fd659096a903a0b3"
+      "size_bytes": 432,
+      "sha256": "5fdb348a238543b135313c7a805700618cb104467fa8b9c1c9b41a5b980307db"
     },
     "src/service/acquisition.py": {
       "path": "src/service/acquisition.py",
@@ -768,8 +768,8 @@
     "scripts/v13_2_run_phase2_holdout.py": {
       "path": "scripts/v13_2_run_phase2_holdout.py",
       "role": "script",
-      "size_bytes": 41831,
-      "sha256": "1a4028a6d0b2c412b9b3009003049679471f5e18072abc55826bb8065be876b6"
+      "size_bytes": 45201,
+      "sha256": "bea8073d29733e3902c51803a864f519f1cd47974f4a64ab09cceebe91e69bb0"
     },
     "scripts/v13_2_verify_gates.py": {
       "path": "scripts/v13_2_verify_gates.py",
@@ -954,8 +954,8 @@
     "tests/test_v13_2_phase2_pipeline.py": {
       "path": "tests/test_v13_2_phase2_pipeline.py",
       "role": "test",
-      "size_bytes": 5925,
-      "sha256": "1c78357a647ce09cbe550a3542e8ac85863d3d3bc47cf690b47812508eded8ee"
+      "size_bytes": 7666,
+      "sha256": "91033f8963cf894eaa41a9df784345f90a7fc1c394bc2df1541a312254b765ed"
     },
     "tests/test_v13_2_runtime_safety.py": {
       "path": "tests/test_v13_2_runtime_safety.py",
