@@ -1,8 +1,8 @@
 # Tri-SACTA V13.2: Phase I Protocol Freeze & Systems Evaluation
 
 - **Branch:** `research/v13.2-final-systems-validation-release-candidate`
-- **Scientific Source SHA:** `4dce9d980a93e2e78ccb42a897cf9b8cddc7b7f5`
-- **Freeze Manifest SHA-256:** `b107b139d6bbeace4c12b95fa6a90fa24abd6a49f60ea7f5385fe2cd2182c4ed`
+- **Scientific Source SHA:** `d59c6f5ba6834494078d9cece2241e7838723df6`
+- **Freeze Manifest SHA-256:** `fb23d9e16f8557e6aaf807d893fd5d8bf756d96e792e9c835934046e960cbdb3`
 - **Eligible Holdout Manifest SHA-256:** `146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e`
 - **Engineering Recommendation:** `RELEASE_CANDIDATE_REVIEWABLE`
 - **Scientific Readiness Status:** `READY_FOR_HOLDOUT_REVIEW`

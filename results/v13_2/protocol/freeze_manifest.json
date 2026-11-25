@@ -1,8 +1,8 @@
 {
   "manifest_version": "13.2",
-  "timestamp_utc": "2026-11-25T06:14:13.919813+00:00",
+  "timestamp_utc": "2026-11-25T06:56:58.071529+00:00",
   "audited_base_sha": "1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e",
-  "scientific_source_commit_sha": "4dce9d980a93e2e78ccb42a897cf9b8cddc7b7f5",
+  "scientific_source_commit_sha": "d59c6f5ba6834494078d9cece2241e7838723df6",
   "active_branch": "research/v13.2-final-systems-validation-release-candidate",
   "candidate_policy": {
     "name": "SequentialConfidence_0.55_0.45",
@@ -546,8 +546,8 @@
     "scripts/acquire_multimodal_features.py": {
       "path": "scripts/acquire_multimodal_features.py",
       "role": "script",
-      "size_bytes": 17939,
-      "sha256": "3239a40c15923bb057be321b74ea4a87a6a521bf7b0917b3ed45e760ac2366d7"
+      "size_bytes": 18045,
+      "sha256": "b86bf9572dd35d0b32598d36a29167eb42fa1cca931450c269690a1e09fa1fdd"
     },
     "scripts/audit_dataset_structure.py": {
       "path": "scripts/audit_dataset_structure.py",
@@ -954,8 +954,8 @@
     "tests/test_v13_2_phase2_pipeline.py": {
       "path": "tests/test_v13_2_phase2_pipeline.py",
       "role": "test",
-      "size_bytes": 7666,
-      "sha256": "91033f8963cf894eaa41a9df784345f90a7fc1c394bc2df1541a312254b765ed"
+      "size_bytes": 8109,
+      "sha256": "09a52d92eeca8113dcff1369a9315087478bb302c1ad66e6d9ba000f13a1fefb"
     },
     "tests/test_v13_2_runtime_safety.py": {
       "path": "tests/test_v13_2_runtime_safety.py",
