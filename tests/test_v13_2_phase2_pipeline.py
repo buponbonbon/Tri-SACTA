@@ -59,7 +59,11 @@ class TestV132Phase2PipelineAndPinning(unittest.TestCase):
 
         with open(os.path.join(out_dir, "final_decision.json"), "r", encoding="utf-8") as f:
             dec = json.load(f)
-        self.assertIn(dec["confirmatory_verdict"], ("CONFIRMATORY_SUPPORTED", "CONFIRMATORY_NOT_SUPPORTED", "CONFIRMATORY_INCONCLUSIVE"))
+        self.assertIn(dec["confirmatory_verdict"], ("CONFIRMATORY_SUPPORTED", "CONFIRMATORY_NOT_SUPPORTED", "CONFIRMATORY_BLOCKED_INCOMPLETE_GRID"))
+        self.assertTrue(dec["tcp_grid_complete"])
+        self.assertIn("tcp_guardrails_passed", dec)
+        self.assertIn("tcp_guardrails_metrics", dec)
+        self.assertIn("nominal_joint_criterion_passed", dec)
 
     def test_frozen_encoder_pinning_refuses_mismatch_and_missing(self):
         with self.assertRaises(RuntimeError):
@@ -107,6 +111,39 @@ class TestV132Phase2PipelineAndPinning(unittest.TestCase):
             ledger = json.load(f)
         self.assertFalse(ledger["fresh_holdout_inference_executed"])
         self.assertEqual(len(ledger["execution_attempts"]), 1)
+
+        # Mark confirmatory started (simulating interrupted/partial run) -> must block repeated run
+        record_holdout_ledger_attempt(
+            ledger_path,
+            mode="execute_holdout_start",
+            outcome="STARTED",
+            details="Interrupted run test",
+            mark_confirmatory_started=True,
+        )
+        with self.assertRaises(AuthorizationError) as ctx_partial:
+            check_phase2_authorization(
+                os.path.join(REPO_ROOT, "results", "v13_2", "protocol", "freeze_manifest.json"),
+                approval_path=None,
+                repo_root=REPO_ROOT,
+                verify_git_head=False,
+                ledger_path=ledger_path,
+                confirmatory_dir=conf_dir,
+            )
+        self.assertIn("H03", str(ctx_partial.exception))
+
+        # Non-empty confirmatory directory (e.g., partial features_cache) must also block
+        partial_ledger = os.path.join(self.tmp_dir, "clean_ledger.json")
+        os.makedirs(os.path.join(conf_dir, "features_cache"), exist_ok=True)
+        with self.assertRaises(AuthorizationError) as ctx_dir:
+            check_phase2_authorization(
+                os.path.join(REPO_ROOT, "results", "v13_2", "protocol", "freeze_manifest.json"),
+                approval_path=None,
+                repo_root=REPO_ROOT,
+                verify_git_head=False,
+                ledger_path=partial_ledger,
+                confirmatory_dir=conf_dir,
+            )
+        self.assertIn("H03", str(ctx_dir.exception))
 
         # Mark confirmatory executed -> check_phase2_authorization must refuse repeated run
         record_holdout_ledger_attempt(

@@ -89,6 +89,7 @@ def record_holdout_ledger_attempt(
     details: str,
     approval_path: Optional[str] = None,
     manifest_sha256: Optional[str] = None,
+    mark_confirmatory_started: bool = False,
     mark_confirmatory_extracted: bool = False,
     mark_confirmatory_executed: bool = False,
 ) -> None:
@@ -101,6 +102,7 @@ def record_holdout_ledger_attempt(
             "schema_version": "13.2",
             "phase": "PHASE_I",
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "fresh_holdout_attempt_started": False,
             "fresh_holdout_features_extracted": False,
             "fresh_holdout_inference_executed": False,
             "fresh_holdout_predictions_written": False,
@@ -119,6 +121,9 @@ def record_holdout_ledger_attempt(
         "manifest_sha256": manifest_sha256,
     })
 
+    if mark_confirmatory_started:
+        ledger["fresh_holdout_attempt_started"] = True
+        ledger["phase"] = "PHASE_II_IN_PROGRESS"
     if mark_confirmatory_extracted:
         ledger["fresh_holdout_features_extracted"] = True
     if mark_confirmatory_executed:
@@ -155,22 +160,24 @@ def check_phase2_authorization(
     resolved_ledger = ledger_path or os.path.join(repo_root, "results", "v13_2", "provenance", "holdout_access_ledger.json")
     resolved_conf_dir = confirmatory_dir or os.path.join(repo_root, "results", "v13_2", "confirmatory")
 
-    # 0. Prevent repeated confirmatory execution
+    # 0. Prevent repeated confirmatory execution (including interrupted/partial runs)
     if os.path.exists(resolved_ledger):
         with open(resolved_ledger, "r", encoding="utf-8") as f:
             ledger_data = json.load(f)
-        if ledger_data.get("fresh_holdout_inference_executed") or ledger_data.get("phase") == "PHASE_II_COMPLETED":
+        if (
+            ledger_data.get("fresh_holdout_inference_executed")
+            or ledger_data.get("fresh_holdout_features_extracted")
+            or ledger_data.get("fresh_holdout_attempt_started")
+            or ledger_data.get("phase") in ("PHASE_II_IN_PROGRESS", "PHASE_II_COMPLETED")
+        ):
             raise AuthorizationError(
-                "PHASE II BLOCKED (H03): Holdout access ledger shows confirmatory execution already completed. Repeated confirmatory runs are prohibited."
+                "PHASE II BLOCKED (H03): Holdout access ledger shows a confirmatory run was already started or completed. Repeated confirmatory runs are prohibited."
             )
     if os.path.isdir(resolved_conf_dir):
-        existing_outputs = [
-            fname for fname in ("final_decision.json", "query_traces.json", "distributed_benchmark.csv")
-            if os.path.exists(os.path.join(resolved_conf_dir, fname))
-        ]
-        if existing_outputs:
+        existing_entries = sorted(os.listdir(resolved_conf_dir))
+        if existing_entries:
             raise AuthorizationError(
-                f"PHASE II BLOCKED (H03): Confirmatory outputs already exist in {resolved_conf_dir}: {existing_outputs}. Repeated confirmatory runs are prohibited."
+                f"PHASE II BLOCKED (H03): Confirmatory directory {resolved_conf_dir} is non-empty ({existing_entries}). Repeated or resumed confirmatory runs are prohibited."
             )
 
     if not approval_path or not os.path.exists(approval_path):
@@ -691,28 +698,53 @@ def run_full_evaluation_pipeline(
             indent=2,
         )
 
-    # 4. Evidence-Derived Verdict
+    # 4. Evidence-Derived Verdict (Primary Measured TCP Endpoint + Complete Paired Grid + TCP Guardrails)
+    primary_tcp_comparators = ["AlwaysOn_Direct_Serial", "AlwaysOn_Direct_Parallel", "Static_TA_Direct"]
+    expected_tcp_rows = len(use_seeds) * len(WORKLOAD_NAMES) * len(DISTRIBUTED_POLICIES) * N
+    tcp_unique_keys = len(df_tcp.drop_duplicates(subset=["sample_idx", "seed", "workload", "policy"]))
+    present_policies = set(df_tcp["policy"].unique().tolist())
+    tcp_grid_ok = (
+        len(df_tcp) == expected_tcp_rows
+        and tcp_unique_keys == expected_tcp_rows
+        and "SequentialConfidence_0.55_0.45" in present_policies
+        and all(c in present_policies and c in tcp_boot["comparisons"] for c in primary_tcp_comparators)
+    )
+
+    df_cand_tcp = df_tcp[df_tcp["policy"] == "SequentialConfidence_0.55_0.45"]
+    tcp_useful_on_time_rate = float(df_cand_tcp["useful_on_time"].mean()) if len(df_cand_tcp) > 0 else 0.0
+    tcp_acceptance_rate = float(df_cand_tcp["prediction"].isin([0, 1, 2]).mean()) if len(df_cand_tcp) > 0 else 0.0
+    tcp_budget_violation_rate = float(df_cand_tcp["budget_violated"].mean()) if len(df_cand_tcp) > 0 else 1.0
+    tcp_guardrails_ok = (
+        tcp_useful_on_time_rate >= 0.95
+        and tcp_acceptance_rate >= 0.98
+        and tcp_budget_violation_rate == 0.0
+    )
+
     cand_off = offline_summary["SequentialConfidence_0.55_0.45"]
-    guardrails_ok = (
+    offline_guardrails_ok = (
         cand_off["overall_useful_on_time_rate"] >= 0.95
         and cand_off["overall_acceptance_rate"] >= 0.98
         and cand_off["overall_budget_violation_rate"] == 0.0
     )
-    tcp_joint_ok = all(
-        comp["non_inferiority_margin_0_01_pass"] and comp["resource_reduction_15pct_pass"]
-        for comp in tcp_boot["comparisons"].values()
+
+    tcp_joint_ok = tcp_grid_ok and all(
+        tcp_boot["comparisons"][c]["non_inferiority_margin_0_01_pass"]
+        and tcp_boot["comparisons"][c]["resource_reduction_15pct_pass"]
+        for c in primary_tcp_comparators
+        if c in tcp_boot["comparisons"]
     )
+    # Nominal acquisition cost is strictly secondary simulation telemetry (never gates primary TCP verdict)
     nom_joint_ok = all(
         comp["non_inferiority_margin_0_01_pass"] and comp["resource_reduction_15pct_pass"]
         for comp in nom_boot["comparisons"].values()
     )
 
-    if guardrails_ok and tcp_joint_ok and nom_joint_ok:
+    if not tcp_grid_ok:
+        verdict = "CONFIRMATORY_BLOCKED_INCOMPLETE_GRID"
+    elif tcp_guardrails_ok and tcp_joint_ok:
         verdict = "CONFIRMATORY_SUPPORTED"
-    elif not tcp_joint_ok or not nom_joint_ok or not guardrails_ok:
-        verdict = "CONFIRMATORY_NOT_SUPPORTED"
     else:
-        verdict = "CONFIRMATORY_INCONCLUSIVE"
+        verdict = "CONFIRMATORY_NOT_SUPPORTED"
 
     decision = {
         "dataset": dataset_label,
@@ -721,7 +753,14 @@ def run_full_evaluation_pipeline(
         "num_video_clusters": len(set(video_ids)),
         "seeds": use_seeds,
         "bootstrap_B": bootstrap_B,
-        "guardrails_passed": guardrails_ok,
+        "tcp_grid_complete": tcp_grid_ok,
+        "tcp_guardrails_passed": tcp_guardrails_ok,
+        "tcp_guardrails_metrics": {
+            "useful_on_time_rate": tcp_useful_on_time_rate,
+            "acceptance_rate": tcp_acceptance_rate,
+            "budget_violation_rate": tcp_budget_violation_rate,
+        },
+        "offline_guardrails_passed": offline_guardrails_ok,
         "tcp_joint_criterion_passed": tcp_joint_ok,
         "nominal_joint_criterion_passed": nom_joint_ok,
         "confirmatory_verdict": verdict,
@@ -847,14 +886,41 @@ def execute_phase2_confirmatory(
         )
         raise
 
+    feat_assets = auth["manifest"]["dataset_and_provenance"]["feature_extraction"].get("hf_snapshot_assets")
+    raw_pkl_path = os.path.join(repo_root, "data", "cmu_mosei", "raw", "mosei.pkl")
+    expected_raw_sha = auth["manifest"]["dataset_and_provenance"].get("raw_mosei_pkl_sha256")
+
+    # Verify raw data SHA-256 and frozen mDeBERTa encoder assets BEFORE any holdout access
+    if not os.path.exists(raw_pkl_path) or compute_sha256(raw_pkl_path) != expected_raw_sha:
+        raise AuthorizationError(
+            "PHASE II BLOCKED (H02): Raw mosei.pkl missing or SHA-256 mismatch against freeze manifest."
+        )
+    from scripts.acquire_multimodal_features import resolve_and_verify_pinned_deberta
+    resolve_and_verify_pinned_deberta(
+        expected_repo_id=PINNED_ENCODER_ID,
+        expected_revision=PINNED_ENCODER_REV,
+        expected_assets=feat_assets,
+        local_files_only=True,
+    )
+
+    # Mark confirmatory run started BEFORE opening raw_pkl or extracting features (blocks partial/interrupted retries)
+    record_holdout_ledger_attempt(
+        ledger_path,
+        mode="execute_holdout_start",
+        outcome="STARTED",
+        details="Authorization, raw mosei.pkl SHA-256, and pinned encoder verified; starting Phase II extraction.",
+        approval_path=approval_path,
+        manifest_sha256=auth["manifest_sha256"],
+        mark_confirmatory_started=True,
+    )
+
     elig_path = os.path.join(repo_root, auth["manifest"]["eligible_holdout_pool"]["eligible_manifest_path"])
     with open(elig_path, "r", encoding="utf-8") as f:
         elig = json.load(f)
 
-    feat_assets = auth["manifest"]["dataset_and_provenance"]["feature_extraction"].get("hf_snapshot_assets")
     feat_dir = os.path.join(out_conf, "features_cache")
     extract_features_for_explicit_ids(
-        os.path.join(repo_root, "data", "cmu_mosei", "raw", "mosei.pkl"),
+        raw_pkl_path,
         elig["eligible_samples"],
         feat_dir,
         expected_assets=feat_assets,
