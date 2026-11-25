@@ -358,145 +358,145 @@ Running Test Suite: V13.2 Phase II Pipeline, Encoder Pinning & Ledger Suite
 SUMMARY: 174 PASSED, 0 FAILED
 ==========================================
 ALL TESTS PASSED SUCCESSFULLY.
-2026-11-25 13:13:17,550 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.175593554973602, 4: 10.691332384943962, 8: 6.000830337405205, 16: 3.068905510008335, 32: 1.239538986235857, 64: 0.4526117295026779}
-2026-11-25 13:13:17,654 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
-2026-11-25 13:13:17,726 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
-2026-11-25 13:13:17,848 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
-2026-11-25 13:13:17,914 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
-2026-11-25 13:13:18,210 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
-2026-11-25 13:13:18,297 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
-2026-11-25 13:13:18,350 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
-2026-11-25 13:13:18,455 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
-2026-11-25 13:13:18,519 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
-2026-11-25 13:13:18,582 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
-2026-11-25 13:13:18,637 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
-2026-11-25 13:13:18,663 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
-2026-11-25 13:13:23,690 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
-2026-11-25 13:13:23,914 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
-2026-11-25 13:13:23,971 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
-2026-11-25 13:13:24,035 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
-2026-11-25 13:13:24,089 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
-2026-11-25 13:13:24,120 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
-2026-11-25 13:13:24,123 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
-2026-11-25 13:13:24,269 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
-2026-11-25 13:13:24,277 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
-2026-11-25 13:13:24,345 [INFO] MultimodalFusionModel initialized: 33,875 total params, 33,875 trainable (0.03 M)
-2026-11-25 13:13:24,381 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.114310085773468, 4: 1.1358720064163208, 8: 0.5110527127981186, 16: 2.046282172203064, 32: 0.10739084240049124}
-2026-11-25 13:13:24,415 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.852286159992218, 4: 1.028606504201889, 8: 0.4762457609176636, 16: 1.9242731481790543, 32: 0.12000014632940292}
-2026-11-25 13:13:24,451 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 4.006979763507843, 4: 1.0412193536758423, 8: 0.4780825898051262, 16: 1.9146131295710802, 32: 0.11020284192636609}
-2026-11-25 13:13:24,485 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 4.447024405002594, 4: 1.0937762260437012, 8: 0.48593616485595703, 16: 1.8636356256902218, 32: 0.11357506737112999}
-2026-11-25 13:13:24,485 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
-2026-11-25 13:13:24,498 [INFO] MultimodalFusionModel initialized: 34,200 total params, 34,200 trainable (0.03 M)
-2026-11-25 13:13:24,527 [INFO] MultimodalFusionModel initialized: 34,200 total params, 34,200 trainable (0.03 M)
-2026-11-25 13:13:24,562 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.189557671546936, 4: 1.031810849905014, 8: 0.5446296483278275, 16: 1.9708107970654964, 32: 0.11091678403317928}
-2026-11-25 13:13:24,597 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.831599742174149, 4: 1.0481907427310944, 8: 0.47826509177684784, 16: 1.8657823354005814, 32: 0.10782497189939022}
-2026-11-25 13:13:24,632 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 5.063336551189423, 4: 1.1786572858691216, 8: 0.5086890161037445, 16: 2.188198823481798, 32: 0.08545520342886448}
-2026-11-25 13:13:24,666 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 5.360343843698502, 4: 1.4015190154314041, 8: 0.4861210584640503, 16: 2.1463295705616474, 32: 0.09082282241433859}
-2026-11-25 13:13:24,672 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
-2026-11-25 13:13:24,738 [INFO] Registered 'visual': D=64, N=200, k_max=32, null_grid={2: 10.831161260604858, 4: 5.240703389048576, 8: 2.1793785095214844, 16: 0.7578227669000626, 32: 0.3708181381225586, 64: 0.07983651012182236}
-2026-11-25 13:13:25,146 [INFO] Registered 'text': D=16, N=32, k_max=4, null_grid={2: 0.7178515911102294, 4: 0.225203338265419, 8: 0.11184598207473756, 16: 0.03577248714864254}
-2026-11-25 13:13:25,172 [INFO] Registered 'visual': D=16, N=32, k_max=4, null_grid={2: 0.7467042207717896, 4: 0.3626040041446686, 8: 0.10552422255277634, 16: 0.03804278522729874}
-2026-11-25 13:13:25,189 [INFO] MultimodalFusionModel initialized: 839,079 total params, 839,079 trainable (0.84 M)
-2026-11-25 13:13:25,194 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
-2026-11-25 13:13:25,241 [INFO] --- [Stage 1.1] Visual Feature Extraction (openai/clip-vit-base-patch16) ---
-2026-11-25 13:13:25,241 [INFO] --- [Stage 1.2] Audio Feature Extraction (microsoft/wavlm-base) ---
-2026-11-25 13:13:25,514 [INFO] Saved dataset manifest (90 items, hash=9a211779cd9b) to C:\Users\ASUS\AppData\Local\Temp\tmp55_4k1cx\fixture_manifest.json
+2026-11-25 13:56:13,613 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.175593554973602, 4: 10.691332384943962, 8: 6.000830337405205, 16: 3.068905510008335, 32: 1.239538986235857, 64: 0.4526117295026779}
+2026-11-25 13:56:13,700 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
+2026-11-25 13:56:13,750 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
+2026-11-25 13:56:13,849 [INFO] Registered 'visual': D=512, N=200, k_max=32, null_grid={2: 19.056355237960815, 4: 10.697609722614288, 8: 6.030256599187851, 16: 3.0679735764861107, 32: 1.233359420672059, 64: 0.4499096069484949}
+2026-11-25 13:56:13,894 [INFO] Registered 'audio': D=768, N=200, k_max=32, null_grid={2: 20.77635157108307, 4: 11.89006493985653, 8: 6.761314786970615, 16: 3.4966481775045395, 32: 1.502155875787139, 64: 0.550514223985374}
+2026-11-25 13:56:14,119 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
+2026-11-25 13:56:14,153 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
+2026-11-25 13:56:14,195 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
+2026-11-25 13:56:14,254 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
+2026-11-25 13:56:14,308 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
+2026-11-25 13:56:14,354 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
+2026-11-25 13:56:14,393 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
+2026-11-25 13:56:14,411 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
+2026-11-25 13:56:18,093 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+2026-11-25 13:56:18,249 [INFO] Registered 'visual': D=512, N=100, k_max=32, null_grid={2: 15.778650164604187, 4: 8.159772768616676, 8: 4.195888243615627, 16: 1.8154635056853294, 32: 0.5307928137481213, 64: 0.08213223656639457}
+2026-11-25 13:56:18,292 [INFO] Registered 'audio': D=768, N=100, k_max=32, null_grid={2: 16.680697321891785, 4: 8.878966137766838, 8: 4.618703790009022, 16: 2.045366983860731, 32: 0.6407449524849653, 64: 0.09675518237054348}
+2026-11-25 13:56:18,337 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.236295878887177, 4: 8.810376361012459, 8: 4.59455269575119, 16: 2.0257760882377625, 32: 0.6277861725538969, 64: 0.095423583406955}
+2026-11-25 13:56:18,376 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 11.262351423501968, 4: 4.920364946126938, 8: 2.1276959478855133, 16: 0.6185211762785912, 32: 0.15987753309309483, 64: 0.020951894111931324}
+2026-11-25 13:56:18,396 [INFO] MultimodalFusionModel initialized: 1,373,655 total params, 1,373,655 trainable (1.37 M)
+2026-11-25 13:56:18,403 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+2026-11-25 13:56:18,500 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
+2026-11-25 13:56:18,507 [INFO] [SYNTHETIC_DEBUG] Generated 20 synthetic multimodal samples for split 'train'
+2026-11-25 13:56:18,543 [INFO] MultimodalFusionModel initialized: 33,875 total params, 33,875 trainable (0.03 M)
+2026-11-25 13:56:18,570 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.114310085773468, 4: 1.1358720064163208, 8: 0.5110527127981186, 16: 2.046282172203064, 32: 0.10739084240049124}
+2026-11-25 13:56:18,595 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.852286159992218, 4: 1.028606504201889, 8: 0.4762457609176636, 16: 1.9242731481790543, 32: 0.12000014632940292}
+2026-11-25 13:56:18,620 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 4.006979763507843, 4: 1.0412193536758423, 8: 0.4780825898051262, 16: 1.9146131295710802, 32: 0.11020284192636609}
+2026-11-25 13:56:18,647 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 4.447024405002594, 4: 1.0937762260437012, 8: 0.48593616485595703, 16: 1.8636356256902218, 32: 0.11357506737112999}
+2026-11-25 13:56:18,649 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+2026-11-25 13:56:18,653 [INFO] MultimodalFusionModel initialized: 34,200 total params, 34,200 trainable (0.03 M)
+2026-11-25 13:56:18,675 [INFO] MultimodalFusionModel initialized: 34,200 total params, 34,200 trainable (0.03 M)
+2026-11-25 13:56:18,693 [INFO] Registered 'visual': D=16, N=50, k_max=16, null_grid={2: 4.189557671546936, 4: 1.031810849905014, 8: 0.5446296483278275, 16: 1.9708107970654964, 32: 0.11091678403317928}
+2026-11-25 13:56:18,721 [INFO] Registered 'audio': D=16, N=50, k_max=16, null_grid={2: 4.831599742174149, 4: 1.0481907427310944, 8: 0.47826509177684784, 16: 1.8657823354005814, 32: 0.10782497189939022}
+2026-11-25 13:56:18,747 [INFO] Registered 'text': D=16, N=50, k_max=16, null_grid={2: 5.063336551189423, 4: 1.1786572858691216, 8: 0.5086890161037445, 16: 2.188198823481798, 32: 0.08545520342886448}
+2026-11-25 13:56:18,772 [INFO] Registered 'prosody': D=16, N=50, k_max=16, null_grid={2: 5.360343843698502, 4: 1.4015190154314041, 8: 0.4861210584640503, 16: 2.1463295705616474, 32: 0.09082282241433859}
+2026-11-25 13:56:18,774 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+2026-11-25 13:56:18,832 [INFO] Registered 'visual': D=64, N=200, k_max=32, null_grid={2: 10.831161260604858, 4: 5.240703389048576, 8: 2.1793785095214844, 16: 0.7578227669000626, 32: 0.3708181381225586, 64: 0.07983651012182236}
+2026-11-25 13:56:19,103 [INFO] Registered 'text': D=16, N=32, k_max=4, null_grid={2: 0.7178515911102294, 4: 0.225203338265419, 8: 0.11184598207473756, 16: 0.03577248714864254}
+2026-11-25 13:56:19,128 [INFO] Registered 'visual': D=16, N=32, k_max=4, null_grid={2: 0.7467042207717896, 4: 0.3626040041446686, 8: 0.10552422255277634, 16: 0.03804278522729874}
+2026-11-25 13:56:19,139 [INFO] MultimodalFusionModel initialized: 839,079 total params, 839,079 trainable (0.84 M)
+2026-11-25 13:56:19,141 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+2026-11-25 13:56:19,167 [INFO] --- [Stage 1.1] Visual Feature Extraction (openai/clip-vit-base-patch16) ---
+2026-11-25 13:56:19,167 [INFO] --- [Stage 1.2] Audio Feature Extraction (microsoft/wavlm-base) ---
+2026-11-25 13:56:19,414 [INFO] Saved dataset manifest (90 items, hash=9a211779cd9b) to C:\Users\ASUS\AppData\Local\Temp\tmpc_tq43ep\fixture_manifest.json
 C:\Users\ASUS\Desktop\Tri-SACTA\src\data\dataset.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   mod_data[mod] = torch.load(mod_path, map_location="cpu")
 C:\Users\ASUS\Desktop\Tri-SACTA\src\data\dataset.py:92: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   labels = torch.load(labels_path, map_location="cpu")
 C:\Users\ASUS\Desktop\Tri-SACTA\src\data\dataset.py:93: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   meta = torch.load(meta_path, map_location="cpu")
-2026-11-25 13:13:25,642 [INFO] Successfully loaded and manifest-verified 10 real samples from C:\Users\ASUS\AppData\Local\Temp\tmpw3rqoz8t\train
-2026-11-25 13:13:25,655 [INFO] Saved source spectral statistics to C:\Users\ASUS\AppData\Local\Temp\tmpdhn58tan\stats.pt (metadata bound: ['dataset_name', 'data_mode', 'seed', 'manifest_hash'])
+2026-11-25 13:56:19,509 [INFO] Successfully loaded and manifest-verified 10 real samples from C:\Users\ASUS\AppData\Local\Temp\tmpblyqb9rc\train
+2026-11-25 13:56:19,518 [INFO] Saved source spectral statistics to C:\Users\ASUS\AppData\Local\Temp\tmpm38tadd7\stats.pt (metadata bound: ['dataset_name', 'data_mode', 'seed', 'manifest_hash'])
 C:\Users\ASUS\Desktop\Tri-SACTA\src\models\spectral_detector.py:301: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   payload = torch.load(filepath, map_location="cpu")
-2026-11-25 13:13:25,671 [INFO] Loaded verified source spectral statistics from C:\Users\ASUS\AppData\Local\Temp\tmpdhn58tan\stats.pt
-2026-11-25 13:13:25,772 [INFO] MultimodalFusionModel initialized: 35,175 total params, 35,175 trainable (0.04 M)
-2026-11-25 13:13:25,774 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
-2026-11-25 13:13:25,783 [INFO] MultimodalFusionModel initialized: 35,175 total params, 35,175 trainable (0.04 M)
-2026-11-25 13:13:25,808 [INFO] MultimodalFusionModel initialized: 48,177 total params, 48,177 trainable (0.05 M)
-2026-11-25 13:13:25,860 [INFO] Registered 'visual': D=35, N=100, k_max=8, null_grid={2: 8.804519593715668, 4: 2.9907343685626984, 8: 0.9092205166816711, 16: 0.38507943972945213, 32: 0.14030252769589424, 64: 0.023869937285780907}
-2026-11-25 13:13:25,915 [INFO] Registered 'audio': D=74, N=100, k_max=8, null_grid={2: 9.629428267478943, 4: 4.356825560331345, 8: 1.832764983177185, 16: 0.7719063237309456, 32: 0.2791624702513218, 64: 0.038501820992678404}
-2026-11-25 13:13:25,970 [INFO] Registered 'text': D=64, N=100, k_max=8, null_grid={2: 10.1448233127594, 4: 4.118121862411499, 8: 1.6583468690514565, 16: 0.699307020753622, 32: 0.26912272721529007, 64: 0.03785725496709347}
-2026-11-25 13:13:25,973 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
-2026-11-25 13:13:26,274 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
-2026-11-25 13:13:26,331 [INFO] Registered 'visual': D=35, N=100, k_max=32, null_grid={2: 8.02075582742691, 4: 2.5833473205566406, 8: 0.9538880437612534, 16: 0.3823896571993828, 32: 1.4300403166562319, 64: 0.06258562579751015}
-2026-11-25 13:13:26,385 [INFO] Registered 'audio': D=74, N=100, k_max=32, null_grid={2: 10.049066662788391, 4: 4.5430199801921844, 8: 1.779539942741394, 16: 0.5300483033061028, 32: 0.20515895448625088, 64: 0.018742463551461697}
-2026-11-25 13:13:26,447 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.172638773918152, 4: 8.69343714416027, 8: 4.4535936415195465, 16: 2.0337536819279194, 32: 0.6224923357367516, 64: 0.09355995804071426}
-2026-11-25 13:13:26,503 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 10.532912075519562, 4: 4.713091015815735, 8: 1.9749621748924255, 16: 0.6071580536663532, 32: 0.1843077689409256, 64: 0.022547218017280102}
-2026-11-25 13:13:26,503 [INFO] TriSACTA initialized — tau={'text': 3.3664, 'audio': 0.0369, 'visual': 0.0294, 'prosody': 0.03}, theta_high=0.75, theta_low=0.20, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
-2026-11-25 13:13:26,571 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
-2026-11-25 13:13:26,638 [INFO] Registered 'text': D=768, N=50, k_max=32, null_grid={2: 12.083876848220825, 4: 5.91726191341877, 8: 2.6156409308314323, 16: 0.8556267507374287, 32: 0.10780791286379099}
-2026-11-25 13:13:26,678 [INFO] Registered 'audio': D=74, N=50, k_max=32, null_grid={2: 7.519361615180969, 4: 3.0711266100406647, 8: 1.005880668759346, 16: 0.2157033383846283, 32: 0.07655315846204758}
-2026-11-25 13:13:26,718 [INFO] Registered 'visual': D=35, N=50, k_max=32, null_grid={2: 5.686853229999542, 4: 2.0357837677001953, 8: 0.6204819455742836, 16: 0.24867691844701767, 32: 0.6133050862699747}
-2026-11-25 13:13:26,757 [INFO] Registered 'prosody': D=88, N=50, k_max=32, null_grid={2: 8.48401165008545, 4: 3.2054710537195206, 8: 1.1985956951975822, 16: 0.285878274589777, 32: 0.05781185906380415}
-2026-11-25 13:13:26,780 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
-2026-11-25 13:13:26,801 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
-2026-11-25 13:13:26,802 [INFO] AdapterNormTTA initialized — lr=1.0e-03, lambda_reg=0.0100
-2026-11-25 13:13:26,854 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
-2026-11-25 13:13:26,857 [INFO] TriSACTA initialized — tau={'text': 2.3282, 'audio': 0.0273, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
-2026-11-25 13:13:26,865 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
-2026-11-25 13:13:26,869 [INFO] TriSACTA initialized — tau={'text': 0.1848, 'audio': 0.0177, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=0.0e+00
-2026-11-25 13:13:26,879 [INFO] TriSACTA initialized — tau={'text': 0.1848, 'audio': 0.0177, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
-2026-11-25 13:13:26,906 [INFO] AdapterNormTTA initialized — lr=1.0e-03, lambda_reg=0.0100
-2026-11-25 13:13:26,938 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
-2026-11-25 13:13:27,224 [INFO] MultimodalFusionModel initialized: 93,341 total params, 93,341 trainable (0.09 M)
-2026-11-25 13:13:27,244 [INFO] MultimodalFusionModel initialized: 93,341 total params, 93,341 trainable (0.09 M)
-2026-11-25 13:13:29,535 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:29,604 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:30,471 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:30,529 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:30,641 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:30,702 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
-2026-11-25 13:13:30,988 [INFO] HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
-2026-11-25 13:13:30,996 [INFO] HTTP Request: GET http://testserver/policies "HTTP/1.1 200 OK"
-2026-11-25 13:13:31,007 [INFO] HTTP Request: GET http://testserver/calibration?seed=42 "HTTP/1.1 200 OK"
-2026-11-25 13:13:31,016 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
-2026-11-25 13:13:31,044 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 200 OK"
-2026-11-25 13:13:31,543 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8795 (250 samples loaded from 'val').
-2026-11-25 13:13:31,544 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8796 (250 samples loaded from 'val').
-2026-11-25 13:13:31,879 [INFO] [AUDIO Provider] Stopped. Served 2 queries (790 application bytes sent, 84 bytes recv).
-2026-11-25 13:13:31,879 [INFO] [VISUAL Provider] Stopped. Served 2 queries (480 application bytes sent, 86 bytes recv).
-2026-11-25 13:13:37,722 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8875 (10 samples loaded from 'val').
-2026-11-25 13:13:37,725 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8876 (10 samples loaded from 'val').
-2026-11-25 13:13:37,813 [INFO] [AUDIO Provider] Stopped. Served 4 queries (2,210 application bytes sent, 425 bytes recv).
-2026-11-25 13:13:37,813 [INFO] [VISUAL Provider] Stopped. Served 3 queries (720 application bytes sent, 129 bytes recv).
-2026-11-25 13:13:38,385 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:38,903 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:39,445 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:39,912 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:40,405 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:40,920 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:41,462 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:41,966 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:42,449 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:42,902 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:43,478 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:43,994 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:44,510 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:45,021 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:45,571 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:46,647 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=BOUNDARY_VIOLATION
-2026-11-25 13:13:47,483 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=READY_FOR_HOLDOUT_REVIEW | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:47,964 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=READY_FOR_HOLDOUT_REVIEW | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:48,416 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:48,889 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:49,563 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:50,199 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:50,823 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:51,253 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:51,608 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:51,970 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:52,487 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:53,012 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:53,458 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:53,917 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
-2026-11-25 13:13:54,583 [INFO] [AUDIO Provider] Listening on 127.0.0.1:53471 (12 samples loaded from 'val').
-2026-11-25 13:13:54,584 [INFO] [VISUAL Provider] Listening on 127.0.0.1:53472 (12 samples loaded from 'val').
-2026-11-25 13:13:55,334 [INFO] [AUDIO Provider] Stopped. Served 295 queries (116,578 application bytes sent, 12,443 bytes recv).
-2026-11-25 13:13:55,335 [INFO] [VISUAL Provider] Stopped. Served 264 queries (63,407 application bytes sent, 11,399 bytes recv).
-2026-11-25 13:13:55,983 [INFO] [AUDIO Provider] Listening on 127.0.0.1:53487 (12 samples loaded from 'val').
-2026-11-25 13:13:55,984 [INFO] [VISUAL Provider] Listening on 127.0.0.1:53488 (12 samples loaded from 'val').
-2026-11-25 13:13:56,665 [INFO] [AUDIO Provider] Stopped. Served 295 queries (116,578 application bytes sent, 12,443 bytes recv).
-2026-11-25 13:13:56,665 [INFO] [VISUAL Provider] Stopped. Served 264 queries (63,407 application bytes sent, 11,399 bytes recv).
+2026-11-25 13:56:19,532 [INFO] Loaded verified source spectral statistics from C:\Users\ASUS\AppData\Local\Temp\tmpm38tadd7\stats.pt
+2026-11-25 13:56:19,595 [INFO] MultimodalFusionModel initialized: 35,175 total params, 35,175 trainable (0.04 M)
+2026-11-25 13:56:19,595 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+2026-11-25 13:56:19,609 [INFO] MultimodalFusionModel initialized: 35,175 total params, 35,175 trainable (0.04 M)
+2026-11-25 13:56:19,625 [INFO] MultimodalFusionModel initialized: 48,177 total params, 48,177 trainable (0.05 M)
+2026-11-25 13:56:19,664 [INFO] Registered 'visual': D=35, N=100, k_max=8, null_grid={2: 8.804519593715668, 4: 2.9907343685626984, 8: 0.9092205166816711, 16: 0.38507943972945213, 32: 0.14030252769589424, 64: 0.023869937285780907}
+2026-11-25 13:56:19,700 [INFO] Registered 'audio': D=74, N=100, k_max=8, null_grid={2: 9.629428267478943, 4: 4.356825560331345, 8: 1.832764983177185, 16: 0.7719063237309456, 32: 0.2791624702513218, 64: 0.038501820992678404}
+2026-11-25 13:56:19,747 [INFO] Registered 'text': D=64, N=100, k_max=8, null_grid={2: 10.1448233127594, 4: 4.118121862411499, 8: 1.6583468690514565, 16: 0.699307020753622, 32: 0.26912272721529007, 64: 0.03785725496709347}
+2026-11-25 13:56:19,749 [INFO] TriSACTA initialized — tau=1.00, theta_high=0.70, theta_low=0.30, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+2026-11-25 13:56:19,979 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
+2026-11-25 13:56:20,012 [INFO] Registered 'visual': D=35, N=100, k_max=32, null_grid={2: 8.02075582742691, 4: 2.5833473205566406, 8: 0.9538880437612534, 16: 0.3823896571993828, 32: 1.4300403166562319, 64: 0.06258562579751015}
+2026-11-25 13:56:20,053 [INFO] Registered 'audio': D=74, N=100, k_max=32, null_grid={2: 10.049066662788391, 4: 4.5430199801921844, 8: 1.779539942741394, 16: 0.5300483033061028, 32: 0.20515895448625088, 64: 0.018742463551461697}
+2026-11-25 13:56:20,095 [INFO] Registered 'text': D=768, N=100, k_max=32, null_grid={2: 16.172638773918152, 4: 8.69343714416027, 8: 4.4535936415195465, 16: 2.0337536819279194, 32: 0.6224923357367516, 64: 0.09355995804071426}
+2026-11-25 13:56:20,129 [INFO] Registered 'prosody': D=88, N=100, k_max=32, null_grid={2: 10.532912075519562, 4: 4.713091015815735, 8: 1.9749621748924255, 16: 0.6071580536663532, 32: 0.1843077689409256, 64: 0.022547218017280102}
+2026-11-25 13:56:20,142 [INFO] TriSACTA initialized — tau={'text': 3.3664, 'audio': 0.0369, 'visual': 0.0294, 'prosody': 0.03}, theta_high=0.75, theta_low=0.20, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-04
+2026-11-25 13:56:20,179 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
+2026-11-25 13:56:20,229 [INFO] Registered 'text': D=768, N=50, k_max=32, null_grid={2: 12.083876848220825, 4: 5.91726191341877, 8: 2.6156409308314323, 16: 0.8556267507374287, 32: 0.10780791286379099}
+2026-11-25 13:56:20,245 [INFO] Registered 'audio': D=74, N=50, k_max=32, null_grid={2: 7.519361615180969, 4: 3.0711266100406647, 8: 1.005880668759346, 16: 0.2157033383846283, 32: 0.07655315846204758}
+2026-11-25 13:56:20,279 [INFO] Registered 'visual': D=35, N=50, k_max=32, null_grid={2: 5.686853229999542, 4: 2.0357837677001953, 8: 0.6204819455742836, 16: 0.24867691844701767, 32: 0.6133050862699747}
+2026-11-25 13:56:20,312 [INFO] Registered 'prosody': D=88, N=50, k_max=32, null_grid={2: 8.48401165008545, 4: 3.2054710537195206, 8: 1.1985956951975822, 16: 0.285878274589777, 32: 0.05781185906380415}
+2026-11-25 13:56:20,328 [INFO] MultimodalFusionModel initialized: 1,071,537 total params, 1,071,537 trainable (1.07 M)
+2026-11-25 13:56:20,328 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
+2026-11-25 13:56:20,343 [INFO] AdapterNormTTA initialized — lr=1.0e-03, lambda_reg=0.0100
+2026-11-25 13:56:20,378 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
+2026-11-25 13:56:20,378 [INFO] TriSACTA initialized — tau={'text': 2.3282, 'audio': 0.0273, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+2026-11-25 13:56:20,390 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
+2026-11-25 13:56:20,392 [INFO] TriSACTA initialized — tau={'text': 0.1848, 'audio': 0.0177, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=0.0e+00
+2026-11-25 13:56:20,396 [INFO] TriSACTA initialized — tau={'text': 0.1848, 'audio': 0.0177, 'visual': 0.0217, 'prosody': 0.025}, theta_high=0.80, theta_low=0.10, lambda_align=0.500, lambda_reg=0.0100, lr=1.0e-03
+2026-11-25 13:56:20,415 [INFO] AdapterNormTTA initialized — lr=1.0e-03, lambda_reg=0.0100
+2026-11-25 13:56:20,440 [INFO] MultimodalFusionModel initialized: 94,641 total params, 94,641 trainable (0.09 M)
+2026-11-25 13:56:20,663 [INFO] MultimodalFusionModel initialized: 93,341 total params, 93,341 trainable (0.09 M)
+2026-11-25 13:56:20,674 [INFO] MultimodalFusionModel initialized: 93,341 total params, 93,341 trainable (0.09 M)
+2026-11-25 13:56:21,776 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:21,829 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:22,265 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:22,315 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:22,416 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:22,466 [INFO] MultimodalFusionModel initialized: 1,066,397 total params, 1,066,397 trainable (1.07 M)
+2026-11-25 13:56:22,675 [INFO] HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-11-25 13:56:22,682 [INFO] HTTP Request: GET http://testserver/policies "HTTP/1.1 200 OK"
+2026-11-25 13:56:22,694 [INFO] HTTP Request: GET http://testserver/calibration?seed=42 "HTTP/1.1 200 OK"
+2026-11-25 13:56:22,698 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 422 Unprocessable Entity"
+2026-11-25 13:56:22,715 [INFO] HTTP Request: POST http://testserver/predict "HTTP/1.1 200 OK"
+2026-11-25 13:56:23,034 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8795 (250 samples loaded from 'val').
+2026-11-25 13:56:23,034 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8796 (250 samples loaded from 'val').
+2026-11-25 13:56:23,384 [INFO] [AUDIO Provider] Stopped. Served 2 queries (790 application bytes sent, 84 bytes recv).
+2026-11-25 13:56:23,384 [INFO] [VISUAL Provider] Stopped. Served 2 queries (480 application bytes sent, 86 bytes recv).
+2026-11-25 13:56:27,343 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8875 (10 samples loaded from 'val').
+2026-11-25 13:56:27,353 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8876 (10 samples loaded from 'val').
+2026-11-25 13:56:27,456 [INFO] [AUDIO Provider] Stopped. Served 5 queries (2,605 application bytes sent, 425 bytes recv).
+2026-11-25 13:56:27,456 [INFO] [VISUAL Provider] Stopped. Served 3 queries (720 application bytes sent, 129 bytes recv).
+2026-11-25 13:56:27,874 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:28,271 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:28,674 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:29,059 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:29,456 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:29,843 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:30,245 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:30,622 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:31,011 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:31,392 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:31,770 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:32,144 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:32,490 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:32,873 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:33,273 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:34,098 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=BOUNDARY_VIOLATION
+2026-11-25 13:56:34,666 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=READY_FOR_HOLDOUT_REVIEW | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:35,033 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=READY_FOR_HOLDOUT_REVIEW | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:35,384 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:35,718 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:36,185 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:36,619 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:37,069 [INFO] Verification complete | Engineering=RELEASE_CANDIDATE_REVIEWABLE | Scientific=DEVELOPMENT_EFFECT_NOT_SUPPORTED | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:37,436 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:37,733 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:38,032 [INFO] Verification complete | Engineering=REVIEWABLE_DEVELOPMENT_PROTOTYPE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:38,388 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=NOT_SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:38,723 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:39,090 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=SUPPORTED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:39,440 [INFO] Verification complete | Engineering=DO_NOT_MERGE | Scientific=BLOCKED_BEFORE_HOLDOUT | DevEffect=BLOCKED | Novelty=OVERLAP_IDENTIFIED | Confirmatory=NOT_RUN
+2026-11-25 13:56:39,874 [INFO] [AUDIO Provider] Listening on 127.0.0.1:62170 (12 samples loaded from 'val').
+2026-11-25 13:56:39,874 [INFO] [VISUAL Provider] Listening on 127.0.0.1:62171 (12 samples loaded from 'val').
+2026-11-25 13:56:40,489 [INFO] [AUDIO Provider] Stopped. Served 295 queries (116,578 application bytes sent, 12,443 bytes recv).
+2026-11-25 13:56:40,489 [INFO] [VISUAL Provider] Stopped. Served 264 queries (63,407 application bytes sent, 11,399 bytes recv).
+2026-11-25 13:56:40,992 [INFO] [AUDIO Provider] Listening on 127.0.0.1:62185 (12 samples loaded from 'val').
+2026-11-25 13:56:40,992 [INFO] [VISUAL Provider] Listening on 127.0.0.1:62186 (12 samples loaded from 'val').
+2026-11-25 13:56:41,615 [INFO] [AUDIO Provider] Stopped. Served 295 queries (116,578 application bytes sent, 12,443 bytes recv).
+2026-11-25 13:56:41,615 [INFO] [VISUAL Provider] Stopped. Served 264 queries (63,407 application bytes sent, 11,399 bytes recv).

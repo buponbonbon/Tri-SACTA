@@ -151,7 +151,8 @@ def resolve_and_verify_pinned_deberta(
             )
         return expected_repo_id
 
-    for fname, expected_sha in assets.items():
+    for fname, expected_entry in assets.items():
+        expected_sha = expected_entry["sha256"] if isinstance(expected_entry, dict) else expected_entry
         fpath = os.path.join(target_dir, fname)
         if not os.path.exists(fpath):
             raise RuntimeError(f"FROZEN ENCODER ASSET MISSING: '{fname}' not found in '{target_dir}'.")

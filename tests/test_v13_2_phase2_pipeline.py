@@ -94,6 +94,15 @@ class TestV132Phase2PipelineAndPinning(unittest.TestCase):
                 expected_assets={"config.json": "0" * 64},
                 local_files_only=True,
             )
+        # Also verify dict-format asset metadata (as stored in freeze_manifest.json)
+        import hashlib
+        real_sha = hashlib.sha256(b'{"model_type": "deberta-v2"}').hexdigest()
+        resolved = resolve_and_verify_pinned_deberta(
+            snapshot_dir=snap,
+            expected_assets={"config.json": {"size_bytes": 28, "sha256": real_sha}},
+            local_files_only=True,
+        )
+        self.assertEqual(resolved, snap)
 
     def test_ledger_recording_and_repeated_execution_prevention(self):
         ledger_path = os.path.join(self.tmp_dir, "holdout_access_ledger.json")
