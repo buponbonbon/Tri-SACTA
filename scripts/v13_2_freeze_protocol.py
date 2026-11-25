@@ -72,6 +72,8 @@ def build_freeze_package() -> Dict[str, Any]:
     elig_path = os.path.join(REPO_ROOT, "results", "v13_2", "provenance", "eligible_holdout_manifest.json")
     prov_path = os.path.join(REPO_ROOT, "results", "v13_2", "provenance", "provenance_audit.json")
     exp_path = os.path.join(REPO_ROOT, "results", "v13_2", "provenance", "exposure_ledger.json")
+    with open(os.path.join(PROTO_DIR, "environment_lock.json"), "r", encoding="utf-8") as f:
+        env_lock = json.load(f)
 
     manifest_obj = {
         "manifest_version": "13.2",
@@ -157,6 +159,7 @@ def build_freeze_package() -> Dict[str, Any]:
             "feature_extraction": {
                 "text_encoder": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
                 "snapshot_revision": "8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c",
+                "hf_snapshot_assets": env_lock.get("hf_snapshot_assets", {}),
                 "audio": "COVAREP_74d_mean_pool_fp16",
                 "visual": "FACET_35d_mean_pool_fp16",
             },

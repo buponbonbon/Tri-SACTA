@@ -71,6 +71,7 @@ import tests.test_v13_1_statistics as test_v13_1_statistics
 import tests.test_v13_2_evaluator_regression as test_v13_2_evaluator_regression
 import tests.test_v13_2_runtime_safety as test_v13_2_runtime_safety
 import tests.test_v13_2_verifier_adversarial as test_v13_2_verifier_adversarial
+import tests.test_v13_2_phase2_pipeline as test_v13_2_phase2_pipeline
 
 
 def run_test_module(module, module_name):
@@ -167,6 +168,7 @@ def main():
         (test_v13_2_evaluator_regression, "V13.2 Evaluator Correctness & Regression Suite"),
         (test_v13_2_runtime_safety, "V13.2 Runtime Safety & Fair Distributed Transport Suite"),
         (test_v13_2_verifier_adversarial, "V13.2 Automated Fail-Closed Verifier Adversarial Suite"),
+        (test_v13_2_phase2_pipeline, "V13.2 Phase II Pipeline, Encoder Pinning & Ledger Suite"),
     ]
 
     total_passed = 0
