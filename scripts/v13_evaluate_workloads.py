@@ -82,7 +82,11 @@ def load_predictor_bank(seed: int, device: torch.device) -> Dict[str, nn.Module]
     return bank
 
 
-def evaluate_split_workloads(split_name: str = "val"):
+def evaluate_split_workloads(split_name: str = "val", allow_historical_test: bool = False):
+    if split_name in ("holdout", "eligible_holdout", "confirmatory"):
+        raise PermissionError("PHASE I GUARDRAIL (H04): Use gated Phase II runner for fresh holdout.")
+    if split_name == "test" and not allow_historical_test:
+        raise PermissionError("PHASE I GUARDRAIL (H04): Direct evaluation of 'test' requires explicit opt-in.")
     logger.info(f"=== Starting Comprehensive Workload Benchmark for split: '{split_name}' ===")
     workloads_dir = os.path.join(repo_root, "results", "v13_utility", "workloads", split_name)
     eval_dir = os.path.join(repo_root, "results", "v13_utility", "evaluation", split_name)

@@ -1,10 +1,11 @@
 {
   "SequentialConfidence_0.55_0.45": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5414508254504847,
       "std": 0.0569099153922704
     },
+    "raw_macro_f1_mean": 0.5414508254504847,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5415389655977539
@@ -15,59 +16,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.592302038575105,
+        "service_quality_macro_f1": 0.592302038575105,
+        "raw_macro_f1": 0.592302038575105,
         "mean_cost": 1.5564,
         "mean_latency_ms": 3.514666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4912636669951615,
+        "service_quality_macro_f1": 0.4912636669951615,
+        "raw_macro_f1": 0.4912636669951615,
         "mean_cost": 1.3212,
         "mean_latency_ms": 2.4106666666666663,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5725900772319802,
+        "service_quality_macro_f1": 0.5725900772319802,
+        "raw_macro_f1": 0.5725900772319802,
         "mean_cost": 1.4957333333333331,
         "mean_latency_ms": 4.050666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5778495381441524,
+        "service_quality_macro_f1": 0.5778495381441524,
+        "raw_macro_f1": 0.5778495381441524,
         "mean_cost": 1.4576,
         "mean_latency_ms": 2.9066666666666663,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4293237451681024,
+        "service_quality_macro_f1": 0.4293237451681024,
+        "raw_macro_f1": 0.4293237451681024,
         "mean_cost": 1.2981333333333334,
         "mean_latency_ms": 2.8346666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5548615988091808,
+        "service_quality_macro_f1": 0.5548615988091808,
+        "raw_macro_f1": 0.5548615988091808,
         "mean_cost": 1.4489333333333334,
         "mean_latency_ms": 3.478666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5719651132297109,
+        "service_quality_macro_f1": 0.5719651132297109,
+        "raw_macro_f1": 0.5719651132297109,
         "mean_cost": 1.3346666666666664,
         "mean_latency_ms": 2.4426666666666668,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "SequentialConfidence_0.65_0.55": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5394145201390286,
       "std": 0.05898423679053356
     },
+    "raw_macro_f1_mean": 0.5394145201390286,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5398658130850322
@@ -78,59 +95,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5944742005590391,
+        "service_quality_macro_f1": 0.5944742005590391,
+        "raw_macro_f1": 0.5944742005590391,
         "mean_cost": 2.0770666666666666,
         "mean_latency_ms": 6.238666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4880174010266207,
+        "service_quality_macro_f1": 0.4880174010266207,
+        "raw_macro_f1": 0.4880174010266207,
         "mean_cost": 1.7109333333333332,
         "mean_latency_ms": 4.348,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5506259906564461,
+        "service_quality_macro_f1": 0.5506259906564461,
+        "raw_macro_f1": 0.5506259906564461,
         "mean_cost": 1.7574666666666667,
         "mean_latency_ms": 5.661333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5773722430162297,
+        "service_quality_macro_f1": 0.5773722430162297,
+        "raw_macro_f1": 0.5773722430162297,
         "mean_cost": 1.6992,
         "mean_latency_ms": 3.9133333333333336,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4273816712105867,
+        "service_quality_macro_f1": 0.4273816712105867,
+        "raw_macro_f1": 0.4273816712105867,
         "mean_cost": 1.5390666666666668,
         "mean_latency_ms": 4.317333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5567784389639626,
+        "service_quality_macro_f1": 0.5567784389639626,
+        "raw_macro_f1": 0.5567784389639626,
         "mean_cost": 1.7324000000000002,
         "mean_latency_ms": 4.914666666666666,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5812516955403151,
+        "service_quality_macro_f1": 0.5812516955403151,
+        "raw_macro_f1": 0.5812516955403151,
         "mean_cost": 1.5904,
         "mean_latency_ms": 3.7079999999999997,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "SequentialConfidence_VisualFirst_0.55_0.45": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5353544572364046,
       "std": 0.05520853115864346
     },
+    "raw_macro_f1_mean": 0.5353544572364046,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5353892655875088
@@ -141,59 +174,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.571512427563257,
+        "service_quality_macro_f1": 0.571512427563257,
+        "raw_macro_f1": 0.571512427563257,
         "mean_cost": 1.5581333333333334,
         "mean_latency_ms": 4.310666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.48565520842037646,
+        "service_quality_macro_f1": 0.48565520842037646,
+        "raw_macro_f1": 0.48565520842037646,
         "mean_cost": 1.3293333333333335,
         "mean_latency_ms": 2.985333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5725900772319802,
+        "service_quality_macro_f1": 0.5725900772319802,
+        "raw_macro_f1": 0.5725900772319802,
         "mean_cost": 1.4957333333333331,
         "mean_latency_ms": 4.050666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5778495381441524,
+        "service_quality_macro_f1": 0.5778495381441524,
+        "raw_macro_f1": 0.5778495381441524,
         "mean_cost": 1.4576,
         "mean_latency_ms": 2.9066666666666663,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4293237451681024,
+        "service_quality_macro_f1": 0.4293237451681024,
+        "raw_macro_f1": 0.4293237451681024,
         "mean_cost": 1.2981333333333334,
         "mean_latency_ms": 2.8346666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5460809832285617,
+        "service_quality_macro_f1": 0.5460809832285617,
+        "raw_macro_f1": 0.5460809832285617,
         "mean_cost": 1.4517333333333333,
         "mean_latency_ms": 3.7693333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5644692208984018,
+        "service_quality_macro_f1": 0.5644692208984018,
+        "raw_macro_f1": 0.5644692208984018,
         "mean_cost": 1.3396,
         "mean_latency_ms": 2.7560000000000002,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "ConfidenceRouting_0.55": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5404560827296074,
       "std": 0.056895885060377266
     },
+    "raw_macro_f1_mean": 0.5404560827296074,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5406221791840317
@@ -204,59 +253,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5840904402205551,
+        "service_quality_macro_f1": 0.5840904402205551,
+        "raw_macro_f1": 0.5840904402205551,
         "mean_cost": 1.9533333333333331,
         "mean_latency_ms": 5.957333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4949804270368124,
+        "service_quality_macro_f1": 0.4949804270368124,
+        "raw_macro_f1": 0.4949804270368124,
         "mean_cost": 1.5933333333333335,
         "mean_latency_ms": 4.085333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5725900772319802,
+        "service_quality_macro_f1": 0.5725900772319802,
+        "raw_macro_f1": 0.5725900772319802,
         "mean_cost": 1.4957333333333331,
         "mean_latency_ms": 4.050666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5778495381441524,
+        "service_quality_macro_f1": 0.5778495381441524,
+        "raw_macro_f1": 0.5778495381441524,
         "mean_cost": 1.4576,
         "mean_latency_ms": 2.9066666666666663,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4293237451681024,
+        "service_quality_macro_f1": 0.4293237451681024,
+        "raw_macro_f1": 0.4293237451681024,
         "mean_cost": 1.2981333333333334,
         "mean_latency_ms": 2.8346666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5459156675694438,
+        "service_quality_macro_f1": 0.5459156675694438,
+        "raw_macro_f1": 0.5459156675694438,
         "mean_cost": 1.589333333333333,
         "mean_latency_ms": 4.342666666666666,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5784426837362052,
+        "service_quality_macro_f1": 0.5784426837362052,
+        "raw_macro_f1": 0.5784426837362052,
         "mean_cost": 1.33,
         "mean_latency_ms": 2.7159999999999997,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "ConfidenceRouting_0.65": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5330956643536513,
       "std": 0.05658884132138582
     },
+    "raw_macro_f1_mean": 0.5330956643536513,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5336135774247888
@@ -267,59 +332,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5756952733163015,
+        "service_quality_macro_f1": 0.5756952733163015,
+        "raw_macro_f1": 0.5756952733163015,
         "mean_cost": 2.4566666666666666,
         "mean_latency_ms": 8.574666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4842464707840874,
+        "service_quality_macro_f1": 0.4842464707840874,
+        "raw_macro_f1": 0.4842464707840874,
         "mean_cost": 2.0766666666666667,
         "mean_latency_ms": 6.5986666666666665,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5506259906564461,
+        "service_quality_macro_f1": 0.5506259906564461,
+        "raw_macro_f1": 0.5506259906564461,
         "mean_cost": 1.7574666666666667,
         "mean_latency_ms": 5.661333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5773722430162297,
+        "service_quality_macro_f1": 0.5773722430162297,
+        "raw_macro_f1": 0.5773722430162297,
         "mean_cost": 1.6992,
         "mean_latency_ms": 3.9133333333333336,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4273816712105867,
+        "service_quality_macro_f1": 0.4273816712105867,
+        "raw_macro_f1": 0.4273816712105867,
         "mean_cost": 1.5390666666666668,
         "mean_latency_ms": 4.317333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5413125355420356,
+        "service_quality_macro_f1": 0.5413125355420356,
+        "raw_macro_f1": 0.5413125355420356,
         "mean_cost": 1.8606666666666662,
         "mean_latency_ms": 5.704000000000001,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5750354659498722,
+        "service_quality_macro_f1": 0.5750354659498722,
+        "raw_macro_f1": 0.5750354659498722,
         "mean_cost": 1.4933333333333332,
         "mean_latency_ms": 3.5653333333333332,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "AlwaysOnFusion": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5287467381518868,
       "std": 0.05601514928290944
     },
+    "raw_macro_f1_mean": 0.5287467381518868,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5297397797934653
@@ -330,59 +411,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.09542857142857143,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5678272982730759,
+        "service_quality_macro_f1": 0.5678272982730759,
+        "raw_macro_f1": 0.5678272982730759,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4844730645234392,
+        "service_quality_macro_f1": 0.4844730645234392,
+        "raw_macro_f1": 0.4844730645234392,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.544217744410448,
+        "service_quality_macro_f1": 0.544217744410448,
+        "raw_macro_f1": 0.544217744410448,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5764363346454523,
+        "service_quality_macro_f1": 0.5764363346454523,
+        "raw_macro_f1": 0.5764363346454523,
         "mean_cost": 2.1999999999999997,
         "mean_latency_ms": 6.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4208100773858872,
+        "service_quality_macro_f1": 0.4208100773858872,
+        "raw_macro_f1": 0.4208100773858872,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.539635349551829,
+        "service_quality_macro_f1": 0.539635349551829,
+        "raw_macro_f1": 0.539635349551829,
         "mean_cost": 2.564,
         "mean_latency_ms": 9.32,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5678272982730759,
+        "service_quality_macro_f1": 0.5678272982730759,
+        "raw_macro_f1": 0.5678272982730759,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "BudgetAdmittedMaxSubset": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5293643199454537,
       "std": 0.056481456734507135
     },
+    "raw_macro_f1_mean": 0.5293643199454537,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5302636446447825
@@ -393,59 +490,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5678272982730759,
+        "service_quality_macro_f1": 0.5678272982730759,
+        "raw_macro_f1": 0.5678272982730759,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4844730645234392,
+        "service_quality_macro_f1": 0.4844730645234392,
+        "raw_macro_f1": 0.4844730645234392,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.544217744410448,
+        "service_quality_macro_f1": 0.544217744410448,
+        "raw_macro_f1": 0.544217744410448,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5764363346454523,
+        "service_quality_macro_f1": 0.5764363346454523,
+        "raw_macro_f1": 0.5764363346454523,
         "mean_cost": 2.1999999999999997,
         "mean_latency_ms": 6.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4208100773858872,
+        "service_quality_macro_f1": 0.4208100773858872,
+        "raw_macro_f1": 0.4208100773858872,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.539635349551829,
+        "service_quality_macro_f1": 0.539635349551829,
+        "raw_macro_f1": 0.539635349551829,
         "mean_cost": 2.564,
         "mean_latency_ms": 9.32,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5721503708280449,
+        "service_quality_macro_f1": 0.5721503708280449,
+        "raw_macro_f1": 0.5721503708280449,
         "mean_cost": 2.2284,
         "mean_latency_ms": 6.976,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "Static_T": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5327715581694907,
       "std": 0.05147689456777191
     },
+    "raw_macro_f1_mean": 0.5327715581694907,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5332065800572257
@@ -456,59 +569,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.47217867989561574,
+        "service_quality_macro_f1": 0.47217867989561574,
+        "raw_macro_f1": 0.47217867989561574,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4396742293181786,
+        "service_quality_macro_f1": 0.4396742293181786,
+        "raw_macro_f1": 0.4396742293181786,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5453467399396749,
+        "service_quality_macro_f1": 0.5453467399396749,
+        "raw_macro_f1": 0.5453467399396749,
         "mean_cost": 0.9983999999999998,
         "mean_latency_ms": 1.288,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "Static_TA": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5362515132109633,
       "std": 0.050381052109394434
     },
+    "raw_macro_f1_mean": 0.5362515132109633,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5368104573405014
@@ -519,59 +648,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5764363346454523,
+        "service_quality_macro_f1": 0.5764363346454523,
+        "raw_macro_f1": 0.5764363346454523,
         "mean_cost": 2.1999999999999997,
         "mean_latency_ms": 6.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4876924820929986,
+        "service_quality_macro_f1": 0.4876924820929986,
+        "raw_macro_f1": 0.4876924820929986,
         "mean_cost": 2.1999999999999997,
         "mean_latency_ms": 6.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5764363346454523,
+        "service_quality_macro_f1": 0.5764363346454523,
+        "raw_macro_f1": 0.5764363346454523,
         "mean_cost": 2.1999999999999997,
         "mean_latency_ms": 6.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4396742293181786,
+        "service_quality_macro_f1": 0.4396742293181786,
+        "raw_macro_f1": 0.4396742293181786,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5421429555112285,
+        "service_quality_macro_f1": 0.5421429555112285,
+        "raw_macro_f1": 0.5421429555112285,
         "mean_cost": 1.8047999999999995,
         "mean_latency_ms": 4.648,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5633279417551923,
+        "service_quality_macro_f1": 0.5633279417551923,
+        "raw_macro_f1": 0.5633279417551923,
         "mean_cost": 1.7968,
         "mean_latency_ms": 4.32,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "Static_TV": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5178812076331462,
       "std": 0.05371020355916761
     },
+    "raw_macro_f1_mean": 0.5178812076331462,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.518951508031322
@@ -582,59 +727,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.544217744410448,
+        "service_quality_macro_f1": 0.544217744410448,
+        "raw_macro_f1": 0.544217744410448,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4576336612211546,
+        "service_quality_macro_f1": 0.4576336612211546,
+        "raw_macro_f1": 0.4576336612211546,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.544217744410448,
+        "service_quality_macro_f1": 0.544217744410448,
+        "raw_macro_f1": 0.544217744410448,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4208100773858872,
+        "service_quality_macro_f1": 0.4208100773858872,
+        "raw_macro_f1": 0.4208100773858872,
         "mean_cost": 2.3,
         "mean_latency_ms": 9.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5397630768691437,
+        "service_quality_macro_f1": 0.5397630768691437,
+        "raw_macro_f1": 0.5397630768691437,
         "mean_cost": 1.716,
         "mean_latency_ms": 5.704,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5504758346266995,
+        "service_quality_macro_f1": 0.5504758346266995,
+        "raw_macro_f1": 0.5504758346266995,
         "mean_cost": 1.4316000000000002,
         "mean_latency_ms": 3.656,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "Static_AV": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.48065508834571624,
       "std": 0.07060897146239677
     },
+    "raw_macro_f1_mean": 0.48065508834571624,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.4816677693262326
@@ -645,59 +806,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.395346504278564,
+        "service_quality_macro_f1": 0.395346504278564,
+        "raw_macro_f1": 0.395346504278564,
         "mean_cost": 2.5,
         "mean_latency_ms": 13.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.395346504278564,
+        "service_quality_macro_f1": 0.395346504278564,
+        "raw_macro_f1": 0.395346504278564,
         "mean_cost": 2.5,
         "mean_latency_ms": 13.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4396742293181786,
+        "service_quality_macro_f1": 0.4396742293181786,
+        "raw_macro_f1": 0.4396742293181786,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.47830174173335166,
+        "service_quality_macro_f1": 0.47830174173335166,
+        "raw_macro_f1": 0.47830174173335166,
         "mean_cost": 1.646,
         "mean_latency_ms": 6.392,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5198160097948722,
+        "service_quality_macro_f1": 0.5198160097948722,
+        "raw_macro_f1": 0.5198160097948722,
         "mean_cost": 1.498,
         "mean_latency_ms": 4.984,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "Static_TAV": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5341749210746607,
       "std": 0.0504154983632657
     },
+    "raw_macro_f1_mean": 0.5341749210746607,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.534679535009557
@@ -708,59 +885,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5678272982730759,
+        "service_quality_macro_f1": 0.5678272982730759,
+        "raw_macro_f1": 0.5678272982730759,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4844730645234392,
+        "service_quality_macro_f1": 0.4844730645234392,
+        "raw_macro_f1": 0.4844730645234392,
         "mean_cost": 3.5,
         "mean_latency_ms": 14.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4396742293181786,
+        "service_quality_macro_f1": 0.4396742293181786,
+        "raw_macro_f1": 0.4396742293181786,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5370460625334776,
+        "service_quality_macro_f1": 0.5370460625334776,
+        "raw_macro_f1": 0.5370460625334776,
         "mean_cost": 2.0084,
         "mean_latency_ms": 6.54,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5741031638579704,
+        "service_quality_macro_f1": 0.5741031638579704,
+        "raw_macro_f1": 0.5741031638579704,
         "mean_cost": 1.83,
         "mean_latency_ms": 5.316,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "FixedFallback": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5327715581694907,
       "std": 0.05147689456777191
     },
+    "raw_macro_f1_mean": 0.5327715581694907,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5332065800572257
@@ -771,59 +964,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.47217867989561574,
+        "service_quality_macro_f1": 0.47217867989561574,
+        "raw_macro_f1": 0.47217867989561574,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4396742293181786,
+        "service_quality_macro_f1": 0.4396742293181786,
+        "raw_macro_f1": 0.4396742293181786,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5453467399396749,
+        "service_quality_macro_f1": 0.5453467399396749,
+        "raw_macro_f1": 0.5453467399396749,
         "mean_cost": 0.9983999999999998,
         "mean_latency_ms": 1.288,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "MatchedBudgetRandom_1.45": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5337344106550089,
       "std": 0.052256370163178224
     },
+    "raw_macro_f1_mean": 0.5337344106550089,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5338647466145546
@@ -834,59 +1043,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5729270436209845,
+        "service_quality_macro_f1": 0.5729270436209845,
+        "raw_macro_f1": 0.5729270436209845,
         "mean_cost": 1.708,
         "mean_latency_ms": 4.632,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.49420109720448835,
+        "service_quality_macro_f1": 0.49420109720448835,
+        "raw_macro_f1": 0.49420109720448835,
         "mean_cost": 1.7127999999999999,
         "mean_latency_ms": 4.652,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5633945877319636,
+        "service_quality_macro_f1": 0.5633945877319636,
+        "raw_macro_f1": 0.5633945877319636,
         "mean_cost": 1.3744000000000003,
         "mean_latency_ms": 3.304,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5771770533699452,
+        "service_quality_macro_f1": 0.5771770533699452,
+        "raw_macro_f1": 0.5771770533699452,
         "mean_cost": 1.3072,
         "mean_latency_ms": 2.28,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.42834370613716893,
+        "service_quality_macro_f1": 0.42834370613716893,
+        "raw_macro_f1": 0.42834370613716893,
         "mean_cost": 1.3692,
         "mean_latency_ms": 3.272,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5402939570155809,
+        "service_quality_macro_f1": 0.5402939570155809,
+        "raw_macro_f1": 0.5402939570155809,
         "mean_cost": 1.4524000000000001,
         "mean_latency_ms": 3.624,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5598034295049326,
+        "service_quality_macro_f1": 0.5598034295049326,
+        "raw_macro_f1": 0.5598034295049326,
         "mean_cost": 1.382,
         "mean_latency_ms": 2.9120000000000004,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "DerivedThreshold_0.05": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5394007176979411,
       "std": 0.055273236957171526
     },
+    "raw_macro_f1_mean": 0.5394007176979411,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.539684968061651
@@ -897,59 +1122,75 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5898137919406091,
+        "service_quality_macro_f1": 0.5898137919406091,
+        "raw_macro_f1": 0.5898137919406091,
         "mean_cost": 1.7733333333333332,
         "mean_latency_ms": 4.4013333333333335,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4831650873556474,
+        "service_quality_macro_f1": 0.4831650873556474,
+        "raw_macro_f1": 0.4831650873556474,
         "mean_cost": 1.5401333333333334,
         "mean_latency_ms": 3.3160000000000003,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.567794481481791,
+        "service_quality_macro_f1": 0.567794481481791,
+        "raw_macro_f1": 0.567794481481791,
         "mean_cost": 1.2721333333333333,
         "mean_latency_ms": 2.674666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5773722430162297,
+        "service_quality_macro_f1": 0.5773722430162297,
+        "raw_macro_f1": 0.5773722430162297,
         "mean_cost": 1.6832,
         "mean_latency_ms": 3.8466666666666662,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.43522004936237924,
+        "service_quality_macro_f1": 0.43522004936237924,
+        "raw_macro_f1": 0.43522004936237924,
         "mean_cost": 1.1508,
         "mean_latency_ms": 1.928,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.5523668309579751,
+        "service_quality_macro_f1": 0.5523668309579751,
+        "raw_macro_f1": 0.5523668309579751,
         "mean_cost": 1.548,
         "mean_latency_ms": 3.8053333333333335,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5700725397709557,
+        "service_quality_macro_f1": 0.5700725397709557,
+        "raw_macro_f1": 0.5700725397709557,
         "mean_cost": 1.4786666666666666,
         "mean_latency_ms": 3.042666666666667,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   },
   "ConditionalUtility_0.05": {
     "primary_estimand": {
-      "metric": "unweighted_mean_per_workload_seed_macro_f1",
+      "metric": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
       "mean": 0.5310402746078424,
       "std": 0.055177685548493796
     },
+    "raw_macro_f1_mean": 0.5310402746078424,
     "secondary_estimand": {
       "metric": "pooled_confusion_macro_f1",
       "score": 0.5313867952063346
@@ -960,50 +1201,65 @@
     "on_time_rate": 1.0,
     "budget_violation_rate": 0.0,
     "acceptance_rate": 0.9977142857142857,
+    "useful_on_time_rate": 0.9977142857142857,
     "num_runs": 21,
     "total_queries_evaluated": 5250,
     "per_workload_breakdown": {
       "CLEAN_MULTIMODAL": {
-        "macro_f1": 0.5682381767127754,
+        "service_quality_macro_f1": 0.5682381767127754,
+        "raw_macro_f1": 0.5682381767127754,
         "mean_cost": 1.5910666666666666,
         "mean_latency_ms": 4.637333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "TEXT_EMBEDDING_NOISE": {
-        "macro_f1": 0.4774880086494106,
+        "service_quality_macro_f1": 0.4774880086494106,
+        "raw_macro_f1": 0.4774880086494106,
         "mean_cost": 1.4177333333333333,
         "mean_latency_ms": 3.5706666666666664,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "AUDIO_FEATURE_MASKING": {
-        "macro_f1": 0.5682381767127754,
+        "service_quality_macro_f1": 0.5682381767127754,
+        "raw_macro_f1": 0.5682381767127754,
         "mean_cost": 1.5910666666666666,
         "mean_latency_ms": 4.637333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "VISUAL_ZERO_MASK": {
-        "macro_f1": 0.5680503145082413,
+        "service_quality_macro_f1": 0.5680503145082413,
+        "raw_macro_f1": 0.5680503145082413,
         "mean_cost": 1.0,
         "mean_latency_ms": 1.0,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "COMPOUND_FAULT": {
-        "macro_f1": 0.4253604347807353,
+        "service_quality_macro_f1": 0.4253604347807353,
+        "raw_macro_f1": 0.4253604347807353,
         "mean_cost": 1.4056,
         "mean_latency_ms": 3.496,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       },
       "INTERMITTENT_MISSINGNESS": {
-        "macro_f1": 0.546873367787626,
+        "service_quality_macro_f1": 0.546873367787626,
+        "raw_macro_f1": 0.546873367787626,
         "mean_cost": 1.3034666666666668,
         "mean_latency_ms": 3.1653333333333333,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 0.984
       },
       "HETEROGENEOUS_DEADLINE_STRESS": {
-        "macro_f1": 0.5630334431033329,
+        "service_quality_macro_f1": 0.5630334431033329,
+        "raw_macro_f1": 0.5630334431033329,
         "mean_cost": 1.2010666666666667,
         "mean_latency_ms": 2.2373333333333334,
-        "on_time_rate": 1.0
+        "on_time_rate": 1.0,
+        "useful_on_time_rate": 1.0
       }
     }
   }

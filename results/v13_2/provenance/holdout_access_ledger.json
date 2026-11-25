@@ -1,0 +1,12 @@
+{
+  "schema_version": "13.2",
+  "phase": "PHASE_I",
+  "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+  "fresh_holdout_features_extracted": false,
+  "fresh_holdout_inference_executed": false,
+  "fresh_holdout_predictions_written": false,
+  "metadata_only_eligibility_audit_executed": true,
+  "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e",
+  "phase_ii_authorization": "PENDING_AUTHOR_APPROVAL",
+  "audit_scope_disclosure": "Repository and local filesystem audit evidence recorded at script execution time; not a cryptographic proof against unlogged external execution."
+}

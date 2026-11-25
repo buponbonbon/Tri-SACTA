@@ -1,0 +1,152 @@
+{
+  "count": 21,
+  "checkpoints": {
+    "mlp_T_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_T_seed42.pt",
+      "subset": "T",
+      "seed": 42,
+      "size_bytes": 207612,
+      "sha256": "622432d1382e400dec780b2f7ead8efca37b22573345d7b4c2728c3f82d0f0ab"
+    },
+    "mlp_T_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_T_seed100.pt",
+      "subset": "T",
+      "seed": 100,
+      "size_bytes": 207624,
+      "sha256": "2611088ce717bff46c9618d956e0cc20b04d1ef40e54c886fffaa35deae90516"
+    },
+    "mlp_T_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_T_seed2026.pt",
+      "subset": "T",
+      "seed": 2026,
+      "size_bytes": 207636,
+      "sha256": "c61a343de6c61e5fe3289fc3123c9ee515a30feb777f42fdaf1c92c237605c7f"
+    },
+    "mlp_A_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_A_seed42.pt",
+      "subset": "A",
+      "seed": 42,
+      "size_bytes": 14076,
+      "sha256": "42c2bef025127ead23670bcef7efcce80546a27b27b3f8acec8bc5c41e46b042"
+    },
+    "mlp_A_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_A_seed100.pt",
+      "subset": "A",
+      "seed": 100,
+      "size_bytes": 14088,
+      "sha256": "d1643b9ae97e5d73beabfa417be1d2476559b4b58b3aa3bb92d7361d0c4f12d3"
+    },
+    "mlp_A_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_A_seed2026.pt",
+      "subset": "A",
+      "seed": 2026,
+      "size_bytes": 14100,
+      "sha256": "395738ab4d9be0692aeae899c54f4a509f493c9f73967810d35eca0e4145848b"
+    },
+    "mlp_V_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_V_seed42.pt",
+      "subset": "V",
+      "seed": 42,
+      "size_bytes": 6204,
+      "sha256": "4226188da88202b39ec63892a518e1661ff683b37652fc873df9de5fd69aa0b2"
+    },
+    "mlp_V_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_V_seed100.pt",
+      "subset": "V",
+      "seed": 100,
+      "size_bytes": 6216,
+      "sha256": "30bbe89206fe0fd0c6e11aeae9b79a609ba5860185073a1120439265be5d2f84"
+    },
+    "mlp_V_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_V_seed2026.pt",
+      "subset": "V",
+      "seed": 2026,
+      "size_bytes": 6228,
+      "sha256": "5487598555bf56fcb326c617f7445da4b1dff400480f816c1495746c39a72377"
+    },
+    "mlp_TA_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TA_seed42.pt",
+      "subset": "TA",
+      "seed": 42,
+      "size_bytes": 227080,
+      "sha256": "0d2c467059ecfa2329bd9f6e17bde53237c86b8e4be48d5d64e1af4f8b78f5db"
+    },
+    "mlp_TA_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TA_seed100.pt",
+      "subset": "TA",
+      "seed": 100,
+      "size_bytes": 227092,
+      "sha256": "5d6bbc37831bac0e7846683e8859cd08677c8e40987adab9546dec2d1cb3480e"
+    },
+    "mlp_TA_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TA_seed2026.pt",
+      "subset": "TA",
+      "seed": 2026,
+      "size_bytes": 227104,
+      "sha256": "2a3963a73f55b467b799d9f3ee1b8009e96dcb66d952ba776fa6a458ed2e7d7a"
+    },
+    "mlp_TV_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TV_seed42.pt",
+      "subset": "TV",
+      "seed": 42,
+      "size_bytes": 216840,
+      "sha256": "7070dd37ffba2d7d388283756cffe1304ae6fa595841b0911d7a95a1b20824d1"
+    },
+    "mlp_TV_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TV_seed100.pt",
+      "subset": "TV",
+      "seed": 100,
+      "size_bytes": 216852,
+      "sha256": "f7e89199bf66e9759fdf656efc7f36a0020dcf3513f0cbd2591be44605341014"
+    },
+    "mlp_TV_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TV_seed2026.pt",
+      "subset": "TV",
+      "seed": 2026,
+      "size_bytes": 216864,
+      "sha256": "da5c488cbd553cc46ff3ef9efb08922df36abb67084e234627ed0075b079162b"
+    },
+    "mlp_AV_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_AV_seed42.pt",
+      "subset": "AV",
+      "seed": 42,
+      "size_bytes": 18824,
+      "sha256": "b40f09a2bc3c4b5036cca65bc3d99a34f90411d5cb36485c136892599b8848b4"
+    },
+    "mlp_AV_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_AV_seed100.pt",
+      "subset": "AV",
+      "seed": 100,
+      "size_bytes": 18836,
+      "sha256": "190905bb44fe9ec2ac834973e0ae60f2c08d8afca97747d48cc43c39ba74e286"
+    },
+    "mlp_AV_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_AV_seed2026.pt",
+      "subset": "AV",
+      "seed": 2026,
+      "size_bytes": 18848,
+      "sha256": "785ef9ada05dd3c8f62ebcb2c5fae10ffa542842f6a9ac5f427f53b97af21f26"
+    },
+    "mlp_TAV_seed42.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TAV_seed42.pt",
+      "subset": "TAV",
+      "seed": 42,
+      "size_bytes": 236308,
+      "sha256": "f5d7b1a3cb27483e701b6fc9fcca9fb70e329d5ac2913ca1d22bf9937411ae96"
+    },
+    "mlp_TAV_seed100.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TAV_seed100.pt",
+      "subset": "TAV",
+      "seed": 100,
+      "size_bytes": 236320,
+      "sha256": "e059cbc80954334ca2e91839d4207f8fb9435b1c1a861ed25248dea4d5c66d3f"
+    },
+    "mlp_TAV_seed2026.pt": {
+      "path": "results/v13_utility/training/checkpoints/mlp_TAV_seed2026.pt",
+      "subset": "TAV",
+      "seed": 2026,
+      "size_bytes": 236332,
+      "sha256": "7318e8fca4a00fde10c5be868bc0dd54767d289e9a2a2e7000fc40ea30bcca6d"
+    }
+  }
+}

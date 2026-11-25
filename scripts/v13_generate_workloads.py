@@ -29,7 +29,15 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 
-def generate_workloads_for_split(split_name: str = "val"):
+def generate_workloads_for_split(split_name: str = "val", allow_historical_test: bool = False):
+    if split_name in ("holdout", "eligible_holdout", "confirmatory"):
+        raise PermissionError(
+            "PHASE I GUARDRAIL (H04): Legacy workload generator cannot access fresh holdout without Phase II gated runner."
+        )
+    if split_name == "test" and not allow_historical_test:
+        raise PermissionError(
+            "PHASE I GUARDRAIL (H04): Default workload generation for 'test' is disabled. Use 'val' for development."
+        )
     logger.info(f"Generating deterministic V13 benchmark workloads for split: '{split_name}'...")
     data_dir = os.path.join(repo_root, "data", "cmu_mosei", "features_cache", split_name)
     out_dir = os.path.join(repo_root, "results", "v13_utility", "workloads", split_name)
@@ -173,6 +181,6 @@ def generate_workloads_for_split(split_name: str = "val"):
 
 
 if __name__ == "__main__":
-    splits = sys.argv[1:] if len(sys.argv) > 1 else ["val", "test"]
+    splits = sys.argv[1:] if len(sys.argv) > 1 else ["val"]
     for s in splits:
         generate_workloads_for_split(s)

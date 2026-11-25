@@ -158,6 +158,56 @@ class TestV132EvaluatorRegression(unittest.TestCase):
 
         self.assertAlmostEqual(sk_f1, custom_f1, places=7)
 
+    def test_cluster_bootstrap_cross_check_against_bruteforce_sklearn(self):
+        """Paired linear-sufficiency cluster bootstrap matches brute-force sklearn resampling on a small fixture."""
+        import pandas as pd
+        from scripts.v13_2_cluster_statistics import paired_cluster_bootstrap_on_df
+
+        # Hand-constructed small fixture: 3 video clusters, 2 workloads, 1 seed, 2 policies
+        rows = []
+        data = [
+            ("v1", 0, 0, 0, 100.0, 200.0),
+            ("v1", 1, 1, 0, 100.0, 200.0),
+            ("v2", 2, 2, 2, 100.0, 200.0),
+            ("v2", 0, -1, 0, 0.0, 200.0),
+            ("v3", 1, 1, 1, 100.0, 200.0),
+            ("v3", 2, 2, 1, 100.0, 200.0),
+        ]
+        for w in ("W1", "W2"):
+            for i, (vid, yt, pc, pb, bc, bb) in enumerate(data):
+                rows.append({"video_id": vid, "workload": w, "seed": 42, "policy": "Cand", "true_label": yt, "sq": pc, "bytes": bc})
+                rows.append({"video_id": vid, "workload": w, "seed": 42, "policy": "Base", "true_label": yt, "sq": pb, "bytes": bb})
+        df = pd.DataFrame(rows)
+
+        res = paired_cluster_bootstrap_on_df(df, "Cand", ["Base"], "sq", "bytes", B=200, seed=1320)
+
+        # Brute-force reference using exact same Multinomial draws + sklearn f1_score
+        clusters = sorted(df["video_id"].unique().tolist())
+        rng = np.random.default_rng(1320)
+        w_res = rng.multinomial(len(clusters), [1.0 / len(clusters)] * len(clusters), size=200)
+        bf_deltas = []
+        for b in range(200):
+            counts = w_res[b]
+            sub_rows_c = []
+            sub_rows_b = []
+            for k_idx, cnt in enumerate(counts):
+                if cnt == 0:
+                    continue
+                vid = clusters[k_idx]
+                for _ in range(int(cnt)):
+                    sub_rows_c.append(df[(df["video_id"] == vid) & (df["policy"] == "Cand")])
+                    sub_rows_b.append(df[(df["video_id"] == vid) & (df["policy"] == "Base")])
+            dfc = pd.concat(sub_rows_c)
+            dfb = pd.concat(sub_rows_b)
+            f1_c = np.mean([f1_score(g["true_label"], g["sq"], labels=[0, 1, 2], average="macro", zero_division=0.0) for _, g in dfc.groupby("workload")])
+            f1_b = np.mean([f1_score(g["true_label"], g["sq"], labels=[0, 1, 2], average="macro", zero_division=0.0) for _, g in dfb.groupby("workload")])
+            bf_deltas.append(float(f1_c - f1_b))
+
+        bf_ci = [float(np.percentile(bf_deltas, 2.5)), float(np.percentile(bf_deltas, 97.5))]
+        lin_ci = res["comparisons"]["Base"]["delta_macro_f1_95_ci"]
+        self.assertAlmostEqual(bf_ci[0], lin_ci[0], places=6)
+        self.assertAlmostEqual(bf_ci[1], lin_ci[1], places=6)
+
 
 if __name__ == "__main__":
     unittest.main()

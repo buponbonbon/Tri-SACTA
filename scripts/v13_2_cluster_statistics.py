@@ -1,13 +1,18 @@
 """
-scripts/v13_2_cluster_statistics.py: Paired Video-Grouped Block Bootstrap for Tri-SACTA V13.2 (Phase I-C).
+scripts/v13_2_cluster_statistics.py: Paired Video-Grouped Block Bootstrap for Tri-SACTA V13.2.
 
-Mathematical Methodology:
-1. Resamples whole unique video clusters with replacement (B = 2,000 resamples).
-2. Uses exact linear sufficiency: cluster-level confusion vectors (TP, FP, FN) and costs
-   are linearly additive under multinomial cluster count vectors w ~ Multinomial(K, 1/K).
-3. Recomputes exact primary estimand (unweighted mean per workload/seed Macro-F1) in every resample.
-4. Reports original observed point estimate, 95% paired bootstrap CI, and cost saving CI.
-5. Exports results to results/v13_2/statistics/paired_bootstrap_summary.json.
+Computes B=2,000 paired video-grouped block bootstrap resamples (deterministic seed 1320)
+for TWO strictly separated resource endpoints across the exact same 7-workload x 3-seed
+validation population (250 utterances, 29 unique video clusters):
+1. PRIMARY ENDPOINT: Measured Application-Protocol Bytes & Service-Quality Macro-F1
+   computed directly from results/v13_2/systems/distributed_benchmark.csv.
+   Jointly checks BOTH primary comparators (AlwaysOn_Direct_Serial, AlwaysOn_Direct_Parallel,
+   Static_TA_Direct) plus secondary controls.
+2. SECONDARY SIMULATION ENDPOINT: Nominal Acquisition Cost & Service-Quality Macro-F1
+   computed directly from results/v13_2/development/query_traces.json.
+
+Handles denominator-zero cleanly (reports absolute difference when comparator transmits 0 bytes)
+and stores ordered video cluster list + RNG seed for exact deterministic reconstruction.
 """
 
 from __future__ import annotations
@@ -16,7 +21,8 @@ import os
 import sys
 import json
 import logging
-from typing import Dict, Any, List, Tuple
+from datetime import datetime, timezone
+from typing import Dict, Any, List, Tuple, Optional
 import numpy as np
 import pandas as pd
 
@@ -40,63 +46,48 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def run_paired_video_bootstrap(B: int = 2000, seed: int = 1320):
-    logger.info(f"=== Running Paired Video-Grouped Block Bootstrap (B={B:,}, Seed={seed}) ===")
-    traces_path = os.path.join(REPO_ROOT, "results", "v13_2", "development", "query_traces.json")
-    if not os.path.exists(traces_path):
-        raise FileNotFoundError(f"Missing traces file: {traces_path}")
-
-    with open(traces_path, "r", encoding="utf-8") as f:
-        traces = json.load(f)
-
-    df = pd.DataFrame(traces)
-    unique_videos = np.array(sorted(df["video_id"].unique()))
+def paired_cluster_bootstrap_on_df(
+    df: pd.DataFrame,
+    candidate: str,
+    comparators: List[str],
+    pred_col: str,
+    resource_col: str,
+    B: int = 2000,
+    seed: int = 1320,
+) -> Dict[str, Any]:
+    """
+    Executes exact paired video-grouped block bootstrap using linear confusion sufficiency.
+    Preserves all samples, seeds, workloads, and policies per resampled video cluster.
+    """
+    unique_videos = sorted(df["video_id"].unique().tolist())
     num_clusters = len(unique_videos)
-    logger.info(f"Loaded {len(df):,} query traces across {num_clusters} unique video clusters.")
-
-    # Candidate policy vs comparators
-    candidate = "SequentialConfidence_0.55_0.45"
-    comparators = [
-        "AlwaysOnFusion",
-        "BudgetAdmittedMaxSubset",
-        "Static_TA",
-        "ConfidenceRouting_0.55",
-        "MatchedBudgetRandom_1.45",
-        "ConditionalUtility_0.05",
-        "Static_T",
-    ]
-    all_policies_to_eval = [candidate] + comparators
-
-    unique_ws = sorted(list(set(zip(df["workload"], df["seed"]))))
+    unique_ws = sorted(list(set(zip(df["workload"].tolist(), df["seed"].tolist()))))
     num_ws = len(unique_ws)
+
     ws_to_idx = {ws: i for i, ws in enumerate(unique_ws)}
     vid_to_idx = {v: i for i, v in enumerate(unique_videos)}
+    all_policies = [candidate] + comparators
 
-    # Pre-aggregate cluster statistics for each policy and (workload, seed)
-    # Shapes: [policy, ws, cluster, 3] for TP, FP, FN; [policy, ws, cluster] for cost, [cluster] for sample count
-    tp_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies_to_eval}
-    fp_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies_to_eval}
-    fn_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies_to_eval}
-    cost_table = {p: np.zeros((num_ws, num_clusters), dtype=np.float64) for p in all_policies_to_eval}
+    tp_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies}
+    fp_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies}
+    fn_table = {p: np.zeros((num_ws, num_clusters, 3), dtype=np.float64) for p in all_policies}
+    res_table = {p: np.zeros((num_ws, num_clusters), dtype=np.float64) for p in all_policies}
     sample_count = np.zeros(num_clusters, dtype=np.float64)
 
-    logger.info("Pre-aggregating linear cluster statistics for ultra-fast exact bootstrap...")
-    for t in traces:
-        pol = t["policy"]
-        if pol not in tp_table:
-            continue
-        v_idx = vid_to_idx[t["video_id"]]
-        ws_idx = ws_to_idx[(t["workload"], t["seed"])]
-        yt = t["true_label"]
-        yp = t["prediction"]
-        c = t["spent_cost"]
+    sub_df = df[df["policy"].isin(all_policies)]
+    for row in sub_df.itertuples(index=False):
+        pol = getattr(row, "policy")
+        v_idx = vid_to_idx[getattr(row, "video_id")]
+        ws_idx = ws_to_idx[(getattr(row, "workload"), getattr(row, "seed"))]
+        yt = int(getattr(row, "true_label"))
+        yp = int(getattr(row, pred_col))
+        r_val = float(getattr(row, resource_col))
 
-        cost_table[pol][ws_idx, v_idx] += c
-
+        res_table[pol][ws_idx, v_idx] += r_val
         if pol == candidate and ws_idx == 0:
-            sample_count[v_idx] += 1
+            sample_count[v_idx] += 1.0
 
-        for cls_i in [0, 1, 2]:
+        for cls_i in (0, 1, 2):
             if yt == cls_i and yp == cls_i:
                 tp_table[pol][ws_idx, v_idx, cls_i] += 1.0
             elif yt != cls_i and yp == cls_i:
@@ -104,115 +95,205 @@ def run_paired_video_bootstrap(B: int = 2000, seed: int = 1320):
             elif yt == cls_i and yp != cls_i:
                 fn_table[pol][ws_idx, v_idx, cls_i] += 1.0
 
-    def compute_metrics_from_weights(w: np.ndarray, pol: str) -> Tuple[float, float]:
-        # w shape: [num_clusters]
-        # tp shape: [num_ws, 3]
+    def compute_from_weights(w: np.ndarray, pol: str) -> Tuple[float, float]:
         tp = np.einsum("k,wkc->wc", w, tp_table[pol])
         fp = np.einsum("k,wkc->wc", w, fp_table[pol])
         fn = np.einsum("k,wkc->wc", w, fn_table[pol])
-
         denom = 2.0 * tp + fp + fn
-        f1_wc = np.where(denom > 0, 2.0 * tp / denom, 0.0)
-        macro_f1_w = np.mean(f1_wc, axis=1)  # mean over 3 classes
-        primary_f1 = float(np.mean(macro_f1_w))  # mean over (workload, seed)
+        f1_wc = np.divide(2.0 * tp, denom, out=np.zeros_like(tp), where=denom > 0)
+        primary_f1 = float(np.mean(np.mean(f1_wc, axis=1)))
+        total_res = float(np.sum(np.einsum("k,wk->w", w, res_table[pol])))
+        total_q = float(np.sum(w * sample_count) * num_ws)
+        mean_res = total_res / total_q if total_q > 0 else 0.0
+        return primary_f1, mean_res
 
-        total_cost = np.sum(np.einsum("k,wk->w", w, cost_table[pol]))
-        total_queries = np.sum(w * sample_count) * num_ws
-        mean_cost = float(total_cost / total_queries) if total_queries > 0 else 0.0
-        return primary_f1, mean_cost
-
-    # 1. Observed Point Estimates (w = ones)
     w_obs = np.ones(num_clusters, dtype=np.float64)
-    cand_obs_f1, cand_obs_cost = compute_metrics_from_weights(w_obs, candidate)
+    cand_obs_f1, cand_obs_res = compute_from_weights(w_obs, candidate)
 
-    observed_comparisons = {}
-    for comp in comparators:
-        comp_f1, comp_cost = compute_metrics_from_weights(w_obs, comp)
-        delta_f1 = cand_obs_f1 - comp_f1
-        cost_saving = ((comp_cost - cand_obs_cost) / comp_cost * 100.0) if comp_cost > 0 else 0.0
-        observed_comparisons[comp] = {
-            "comp_macro_f1": comp_f1,
-            "comp_cost": comp_cost,
-            "observed_delta_f1": delta_f1,
-            "observed_cost_saving_pct": cost_saving,
-        }
-
-    # 2. Resample B times via Multinomial cluster weights
     rng = np.random.default_rng(seed)
-    # Multinomial draws of size num_clusters across num_clusters bins
     w_resamples = rng.multinomial(num_clusters, [1.0 / num_clusters] * num_clusters, size=B)
 
-    bootstrap_deltas: Dict[str, List[float]] = {c: [] for c in comparators}
-    bootstrap_savings: Dict[str, List[float]] = {c: [] for c in comparators}
+    boot_deltas = {c: [] for c in comparators}
+    boot_savings_pct = {c: [] for c in comparators}
+    boot_abs_diff = {c: [] for c in comparators}
+    obs_comp = {}
 
-    logger.info(f"Executing {B:,} exact paired cluster bootstrap resamples...")
+    for comp in comparators:
+        comp_f1, comp_res = compute_from_weights(w_obs, comp)
+        obs_comp[comp] = {
+            "comp_f1": comp_f1,
+            "comp_res": comp_res,
+            "delta_f1": cand_obs_f1 - comp_f1,
+            "abs_diff": cand_obs_res - comp_res,
+            "saving_pct": ((comp_res - cand_obs_res) / comp_res * 100.0) if comp_res > 0.0 else None,
+        }
+
     for b in range(B):
         w_b = w_resamples[b].astype(np.float64)
-        b_cand_f1, b_cand_c = compute_metrics_from_weights(w_b, candidate)
-
+        b_cf1, b_cres = compute_from_weights(w_b, candidate)
         for comp in comparators:
-            b_comp_f1, b_comp_c = compute_metrics_from_weights(w_b, comp)
-            d_f1 = b_cand_f1 - b_comp_f1
-            c_save = ((b_comp_c - b_cand_c) / b_comp_c * 100.0) if b_comp_c > 0 else 0.0
-            bootstrap_deltas[comp].append(d_f1)
-            bootstrap_savings[comp].append(c_save)
+            b_kf1, b_kres = compute_from_weights(w_b, comp)
+            boot_deltas[comp].append(b_cf1 - b_kf1)
+            boot_abs_diff[comp].append(b_cres - b_kres)
+            if b_kres > 0.0:
+                boot_savings_pct[comp].append((b_kres - b_cres) / b_kres * 100.0)
+            else:
+                boot_savings_pct[comp].append(np.nan)
 
-    # 3. Percentile 95% Confidence Intervals
-    comparison_summary = {}
+    comparisons = {}
     for comp in comparators:
-        d_arr = np.array(bootstrap_deltas[comp])
-        s_arr = np.array(bootstrap_savings[comp])
+        d_arr = np.array(boot_deltas[comp], dtype=np.float64)
+        abs_arr = np.array(boot_abs_diff[comp], dtype=np.float64)
+        s_arr = np.array(boot_savings_pct[comp], dtype=np.float64)
+        obs = obs_comp[comp]
 
-        ci_f1_lower = float(np.percentile(d_arr, 2.5))
-        ci_f1_upper = float(np.percentile(d_arr, 97.5))
-        ci_cost_lower = float(np.percentile(s_arr, 2.5))
-        ci_cost_upper = float(np.percentile(s_arr, 97.5))
+        ci_f1 = [float(np.percentile(d_arr, 2.5)), float(np.percentile(d_arr, 97.5))]
+        ci_abs = [float(np.percentile(abs_arr, 2.5)), float(np.percentile(abs_arr, 97.5))]
 
-        obs = observed_comparisons[comp]
-        p_sup = float(np.mean(d_arr <= 0.0))
+        if obs["saving_pct"] is not None and np.all(np.isfinite(s_arr)):
+            ci_save = [float(np.percentile(s_arr, 2.5)), float(np.percentile(s_arr, 97.5))]
+            saving_pass = bool(ci_save[0] >= 15.0)
+            saving_defined = True
+        else:
+            ci_save = None
+            saving_pass = False
+            saving_defined = False
 
-        comparison_summary[comp] = {
+        comparisons[comp] = {
             "comparator": comp,
             "candidate_observed_f1": cand_obs_f1,
-            "comparator_observed_f1": obs["comp_macro_f1"],
-            "observed_delta_macro_f1": obs["observed_delta_f1"],
-            "delta_macro_f1_95_ci": [ci_f1_lower, ci_f1_upper],
-            "candidate_observed_cost": cand_obs_cost,
-            "comparator_observed_cost": obs["comp_cost"],
-            "observed_cost_saving_pct": obs["observed_cost_saving_pct"],
-            "cost_saving_pct_95_ci": [ci_cost_lower, ci_cost_upper],
-            "bootstrap_fraction_delta_le_zero": p_sup,
-            "non_inferiority_margin_0_01_pass": bool(ci_f1_lower >= -0.010),
-            "resource_reduction_15pct_pass": bool(ci_cost_lower >= 15.0),
+            "comparator_observed_f1": obs["comp_f1"],
+            "observed_delta_macro_f1": obs["delta_f1"],
+            "delta_macro_f1_95_ci": ci_f1,
+            "candidate_observed_resource": cand_obs_res,
+            "comparator_observed_resource": obs["comp_res"],
+            "observed_resource_abs_diff": obs["abs_diff"],
+            "resource_abs_diff_95_ci": ci_abs,
+            "saving_pct_defined": saving_defined,
+            "observed_resource_saving_pct": obs["saving_pct"],
+            "resource_saving_pct_95_ci": ci_save,
+            "bootstrap_fraction_delta_le_zero": float(np.mean(d_arr <= 0.0)),
+            "non_inferiority_margin_0_01_pass": bool(ci_f1[0] >= -0.010),
+            "resource_reduction_15pct_pass": saving_pass,
         }
+
+    return {
+        "resource_unit": resource_col,
+        "prediction_column": pred_col,
+        "num_bootstrap_resamples": B,
+        "rng_seed": seed,
+        "rng_algorithm": "numpy.random.default_rng(seed).multinomial(K, [1/K]*K, size=B)",
+        "ci_method": "two_sided_percentile_2.5_97.5",
+        "num_video_clusters": num_clusters,
+        "ordered_video_clusters": unique_videos,
+        "num_ws_cells": num_ws,
+        "candidate_policy": candidate,
+        "candidate_observed": {"macro_f1": cand_obs_f1, "mean_resource": cand_obs_res},
+        "comparisons": comparisons,
+    }
+
+
+def run_paired_video_bootstrap(B: int = 2000, seed: int = 1320):
+    utc_now = datetime.now(timezone.utc).isoformat()
+    logger.info(f"=== Running Dual-Endpoint Paired Video-Grouped Block Bootstrap (B={B:,}, Seed={seed}) ===")
+
+    # 1. PRIMARY MEASURED RESOURCE ENDPOINT (Application-Protocol Bytes + SQ Macro-F1 from TCP CSV)
+    sys_csv = os.path.join(REPO_ROOT, "results", "v13_2", "systems", "distributed_benchmark.csv")
+    if not os.path.exists(sys_csv):
+        raise FileNotFoundError(f"Missing distributed benchmark CSV: {sys_csv}")
+    df_sys = pd.read_csv(sys_csv)
+    tcp_comparators = [
+        "AlwaysOn_Direct_Serial",
+        "AlwaysOn_Direct_Parallel",
+        "Static_TA_Direct",
+        "BudgetAdmittedMaxSubset",
+        "OneShot_ConfidenceRouting_0.55",
+        "MatchedBudgetRandom_1.45",
+        "Unimodal_Text",
+    ]
+    primary_measured = paired_cluster_bootstrap_on_df(
+        df_sys,
+        candidate="SequentialConfidence_0.55_0.45",
+        comparators=tcp_comparators,
+        pred_col="service_quality_prediction",
+        resource_col="application_protocol_bytes",
+        B=B,
+        seed=seed,
+    )
+    primary_measured["primary_comparators"] = ["AlwaysOn_Direct_Serial", "AlwaysOn_Direct_Parallel", "Static_TA_Direct"]
+
+    # Joint intersection rule on PRIMARY endpoint
+    primary_joint_pass = True
+    for p_comp in primary_measured["primary_comparators"]:
+        c_res = primary_measured["comparisons"][p_comp]
+        if not (c_res["non_inferiority_margin_0_01_pass"] and c_res["resource_reduction_15pct_pass"]):
+            primary_joint_pass = False
+    primary_measured["joint_primary_criterion_pass"] = primary_joint_pass
+
+    logger.info("--- PRIMARY ENDPOINT (Measured Application-Protocol Bytes & Service-Quality Macro-F1) ---")
+    for comp, c_d in primary_measured["comparisons"].items():
+        save_str = f"{c_d['observed_resource_saving_pct']:+.1f}% {c_d['resource_saving_pct_95_ci']}" if c_d["saving_pct_defined"] else f"N/A (abs diff {c_d['observed_resource_abs_diff']:+.1f}B)"
         logger.info(
-            f"vs {comp:25s}: Delta F1 = {obs['observed_delta_f1']:+.4f} [{ci_f1_lower:+.4f}, {ci_f1_upper:+.4f}] | "
-            f"Cost Saved = {obs['observed_cost_saving_pct']:+.1f}% [{ci_cost_lower:+.1f}%, {ci_cost_upper:+.1f}%] | "
-            f"Non-Inf (-0.01): {'PASS' if ci_f1_lower >= -0.010 else 'FAIL'} | "
-            f"Savings (>=15%): {'PASS' if ci_cost_lower >= 15.0 else 'FAIL'}"
+            f"  vs {comp:30s}: Delta F1 = {c_d['observed_delta_macro_f1']:+.4f} {c_d['delta_macro_f1_95_ci']} | "
+            f"AppBytes Saved = {save_str} | NI={'PASS' if c_d['non_inferiority_margin_0_01_pass'] else 'FAIL'} | "
+            f"15%={'PASS' if c_d['resource_reduction_15pct_pass'] else 'FAIL'}"
+        )
+
+    # 2. SECONDARY SIMULATION ENDPOINT (Nominal Cost & SQ Macro-F1 from Dev Replay)
+    traces_path = os.path.join(REPO_ROOT, "results", "v13_2", "development", "query_traces.json")
+    if not os.path.exists(traces_path):
+        raise FileNotFoundError(f"Missing dev traces: {traces_path}")
+    with open(traces_path, "r", encoding="utf-8") as f:
+        df_dev = pd.DataFrame(json.load(f))
+
+    dev_comparators = [
+        "AlwaysOnFusion",
+        "Static_TA",
+        "BudgetAdmittedMaxSubset",
+        "ConfidenceRouting_0.55",
+        "MatchedBudgetRandom_1.45",
+        "ConditionalUtility_0.05",
+        "Static_T",
+    ]
+    secondary_nominal = paired_cluster_bootstrap_on_df(
+        df_dev,
+        candidate="SequentialConfidence_0.55_0.45",
+        comparators=dev_comparators,
+        pred_col="service_quality_prediction",
+        resource_col="spent_cost",
+        B=B,
+        seed=seed,
+    )
+    secondary_nominal["primary_comparators"] = ["AlwaysOnFusion", "Static_TA"]
+    nominal_joint_pass = all(
+        secondary_nominal["comparisons"][pc]["non_inferiority_margin_0_01_pass"]
+        and secondary_nominal["comparisons"][pc]["resource_reduction_15pct_pass"]
+        for pc in secondary_nominal["primary_comparators"]
+    )
+    secondary_nominal["joint_primary_criterion_pass"] = nominal_joint_pass
+
+    logger.info("--- SECONDARY SIMULATION ENDPOINT (Nominal Acquisition Cost & SQ Macro-F1) ---")
+    for comp, c_d in secondary_nominal["comparisons"].items():
+        save_str = f"{c_d['observed_resource_saving_pct']:+.1f}% {c_d['resource_saving_pct_95_ci']}" if c_d["saving_pct_defined"] else "N/A"
+        logger.info(
+            f"  vs {comp:30s}: Delta F1 = {c_d['observed_delta_macro_f1']:+.4f} {c_d['delta_macro_f1_95_ci']} | "
+            f"NominalCost Saved = {save_str} | NI={'PASS' if c_d['non_inferiority_margin_0_01_pass'] else 'FAIL'} | "
+            f"15%={'PASS' if c_d['resource_reduction_15pct_pass'] else 'FAIL'}"
         )
 
     out_artifact = {
         "analysis_version": "13.2",
-        "methodology": "Paired Video-Grouped Block Bootstrap",
-        "num_bootstrap_resamples": B,
-        "rng_seed": seed,
-        "num_video_clusters": num_clusters,
-        "total_queries_analyzed": len(df),
-        "primary_estimand": "unweighted_mean_per_workload_seed_macro_f1",
-        "candidate_policy": candidate,
-        "candidate_observed_point_estimates": {
-            "macro_f1": cand_obs_f1,
-            "mean_cost": cand_obs_cost,
-        },
-        "comparisons": comparison_summary,
+        "timestamp_utc": utc_now,
+        "methodology": "Paired Video-Grouped Block Bootstrap (Linear Sufficiency)",
+        "primary_estimand": "unweighted_mean_per_workload_seed_service_quality_macro_f1",
+        "primary_measured_endpoint": primary_measured,
+        "secondary_nominal_endpoint": secondary_nominal,
     }
-
     out_path = os.path.join(STAT_DIR, "paired_bootstrap_summary.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(out_artifact, f, indent=2)
 
-    logger.info(f"Paired cluster bootstrap summary successfully saved to {out_path}")
+    logger.info(f"Saved dual-endpoint paired bootstrap summary to {out_path}")
     return out_artifact
 
 

@@ -1,0 +1,24 @@
+2026-11-25 12:11:31,920 [INFO] === Starting Tri-SACTA V13.2 Full Distributed TCP Socket Benchmark ===
+2026-11-25 12:11:32,038 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8765 (250 samples loaded from 'val').
+2026-11-25 12:11:32,046 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8766 (250 samples loaded from 'val').
+2026-11-25 12:11:32,353 [INFO] [1/4] Verifying Offline vs TCP Socket exact decision parity on CLEAN_MULTIMODAL...
+2026-11-25 12:11:34,490 [INFO]   Offline vs Socket parity PASSED 100% across all deterministic modes.
+2026-11-25 12:11:34,491 [INFO] [2/4] Running 7-Workload x 3-Seed Paired TCP Benchmark (42,000 real socket queries)...
+2026-11-25 12:12:02,828 [INFO]   Client total app bytes: 11,740,552 | Server measured app bytes: 11,741,673 | Diff: 1121
+2026-11-25 12:12:03,533 [INFO] [3/4] Running sensitivity benchmark (3 reps, non-persistent TCP, concurrency=4, cold/warm)...
+2026-11-25 12:12:23,319 [INFO] [4/4] Running controlled TCP fault-injection suite...
+2026-11-25 12:12:23,324 [INFO] [AUDIO Provider] Listening on 127.0.0.1:8775 (250 samples loaded from 'val').
+2026-11-25 12:12:23,326 [INFO] [VISUAL Provider] Listening on 127.0.0.1:8776 (250 samples loaded from 'val').
+2026-11-25 12:12:24,049 [INFO] [AUDIO Provider] Stopped. Served 11 queries (6,385 application bytes sent, 1,150 bytes recv).
+2026-11-25 12:12:24,052 [INFO] [VISUAL Provider] Stopped. Served 10 queries (2,660 application bytes sent, 524 bytes recv).
+2026-11-25 12:12:24,247 [INFO] === Distributed TCP Benchmark Complete ===
+2026-11-25 12:12:24,247 [INFO]   AlwaysOn_Direct_Serial           | SQ-F1=0.5287 | AppBytes/q=525.6B | Mean=0.87ms | p95=1.32ms | p99=1.59ms | UOT=99.77%
+2026-11-25 12:12:24,250 [INFO]   AlwaysOn_Direct_Parallel         | SQ-F1=0.5287 | AppBytes/q=525.5B | Mean=0.92ms | p95=1.46ms | p99=1.74ms | UOT=99.77%
+2026-11-25 12:12:24,250 [INFO]   Static_TA_Direct                 | SQ-F1=0.5363 | AppBytes/q=276.3B | Mean=0.51ms | p95=0.86ms | p99=1.12ms | UOT=99.77%
+2026-11-25 12:12:24,250 [INFO]   BudgetAdmittedMaxSubset          | SQ-F1=0.5294 | AppBytes/q=477.2B | Mean=0.86ms | p95=1.46ms | p99=1.83ms | UOT=99.77%
+2026-11-25 12:12:24,250 [INFO]   OneShot_ConfidenceRouting_0.55   | SQ-F1=0.5405 | AppBytes/q=155.2B | Mean=0.54ms | p95=1.62ms | p99=2.00ms | UOT=99.77%
+2026-11-25 12:12:24,251 [INFO]   SequentialConfidence_0.55_0.45   | SQ-F1=0.5415 | AppBytes/q=133.1B | Mean=0.51ms | p95=1.31ms | p99=1.80ms | UOT=99.77%
+2026-11-25 12:12:24,251 [INFO]   Unimodal_Text                    | SQ-F1=0.5328 | AppBytes/q=3.7B | Mean=0.22ms | p95=0.33ms | p99=0.68ms | UOT=99.77%
+2026-11-25 12:12:24,251 [INFO]   MatchedBudgetRandom_1.45         | SQ-F1=0.5373 | AppBytes/q=139.8B | Mean=0.45ms | p95=1.13ms | p99=1.64ms | UOT=99.77%
+2026-11-25 12:12:24,251 [INFO] [AUDIO Provider] Stopped. Served 23323 queries (9,248,845 application bytes sent, 1,015,826 bytes recv).
+2026-11-25 12:12:24,252 [INFO] [VISUAL Provider] Stopped. Served 19537 queries (4,719,233 application bytes sent, 870,444 bytes recv).

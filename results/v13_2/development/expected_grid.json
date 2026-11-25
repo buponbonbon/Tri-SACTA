@@ -1,0 +1,41 @@
+{
+  "schema_version": "13.2",
+  "timestamp_utc": "2026-11-25T05:07:44.177857+00:00",
+  "split": "val",
+  "num_samples_per_cell": 250,
+  "num_video_clusters": 29,
+  "seeds": [
+    42,
+    100,
+    2026
+  ],
+  "workloads": [
+    "CLEAN_MULTIMODAL",
+    "TEXT_EMBEDDING_NOISE",
+    "AUDIO_FEATURE_MASKING",
+    "VISUAL_ZERO_MASK",
+    "COMPOUND_FAULT",
+    "INTERMITTENT_MISSINGNESS",
+    "HETEROGENEOUS_DEADLINE_STRESS"
+  ],
+  "policies": [
+    "SequentialConfidence_0.55_0.45",
+    "SequentialConfidence_0.65_0.55",
+    "SequentialConfidence_VisualFirst_0.55_0.45",
+    "ConfidenceRouting_0.55",
+    "ConfidenceRouting_0.65",
+    "AlwaysOnFusion",
+    "BudgetAdmittedMaxSubset",
+    "Static_T",
+    "Static_TA",
+    "Static_TV",
+    "Static_AV",
+    "Static_TAV",
+    "FixedFallback",
+    "MatchedBudgetRandom_1.45",
+    "DerivedThreshold_0.05",
+    "ConditionalUtility_0.05"
+  ],
+  "expected_total_rows": 84000,
+  "deadline_stress_design_note": "HETEROGENEOUS_DEADLINE_STRESS cycles paired scenarios [(15.0ms, 1.0), (30.0ms, 2.2), (50.0ms, 3.5)] via i % 3; NOT a 3x3 Cartesian product. Since 15ms > nominal 14ms TAV latency, deadline-only stress does not exceed nominal simulation time on clean latencies."
+}

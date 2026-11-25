@@ -1,0 +1,36 @@
+{
+  "all_passed": true,
+  "cases": [
+    {
+      "case": "below_initial_cost_0.99",
+      "pass": true,
+      "prediction": -1,
+      "spent_cost": 0.0,
+      "status": "REJECTED_INFEASIBLE"
+    },
+    {
+      "case": "exact_budget_1.0",
+      "pass": true,
+      "final_subset": "T",
+      "spent_cost": 1.0
+    },
+    {
+      "case": "deadline_boundaries_0.99_5.9_14.0",
+      "pass": true,
+      "below_1ms_status": "REJECTED_INFEASIBLE",
+      "at_5.9ms_subset": "T",
+      "at_14.0ms_subset": "T"
+    },
+    {
+      "case": "complete_blackout",
+      "pass": true,
+      "prediction": -1,
+      "status": "REJECTED_BLACKOUT"
+    },
+    {
+      "case": "poisoned_masked_provider_no_leak",
+      "pass": true,
+      "final_subset": "T"
+    }
+  ]
+}

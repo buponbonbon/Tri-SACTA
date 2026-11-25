@@ -1,0 +1,40 @@
+{
+  "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+  "events": [
+    {
+      "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+      "file": "data/cmu_mosei/raw/mosei.pkl",
+      "access_type": "SHA256_AND_METADATA_AUDIT",
+      "feature_extraction": false,
+      "model_inference": false
+    },
+    {
+      "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+      "file": "data/cmu_mosei/raw/train.csv",
+      "access_type": "SHA256_AND_METADATA_AUDIT",
+      "feature_extraction": false,
+      "model_inference": false
+    },
+    {
+      "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+      "file": "data/cmu_mosei/raw/val.csv",
+      "access_type": "SHA256_AND_METADATA_AUDIT",
+      "feature_extraction": false,
+      "model_inference": false
+    },
+    {
+      "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+      "file": "data/cmu_mosei/raw/test.csv",
+      "access_type": "SHA256_AND_METADATA_AUDIT",
+      "feature_extraction": false,
+      "model_inference": false
+    },
+    {
+      "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+      "file": "data/cmu_mosei/data_manifest.json",
+      "access_type": "SHA256_AND_METADATA_AUDIT",
+      "feature_extraction": false,
+      "model_inference": false
+    }
+  ]
+}

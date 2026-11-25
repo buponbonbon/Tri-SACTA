@@ -48,8 +48,14 @@ class TestV132RuntimeSafety(unittest.TestCase):
         # Start local test servers on test ports
         cls.audio_port = 8875
         cls.visual_port = 8876
-        cls.audio_server = ModalitySocketServer("audio", host="127.0.0.1", port=cls.audio_port, split_name="val")
-        cls.visual_server = ModalitySocketServer("visual", host="127.0.0.1", port=cls.visual_port, split_name="val")
+        cls.audio_server = ModalitySocketServer(
+            "audio", host="127.0.0.1", port=cls.audio_port, split_name="val",
+            features_tensor=torch.ones(10, 74) * 0.2,
+        )
+        cls.visual_server = ModalitySocketServer(
+            "visual", host="127.0.0.1", port=cls.visual_port, split_name="val",
+            features_tensor=torch.ones(10, 35) * 0.2,
+        )
         cls.audio_server.start()
         cls.visual_server.start()
 
@@ -120,6 +126,94 @@ class TestV132RuntimeSafety(unittest.TestCase):
         self.assertEqual(res["final_subset"], "T")
         self.assertEqual(res["num_network_hops"], 0)
         self.assertEqual(res["application_protocol_bytes"], 0)
+
+    def test_t03_truncated_oversize_nan_faults_fail_safely(self):
+        """T03: Truncated payload, oversized header, and NaN feature fail safely without crashing."""
+        # Low-confidence text triggers escalation in sequential_confidence when logits force <0.55
+        coord_low = DistributedCoordinator(
+            {k: torch.nn.Linear(v["in_dim"], 3).eval() for k, v in SUBSET_METADATA.items()},
+            torch.device("cpu"),
+            audio_port=self.audio_port,
+            visual_port=self.visual_port,
+        )
+        # Zero weights give 0.333 max prob -> forces Stage 2 escalation
+        for m in coord_low.predictor_bank.values():
+            torch.nn.init.zeros_(m.weight)
+            torch.nn.init.zeros_(m.bias)
+        text_feat = torch.ones(1, 768) * 0.1
+
+        try:
+            # 1. Disconnect mid-payload
+            self.audio_server.set_fault(disconnect_mid_payload=True)
+            r1 = coord_low.process_query(0, text_feat, policy_mode="sequential_confidence", deadline_ms=200.0)
+            self.assertEqual(r1["final_subset"], "T")
+            self.assertEqual(r1["failed_attempts"], 1)
+
+            # 2. Oversize malformed header
+            self.audio_server.clear_faults()
+            self.audio_server.set_fault(send_oversize_header=True)
+            r2 = coord_low.process_query(0, text_feat, policy_mode="sequential_confidence", deadline_ms=200.0)
+            self.assertEqual(r2["final_subset"], "T")
+            self.assertEqual(r2["failed_attempts"], 1)
+
+            # 3. Non-finite NaN feature
+            self.audio_server.clear_faults()
+            self.audio_server.set_fault(inject_nan_sample=0)
+            r3 = coord_low.process_query(0, text_feat, policy_mode="sequential_confidence", deadline_ms=200.0)
+            self.assertEqual(r3["final_subset"], "T")
+            self.assertEqual(r3["failed_attempts"], 1)
+        finally:
+            self.audio_server.clear_faults()
+            coord_low.close()
+
+    def test_t04_slow_provider_deadline_and_connection_refused(self):
+        """T04: Slow provider exceeds absolute monotonic deadline without timeout reset; refused port fails safely."""
+        coord_low = DistributedCoordinator(
+            {k: torch.nn.Linear(v["in_dim"], 3).eval() for k, v in SUBSET_METADATA.items()},
+            torch.device("cpu"),
+            audio_port=self.audio_port,
+            visual_port=8999,  # dead port
+        )
+        for m in coord_low.predictor_bank.values():
+            torch.nn.init.zeros_(m.weight)
+            torch.nn.init.zeros_(m.bias)
+        text_feat = torch.ones(1, 768) * 0.1
+
+        try:
+            # Delay 30ms with 10ms deadline -> timeout recorded and wall_ms bounded near 10-30ms
+            self.audio_server.set_fault(delay_ms=30.0)
+            r_slow = coord_low.process_query(0, text_feat, policy_mode="always_on_serial", deadline_ms=10.0)
+            self.assertEqual(r_slow["status"], "FAILED_OR_TIMEOUT")
+            self.assertGreaterEqual(r_slow["failed_attempts"], 1)
+            self.assertFalse(r_slow["on_time"])
+        finally:
+            self.audio_server.clear_faults()
+            coord_low.close()
+
+    def test_t05_parallel_always_on_and_oneshot_escalation(self):
+        """T05: Parallel AlwaysOn acquires TAV in 1 pass; OneShot CR0.55 escalates directly to TAV."""
+        coord_low = DistributedCoordinator(
+            {k: torch.nn.Linear(v["in_dim"], 3).eval() for k, v in SUBSET_METADATA.items()},
+            torch.device("cpu"),
+            audio_port=self.audio_port,
+            visual_port=self.visual_port,
+            persistent_connections=True,
+        )
+        for m in coord_low.predictor_bank.values():
+            torch.nn.init.zeros_(m.weight)
+            torch.nn.init.zeros_(m.bias)
+        text_feat = torch.ones(1, 768) * 0.1
+
+        try:
+            r_par = coord_low.process_query(0, text_feat, policy_mode="always_on_parallel", deadline_ms=200.0)
+            self.assertEqual(r_par["acquisition_path"], ["TAV"])
+            self.assertEqual(r_par["num_network_hops"], 2)
+
+            r_cr = coord_low.process_query(0, text_feat, policy_mode="confidence_routing_055", deadline_ms=200.0)
+            self.assertEqual(r_cr["acquisition_path"], ["T", "TAV"])
+            self.assertEqual(r_cr["num_network_hops"], 2)
+        finally:
+            coord_low.close()
 
 
 if __name__ == "__main__":

@@ -69,6 +69,8 @@ cover/
 # Django stuff:
 *.log
 !docs/logs/*.log
+!results/v13_2/logs/*.log
+!results/v13_2/logs/*.txt
 local_settings.py
 db.sqlite3
 db.sqlite3-journal

@@ -1,0 +1,21 @@
+{
+  "timestamp_utc": "2026-11-25T05:23:52.842248+00:00",
+  "v13_2_unittest": {
+    "command": "C:\\Program Files\\Python310\\python.exe -m unittest -v tests/test_v13_2_evaluator_regression.py tests/test_v13_2_runtime_safety.py tests/test_v13_2_verifier_adversarial.py",
+    "exit_code": 0,
+    "tests_run": 50,
+    "passed": 50,
+    "failed": 0
+  },
+  "full_regression_suite": {
+    "command": "C:\\Program Files\\Python310\\python.exe tests/run_all_tests.py",
+    "exit_code": 0,
+    "passed": 166,
+    "failed": 0
+  },
+  "exit_code": 0,
+  "passed": 166,
+  "failed": 0,
+  "skipped": 0,
+  "log_path": "results/v13_2/logs/test_execution.log"
+}

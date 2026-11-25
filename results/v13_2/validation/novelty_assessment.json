@@ -1,0 +1,79 @@
+{
+  "schema_version": "13.2",
+  "timestamp_utc": "2026-11-25T05:12:00Z",
+  "novelty_status": "OVERLAP_IDENTIFIED",
+  "target_venues_conditional": [
+    {
+      "journal": "Multimedia Tools and Applications (Springer)",
+      "sjr_2024_2025": "0.777-0.798 (Q1 in Media Technology; Q2 in Computer Networks/Software)",
+      "fee_model": "Hybrid: $0 mandatory APC under subscription track; Gold OA optional (~$3,190 / EUR 2,690)",
+      "acceptance_claim": "NOT_CLAIMED"
+    },
+    {
+      "journal": "Multimedia Systems (Springer)",
+      "sjr_2024_2025": "~0.669 (Q1 Media Technology; Q2 Networks/Systems)",
+      "fee_model": "Hybrid: $0 mandatory APC under subscription track; Gold OA optional (~$3,490 / EUR 2,990)",
+      "acceptance_claim": "NOT_CLAIMED"
+    }
+  ],
+  "prior_art_comparisons": [
+    {
+      "work": "A2MT (Kossen et al., TMLR 2023)",
+      "identifier": "arXiv:2211.05039",
+      "text_verified_scope": "Published TMLR paper & OpenReview ablations",
+      "action_space": "Sequential multimodal temporal modality acquisition via Perceiver IO + RL",
+      "budget_and_network": "Soft cost penalty in RL reward; simulated cost, no physical TCP sockets or deadlines",
+      "overlap_finding": "Already demonstrated sequential multimodal acquisition and observed RL policies often collapse to simple marginal-cost heuristics."
+    },
+    {
+      "work": "DynMM (Xue & Marculescu, CVPRW 2023)",
+      "identifier": "DOI:10.1109/CVPRW59228.2023.00256",
+      "text_verified_scope": "CVPRW proceedings metadata & abstract/repo",
+      "action_space": "Dynamic instance-wise modality/fusion path selection on multimodal benchmarks including CMU-MOSEI",
+      "budget_and_network": "Compute/FLOP efficiency on co-located inputs; no distributed socket telemetry or provider fault recovery",
+      "overlap_finding": "Establishes adaptive modality gating on CMU-MOSEI; Tri-SACTA differs only by decoupling providers across TCP sockets."
+    },
+    {
+      "work": "SemARC (Mohapatra et al., 2026 preprint)",
+      "identifier": "arXiv:2610.07466",
+      "text_verified_scope": "arXiv metadata & summary (full PDF not ingested locally)",
+      "action_space": "Sequential modality aggregator (SeMA) + Adaptive Runtime Controller (ARC) with marginal utility priors & Q-learning",
+      "budget_and_network": "Evaluated under 0-40% missingness with hardware GPU/CPU/Android latency and energy; single-device execution",
+      "overlap_finding": "Close methodological overlap on sequential fusion + marginal utility priors under missingness; Tri-SACTA contributes distributed TCP protocol byte accounting and fault handling rather than novel fusion/RL."
+    },
+    {
+      "work": "MoA-Off (Yang et al., 2025 preprint) & MSAO (Yang et al., 2026 preprint)",
+      "identifier": "arXiv:2509.16995 / arXiv:2604.02945",
+      "text_verified_scope": "arXiv cs.DC abstracts/metadata (full PDF not ingested locally)",
+      "action_space": "Edge-cloud modality complexity/sparsity-aware offloading with speculative execution for MLLMs",
+      "budget_and_network": "Real network latency & bandwidth offloading across edge-cloud",
+      "overlap_finding": "Substantial overlap on adaptive edge-cloud modality offloading under bandwidth/latency constraints; Tri-SACTA narrows scope to pre-extracted sentiment MLPs with fail-closed TCP socket fault injection."
+    },
+    {
+      "work": "SPINN (Laskaridis et al., ACM MobiCom 2020)",
+      "identifier": "DOI:10.1145/3372224.3419194",
+      "text_verified_scope": "ACM MobiCom published paper metadata",
+      "action_space": "Progressive early-exit edge-cloud neural inference under dynamic network conditions and deadlines",
+      "budget_and_network": "Measured device-cloud latency/network adaptation under deadlines",
+      "overlap_finding": "Already established progressive confidence early exit over real edge-cloud networks under latency deadlines."
+    },
+    {
+      "work": "Wu et al. (Electronics 2026) & RegCal-Net (Multimedia Systems 2026)",
+      "identifier": "DOI:10.3390/electronics15163624 / DOI:10.1007/s00530-026-02653-8",
+      "text_verified_scope": "Journal metadata & abstracts",
+      "action_space": "Centralized missing-modality evidential/register fusion",
+      "budget_and_network": "Offline centralized models; no distributed runtime or network byte measurements",
+      "overlap_finding": "Orthogonal model-architecture works; insufficient alone to establish distributed runtime novelty."
+    }
+  ],
+  "honest_assessment": {
+    "algorithmic_novelty": "NONE — SequentialConfidence_0.55_0.45 is standard two-stage softmax-max confidence thresholding, selected over ConditionalUtility after algebraic equivalence and empirical defeat.",
+    "systems_contribution_scope": "Engineering integration of fail-closed 12-byte TCP socket framing, monotonic deadline reserves, masked feature traps, and dual-endpoint video-cluster evaluation.",
+    "unresolved_tradeoffs": [
+      "Persistent TCP Static_TA_Direct has lower tail latency (p95=0.82ms, p99=1.01ms) than SequentialConfidence (p95=1.28ms, p99=1.79ms).",
+      "Non-persistent TCP OneShot_ConfidenceRouting_0.55 has lower mean/p95/p99 latency (4.63/17.93/23.83ms) than SequentialConfidence (6.65/20.99/30.67ms) and saves 398 vs 265 B/q (-14.3% overall across 7 workloads, failing the 15% lower-CI margin against OneShot).",
+      "Unimodal_Text is even faster/cheaper (3.7 B/q, 0.23ms) with 0.5328 SQ-F1 vs 0.5415 (+0.0087 F1, 95% CI [-0.0081, +0.0269] crosses 0).",
+      "Localhost loopback sockets reflect same-host feature tensor transmission, not WAN network links, two physical devices, energy, or raw media ingestion."
+    ]
+  }
+}

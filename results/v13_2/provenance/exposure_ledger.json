@@ -1,26 +1,33 @@
 {
   "audit_version": "13.2",
-  "timestamp_utc": "2026-11-24T13:01:37.178094+00:00",
+  "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
   "partitions": {
     "train": {
       "status": "DEVELOPMENT_FIT",
-      "access_history": "Used for subset MLP training (seeds 42, 100, 2026)"
+      "count": 1000,
+      "videos": 112
     },
     "val": {
       "status": "DEVELOPMENT_FIT",
-      "access_history": "Used for policy threshold selection & prior estimation"
+      "count": 250,
+      "videos": 29
     },
     "cal": {
       "status": "DEVELOPMENT_FIT",
-      "access_history": "Used for conformal quantile calibration"
+      "count": 250,
+      "videos": 46
     },
     "test_historical_500": {
-      "status": "QUARANTINED",
-      "access_history": "Exposed across V7-V13; strictly quarantined"
+      "status": "QUARANTINED_FOREVER",
+      "count": 500,
+      "videos": 58
     },
     "candidate_unexposed_4131": {
       "status": "ELIGIBLE_FOR_CONFIRMATORY_FREEZE",
-      "access_history": "Untouched; metadata-only audit"
+      "count": 4131,
+      "videos": 617,
+      "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e"
     }
-  }
+  },
+  "unknown_historical_disclosure": "Independent repository audit verified historical caches cover 1000 train, 250 val, 250 cal, and 500 test utterances. Metadata-only provenance checks inspected aggregate class counts of the remaining 4131 raw_test items in V13.1/V13.2."
 }

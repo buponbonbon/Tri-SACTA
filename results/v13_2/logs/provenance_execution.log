@@ -1,0 +1,6 @@
+2026-11-25 12:01:34,003 [INFO] === Tri-SACTA V13.2: Phase I Blocker-Fix Provenance & Identity Audit ===
+2026-11-25 12:01:37,009 [INFO] Running dev-only extraction reproducibility check on val[0:5]...
+2026-11-25 12:02:47,680 [INFO] Eligible holdout manifest SHA-256: 146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e
+2026-11-25 12:02:47,680 [INFO] 21 checkpoints hashed in C:\Users\ASUS\Desktop\Tri-SACTA\results\v13_2\protocol\checkpoint_hashes.json
+2026-11-25 12:02:47,680 [INFO] Dev-only extraction repro check: VERIFIED_DEV_ONLY, AV diff=(0.0, 0.0)
+2026-11-25 12:02:47,680 [INFO] === Phase I Provenance & Identity Audit Complete ===
