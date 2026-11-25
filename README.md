@@ -1,8 +1,8 @@
 # Tri-SACTA V13.2: Phase I Protocol Freeze & Systems Evaluation
 
 - **Branch:** `research/v13.2-final-systems-validation-release-candidate`
-- **Scientific Source SHA:** `fc373797145afa32895ed407cfad485cd121a019`
-- **Freeze Manifest SHA-256:** `4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09`
+- **Scientific Source SHA:** `f51a9edc819623b10339c9b0c8232a85b09643a9`
+- **Freeze Manifest SHA-256:** `b5e004f17c75dcfeff65bdb9f51841ef2c1deecdc427c036f904a8db3e34d008`
 - **Eligible Holdout Manifest SHA-256:** `146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e`
 - **Engineering Recommendation:** `RELEASE_CANDIDATE_REVIEWABLE`
 - **Scientific Readiness Status:** `READY_FOR_HOLDOUT_REVIEW`
@@ -77,7 +77,7 @@ python scripts/v13_2_cluster_statistics.py
 # 5. Automated fail-closed gate verifier
 python scripts/v13_2_verify_gates.py
 
-# 6. Full adversarial & regression tests (166/166 passing)
+# 6. Full adversarial & regression tests (174/174 passing)
 python -m unittest -v tests/test_v13_2_evaluator_regression.py tests/test_v13_2_runtime_safety.py tests/test_v13_2_verifier_adversarial.py
 ```
 

@@ -2,8 +2,8 @@
 
 * **Manifest Path:** [freeze_manifest.json](../results/v13_2/protocol/freeze_manifest.json)
 * **Detached Digest Path:** [freeze_manifest.sha256](../results/v13_2/protocol/freeze_manifest.sha256)
-* **Manifest SHA-256:** `4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09`
-* **Scientific Source Commit SHA:** `fc373797145afa32895ed407cfad485cd121a019`
+* **Manifest SHA-256:** `b5e004f17c75dcfeff65bdb9f51841ef2c1deecdc427c036f904a8db3e34d008`
+* **Scientific Source Commit SHA:** `f51a9edc819623b10339c9b0c8232a85b09643a9`
 * **Eligible Holdout Manifest SHA-256:** `146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e` (`4131` utterances / `617` video clusters)
 * **Raw Asset (`mosei.pkl`) SHA-256:** `90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e`
 * **Locked Checkpoints:** `21` subset MLPs ([checkpoint_hashes.json](../results/v13_2/protocol/checkpoint_hashes.json))

@@ -1,6 +1,6 @@
 # Tri-SACTA V13.2: Independent Automated Gate Verdict
 
-**Generated:** `2026-11-25T05:24:31.596525+00:00` | **Source:** [final_decision.json](../results/v13_2/validation/final_decision.json)
+**Generated:** `2026-11-25T05:52:15.067875+00:00` | **Source:** [final_decision.json](../results/v13_2/validation/final_decision.json)
 
 | Output Field | Value |
 | :--- | :--- |

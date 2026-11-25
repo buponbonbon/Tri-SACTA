@@ -3,8 +3,8 @@
 - **Repository:** https://github.com/buponbonbon/Tri-SACTA
 - **Branch:** `research/v13.2-final-systems-validation-release-candidate`
 - **Audited Base Revision:** `1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e`
-- **Scientific Source Commit SHA:** `fc373797145afa32895ed407cfad485cd121a019`
-- **Freeze Manifest Digest (SHA-256):** `4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09`
+- **Scientific Source Commit SHA:** `f51a9edc819623b10339c9b0c8232a85b09643a9`
+- **Freeze Manifest Digest (SHA-256):** `b5e004f17c75dcfeff65bdb9f51841ef2c1deecdc427c036f904a8db3e34d008`
 - **Eligible Holdout Manifest Digest:** `146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e` (`4131` samples / `617` video clusters)
 - **Engineering Status:** `RELEASE_CANDIDATE_REVIEWABLE`
 - **Scientific Status:** `READY_FOR_HOLDOUT_REVIEW` (`development_effect_status = SUPPORTED`, `novelty_status = OVERLAP_IDENTIFIED`)

@@ -1,8 +1,8 @@
 {
   "manifest_version": "13.2",
-  "timestamp_utc": "2026-11-25T05:24:24.126545+00:00",
+  "timestamp_utc": "2026-11-25T05:52:08.251188+00:00",
   "audited_base_sha": "1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e",
-  "scientific_source_commit_sha": "fc373797145afa32895ed407cfad485cd121a019",
+  "scientific_source_commit_sha": "f51a9edc819623b10339c9b0c8232a85b09643a9",
   "active_branch": "research/v13.2-final-systems-validation-release-candidate",
   "candidate_policy": {
     "name": "SequentialConfidence_0.55_0.45",
@@ -111,6 +111,36 @@
     "feature_extraction": {
       "text_encoder": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
       "snapshot_revision": "8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c",
+      "hf_snapshot_assets": {
+        "added_tokens.json": {
+          "size_bytes": 23,
+          "sha256": "fb697283833d25e2c711f1bc37730ecd8b20f4bd5f015db1d84aefe0adc9155a"
+        },
+        "config.json": {
+          "size_bytes": 1066,
+          "sha256": "4e4430c95100d613df80fa01276f231931e1b535557cf62fbb3cc50323e50cca"
+        },
+        "model.safetensors": {
+          "size_bytes": 557652046,
+          "sha256": "65af59b1ff4450b09ecbf13ca35c840dbf038b26ff8e10e5ea89ca724828ed1e"
+        },
+        "special_tokens_map.json": {
+          "size_bytes": 286,
+          "sha256": "9463f61e1b109a8eb4688b829260d7c6b1e6dff04c98ff7269bb89e2b92369b9"
+        },
+        "spm.model": {
+          "size_bytes": 4305025,
+          "sha256": "13c8d666d62a7bc4ac8f040aab68e942c861f93303156cc28f5c7e885d86d6e3"
+        },
+        "tokenizer.json": {
+          "size_bytes": 16331396,
+          "sha256": "3aca3ce69a0a35aeb144a52c4f1d41c4246b8785f8f398315cc8fb6b24057810"
+        },
+        "tokenizer_config.json": {
+          "size_bytes": 1256,
+          "sha256": "df9fd3a4482cc4a866788244824573fab8e74dadd1609d4f0e5997f9e96921dc"
+        }
+      },
       "audio": "COVAREP_74d_mean_pool_fp16",
       "visual": "FACET_35d_mean_pool_fp16"
     }
@@ -516,8 +546,8 @@
     "scripts/acquire_multimodal_features.py": {
       "path": "scripts/acquire_multimodal_features.py",
       "role": "script",
-      "size_bytes": 14864,
-      "sha256": "651c1af81d1dc4e1f4ec3c33a94102c7a4a15a9cc0d483655d032f5614ca11d0"
+      "size_bytes": 17939,
+      "sha256": "3239a40c15923bb057be321b74ea4a87a6a521bf7b0917b3ed45e760ac2366d7"
     },
     "scripts/audit_dataset_structure.py": {
       "path": "scripts/audit_dataset_structure.py",
@@ -726,8 +756,8 @@
     "scripts/v13_2_freeze_protocol.py": {
       "path": "scripts/v13_2_freeze_protocol.py",
       "role": "script",
-      "size_bytes": 11348,
-      "sha256": "4ae74e0cbd5e97001b77f313483d009e908a7510438ec4dc8fd42601ced9923d"
+      "size_bytes": 11551,
+      "sha256": "f093276b149dd484d949b22e0ab00270486fa0da9bc9d93d465cd896c3b72322"
     },
     "scripts/v13_2_generate_reports.py": {
       "path": "scripts/v13_2_generate_reports.py",
@@ -738,8 +768,8 @@
     "scripts/v13_2_run_phase2_holdout.py": {
       "path": "scripts/v13_2_run_phase2_holdout.py",
       "role": "script",
-      "size_bytes": 14186,
-      "sha256": "f7e96b0988319a1d8546a4f83b2c0f295264e9ec0529877cadf4e87ba82bfcdd"
+      "size_bytes": 41831,
+      "sha256": "1a4028a6d0b2c412b9b3009003049679471f5e18072abc55826bb8065be876b6"
     },
     "scripts/v13_2_verify_gates.py": {
       "path": "scripts/v13_2_verify_gates.py",
@@ -798,8 +828,8 @@
     "tests/run_all_tests.py": {
       "path": "tests/run_all_tests.py",
       "role": "test",
-      "size_bytes": 8530,
-      "sha256": "97f3dd2317a96ea29374f56053667d944c3cd819f2f820e221c5f8908f076356"
+      "size_bytes": 8699,
+      "sha256": "92023c8adade45b2f348d585014cb6434181b7608d151ee90d8de33082939ab1"
     },
     "tests/test_aci_counterexample.py": {
       "path": "tests/test_aci_counterexample.py",
@@ -920,6 +950,12 @@
       "role": "test",
       "size_bytes": 10024,
       "sha256": "4d32847cee69e22c7dc4045989364fa28ad666aeab4d8bcf9360753a04e5ddc7"
+    },
+    "tests/test_v13_2_phase2_pipeline.py": {
+      "path": "tests/test_v13_2_phase2_pipeline.py",
+      "role": "test",
+      "size_bytes": 5925,
+      "sha256": "1c78357a647ce09cbe550a3542e8ac85863d3d3bc47cf690b47812508eded8ee"
     },
     "tests/test_v13_2_runtime_safety.py": {
       "path": "tests/test_v13_2_runtime_safety.py",

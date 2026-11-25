@@ -1,6 +1,6 @@
 # Tri-SACTA V13.2: Fair Development Benchmark, Dual-Endpoint Bootstrap & TCP Telemetry
 
-**Generated from canonical artifacts on:** `2026-11-25T05:24:31.596525+00:00`  
+**Generated from canonical artifacts on:** `2026-11-25T05:52:15.067875+00:00`  
 **Sources:** [policy_metrics.json](../results/v13_2/development/policy_metrics.json), [paired_bootstrap_summary.json](../results/v13_2/statistics/paired_bootstrap_summary.json), [distributed_summary.json](../results/v13_2/systems/distributed_summary.json)
 
 ## 1. Offline Development Replay (84,000 Queries, Boundary Guardrails Passed: `True`)

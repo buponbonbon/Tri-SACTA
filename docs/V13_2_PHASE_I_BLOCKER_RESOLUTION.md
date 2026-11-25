@@ -1,6 +1,6 @@
 # Tri-SACTA V13.2: Phase I Blocker Resolution & Discrepancy Ledger
 
-Audited revision: `1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e` -> Scientific Source SHA: `fc373797145afa32895ed407cfad485cd121a019` -> Manifest Digest: `4001ff922130772c123a1e380d87c91e6b4d57f06ab05c23867ebc88021c9f09`
+Audited revision: `1cd239e2b4fc1ef7e5cdd8c213cd71acf5ac022e` -> Scientific Source SHA: `f51a9edc819623b10339c9b0c8232a85b09643a9` -> Manifest Digest: `b5e004f17c75dcfeff65bdb9f51841ef2c1deecdc427c036f904a8db3e34d008`
 
 | Blocker | Original Defect | Implemented Fix & Verification |
 | :--- | :--- | :--- |
