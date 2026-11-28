@@ -1,0 +1,31 @@
+{
+  "split": "val",
+  "selection_rule": "first_5_sorted_video_clusters",
+  "num_video_clusters": 5,
+  "video_ids": [
+    "--qXJuDtHPw",
+    "-571d8cVauQ",
+    "-I_e4mIh0yE",
+    "-UacrmKiTn4",
+    "-hnBHBN8p5A"
+  ],
+  "num_utterances": 16,
+  "sample_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "status": "PILOT_FIXED_PATH_LATENCY_SENSITIVITY",
+  "note": "Post-hoc delay injection pilot preserved untouched",
+  "artifacts": {
+    "analytical_model_validation.json": {
+      "bytes": 4099,
+      "sha256": "11dd0f29cadcff39a4fe9bd2cf0d438dcff6cc9b8baf383c267ef2b7f3b57cbd"
+    },
+    "data_selection_manifest.json": {
+      "bytes": 414,
+      "sha256": "c7832a940fb9d97527f1536f8463ebccf61878defa1641db7668270a952d8a61"
+    },
+    "network_aggregated_metrics.csv": {
+      "bytes": 8513,
+      "sha256": "0162d0e64fe2fdb0000144ca3f8b95a3524a124b9d70b559e34f3287c2260990"
+    },
+    "network_benchmark_traces.csv.gz": {
+      "bytes": 66138,
+      "sha256": "8317a9ece3b73bc84926edf6792b1a708bf956c0ba9045140f32a61f9155d5e4"
+    },
+    "operating_regions.json": {
+      "bytes": 27907,
+      "sha256": "d6d81e11e210d47d1090d8820fc78d63d5d9f5550a38f24f349b72980dc6c12d"
+    },
+    "transport_calibration.json": {
+      "bytes": 2218,
+      "sha256": "e1bdb2547fca9b7a4072129b08c55b1ec4d1c27ebb7d03093599790a8e75a100"
+    }
+  }
+}

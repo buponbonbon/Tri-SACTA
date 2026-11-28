@@ -1,0 +1,132 @@
+{
+  "mae_ms": 4.744892971276487,
+  "medae_ms": 4.106062506107264,
+  "predictions": [
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 11.05690155076445,
+      "observed_ms": 16.478896872285986,
+      "abs_err_ms": 5.4219953215215355
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 20.215728132316144,
+      "observed_ms": 30.888429675542284,
+      "abs_err_ms": 10.67270154322614
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 6.258801556687104,
+      "observed_ms": 7.622548455401557,
+      "abs_err_ms": 1.363746898714453
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 7.198759363818681,
+      "observed_ms": 10.585490625089733,
+      "abs_err_ms": 3.386731261271052
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 9.198509352863766,
+      "observed_ms": 13.340764038730413,
+      "abs_err_ms": 4.1422546858666465
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 0.28783125526388176,
+      "observed_ms": 0.3036906127817929,
+      "abs_err_ms": 0.01585935751791112
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 30.11940155076445,
+      "observed_ms": 38.12291562644532,
+      "abs_err_ms": 8.003514075680869
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 56.465728132316144,
+      "observed_ms": 68.33234217992867,
+      "abs_err_ms": 11.86661404761253
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 15.008801556687104,
+      "observed_ms": 17.494085943326354,
+      "abs_err_ms": 2.4852843866392504
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 18.76125936381868,
+      "observed_ms": 23.733564052236034,
+      "abs_err_ms": 4.972304688417353
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 25.448509352863766,
+      "observed_ms": 28.76741092040902,
+      "abs_err_ms": 3.318901567545254
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 0.28783125526388176,
+      "observed_ms": 0.3297374933026731,
+      "abs_err_ms": 0.041906238038791344
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 77.77565155076445,
+      "observed_ms": 84.33494218843407,
+      "abs_err_ms": 6.559290637669619
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 147.09072813231614,
+      "observed_ms": 158.30756874856888,
+      "abs_err_ms": 11.216840616252739
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 36.883801556687104,
+      "observed_ms": 39.51701250116457,
+      "abs_err_ms": 2.6332109444774687
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 47.66750936381868,
+      "observed_ms": 51.73737969016656,
+      "abs_err_ms": 4.069870326347882
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 66.07350935286377,
+      "observed_ms": 71.29511093444307,
+      "abs_err_ms": 5.221601581579307
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 0.28783125526388176,
+      "observed_ms": 0.30327655986184254,
+      "abs_err_ms": 0.015445304597960785
+    }
+  ]
+}
