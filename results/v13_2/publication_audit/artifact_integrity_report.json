@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-11-28T03:27:40.774201+00:00",
+  "phase": "PHASE_II_COMPLETED",
+  "fresh_holdout_inference_executed": true,
+  "distributed_benchmark_csv": {
+    "raw_bytes": 94272383,
+    "lf_normalized_bytes": 93578374,
+    "crlf_line_count_diff": 694009,
+    "raw_sha256": "403b8309f8cbac2cd525237d24a16cbff86055046ebbb9b786ef78fffe832086",
+    "lf_normalized_sha256": "32ed7388af2e25abf2ad73eec1fe3cf064cab4aee423f540440dfec2ef2c4438",
+    "computed_git_blob_sha1": "391f1990789d5faa01d369881f13663f2c897310",
+    "committed_git_blob_sha1": "391f1990789d5faa01d369881f13663f2c897310",
+    "git_blob_exact_match": true
+  },
+  "query_traces_json_gz": {
+    "bytes": 14813847,
+    "sha256": "38d852b72ec0768e64371654069b6228b2eb2412c42421286251bc745e86c8a1"
+  },
+  "final_decision_json_sha256": "6090a10cd701544b5027ed8a23ff1259e15a9558e614c2d272abc5fe904e3c45",
+  "cluster_bootstrap_summary_json_sha256": "1c6754cb89331570b4964ee3e8f67bfd780865a8e70b1bb604eddb15e2a1bee4",
+  "policy_evaluation_summary_json_sha256": "51a7ca3e65ad4531f76d06f95dba4b24183e103afdd466c5fdc4b66e68d6fa02"
+}

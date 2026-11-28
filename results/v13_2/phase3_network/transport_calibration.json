@@ -1,0 +1,79 @@
+{
+  "RTT0_UNRES_A": {
+    "target_rtt_ms": 0.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 0.0032599549740552902,
+    "parallel_two_stream_ms": 2.254999941214919
+  },
+  "RTT10_UNRES_A": {
+    "target_rtt_ms": 10.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 15.710939932614565,
+    "parallel_two_stream_ms": 17.05510006286204
+  },
+  "RTT30_UNRES_A": {
+    "target_rtt_ms": 30.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 31.64044003933668,
+    "parallel_two_stream_ms": 48.550300067290664
+  },
+  "RTT80_UNRES_A": {
+    "target_rtt_ms": 80.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 88.83104007691145,
+    "parallel_two_stream_ms": 97.1750000026077
+  },
+  "RTT0_UNRES_B": {
+    "target_rtt_ms": 0.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 0.0023199710994958878,
+    "parallel_two_stream_ms": 1.0283999145030975
+  },
+  "RTT10_UNRES_B": {
+    "target_rtt_ms": 10.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 15.354440081864595,
+    "parallel_two_stream_ms": 16.488299937918782
+  },
+  "RTT30_UNRES_B": {
+    "target_rtt_ms": 30.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 34.70729999244213,
+    "parallel_two_stream_ms": 49.33279985561967
+  },
+  "RTT80_UNRES_B": {
+    "target_rtt_ms": 80.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 83.19614003412426,
+    "parallel_two_stream_ms": 84.27640004083514
+  },
+  "RTT30_BW10_B": {
+    "target_rtt_ms": 30.0,
+    "bandwidth_mbps": 10.0,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 32.91871999390423,
+    "parallel_two_stream_ms": 37.07429999485612
+  },
+  "RTT30_BW1_B": {
+    "target_rtt_ms": 30.0,
+    "bandwidth_mbps": 1.0,
+    "jitter_ms": 0.0,
+    "achieved_mean_ms": 46.09966007992625,
+    "parallel_two_stream_ms": 40.39829992689192
+  },
+  "RTT30_JIT5_B": {
+    "target_rtt_ms": 30.0,
+    "bandwidth_mbps": null,
+    "jitter_ms": 5.0,
+    "achieved_mean_ms": 35.788979940116405,
+    "parallel_two_stream_ms": 49.88499986939132
+  }
+}
