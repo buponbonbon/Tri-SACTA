@@ -1,0 +1,9 @@
+{
+  "schema_version": "14.0",
+  "v13_2_foundation_closure_commit": "a070c0d4dda2f826ff804ca2be7fb77d6a0e2b69",
+  "v13_2_foundation_verdict": "V13_2_FOUNDATION_USABLE_WITH_DOCUMENTED_LIMITATIONS",
+  "v14_research_decision": "V14_METHOD_GAP_SUPPORTED_READY_FOR_V15",
+  "primary_candidate": "Candidate B: Joint Sequential-Parallel Option-Value Policy (JOV-Acquisition)",
+  "backup_candidate": "Candidate C: Risk-Aware Conservative Stopping (LCB)",
+  "strongest_reviewer_objection": "Text-only baseline (0.4834 SQ-F1, 5.0 B) and OneShot_0.55 (0.4897 SQ-F1) are already strong on CMU-MOSEI, and rare rescue/harm events (5.6%-10.1%) require larger train-split fitting to avoid overfitting."
+}

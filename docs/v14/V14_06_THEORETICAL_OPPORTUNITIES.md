@@ -1,0 +1,5 @@
+# V14-06: Theoretical Opportunities
+
+1. **Confidence-Only Insufficiency Condition:** Confidence-only routing `max(p_S) < tau` is strictly suboptimal whenever `E[c_{S U a} - c_S | p_S, q_S]` is non-monotonic in `max(p_S)` (e.g., high-entropy vs margin-ambiguous errors, or corrupted `z_S` where `p_S` is overconfident) or when `H(s,a) > R(s,a)` for a subset `a`.
+2. **Sequential-Parallel Option Value Inequality (Finite-Horizon Proposition):** For two remaining modalities `{A, V}` with remaining deadline `D`, sequential acquisition (`A` then optional `V`) strictly dominates parallel acquisition (`AV_PARALLEL`) in expected utility iff `D >= T_A + T_V` AND `P(STOP after A) * (lambda_c * cost(V) + alpha * H_cond(V)) > lambda_t * (E[L_seq] - E[L_par])`. When `T_A + T_V > D >= max(T_A, T_V)`, sequential `T -> A -> V` is infeasible while `AV_PARALLEL` remains feasible.
+3. **Scope Disclosure:** These are finite-horizon decision-theoretic propositions guiding V15 algorithm structure — not asymptotic PAC/regret theorems.

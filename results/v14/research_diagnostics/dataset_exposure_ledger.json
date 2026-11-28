@@ -1,0 +1,10 @@
+{
+  "schema_version": "14.0",
+  "partitions": {
+    "train": {"samples": 16327, "status": "EXPOSED_PREDICTOR_TRAINING"},
+    "val": {"samples": 250, "video_clusters": 29, "status": "EXPOSED_V12_V14_DEV"},
+    "cal": {"samples": 250, "status": "EXPOSED_V12_V14_CALIBRATION"},
+    "test_0_500": {"samples": 500, "status": "EXPOSED_LEGACY_V1_V13_1"},
+    "eligible_holdout_500_4631": {"samples": 4131, "video_clusters": 617, "status": "EXPOSED_V13_2_PHASE_II_RETIRED_FOR_V14_V15"}
+  }
+}

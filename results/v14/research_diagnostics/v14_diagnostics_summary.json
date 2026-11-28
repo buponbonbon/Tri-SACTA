@@ -1,0 +1,129 @@
+{
+  "dataset": "val_development_only",
+  "num_samples": 250,
+  "num_video_clusters": 29,
+  "oracle_headroom_by_workload": {
+    "CLEAN_MULTIMODAL": {
+      "static_T_f1": 0.5635541044497592,
+      "static_TAV_f1": 0.5686455532807694,
+      "oracle_unrestricted_f1": 0.894880981797216,
+      "oracle_reachable_f1": 0.894880981797216,
+      "oracle_budget_feasible_f1": 0.894880981797216,
+      "oracle_deadline_feasible_f1": 0.894880981797216,
+      "oracle_joint_seq_par_feasible_f1": 0.894880981797216
+    },
+    "TEXT_EMBEDDING_NOISE": {
+      "static_T_f1": 0.4672321445861291,
+      "static_TAV_f1": 0.48638250727443183,
+      "oracle_unrestricted_f1": 0.8727051197634279,
+      "oracle_reachable_f1": 0.8727051197634279,
+      "oracle_budget_feasible_f1": 0.8727051197634279,
+      "oracle_deadline_feasible_f1": 0.8727051197634279,
+      "oracle_joint_seq_par_feasible_f1": 0.8727051197634279
+    },
+    "AUDIO_FEATURE_MASKING": {
+      "static_T_f1": 0.5635541044497592,
+      "static_TAV_f1": 0.5380323391734185,
+      "oracle_unrestricted_f1": 0.8937457925762019,
+      "oracle_reachable_f1": 0.7992608754782137,
+      "oracle_budget_feasible_f1": 0.7992608754782137,
+      "oracle_deadline_feasible_f1": 0.7992608754782137,
+      "oracle_joint_seq_par_feasible_f1": 0.7992608754782137
+    },
+    "VISUAL_ZERO_MASK": {
+      "static_T_f1": 0.5635541044497592,
+      "static_TAV_f1": 0.5106079151366789,
+      "oracle_unrestricted_f1": 0.8980866024056734,
+      "oracle_reachable_f1": 0.7768737202699466,
+      "oracle_budget_feasible_f1": 0.7768737202699466,
+      "oracle_deadline_feasible_f1": 0.7768737202699466,
+      "oracle_joint_seq_par_feasible_f1": 0.7768737202699466
+    },
+    "COMPOUND_FAULT": {
+      "static_T_f1": 0.4467607177099027,
+      "static_TAV_f1": 0.4578895641447165,
+      "oracle_unrestricted_f1": 0.8331502140835889,
+      "oracle_reachable_f1": 0.6916179302315167,
+      "oracle_budget_feasible_f1": 0.6916179302315167,
+      "oracle_deadline_feasible_f1": 0.6916179302315167,
+      "oracle_joint_seq_par_feasible_f1": 0.6916179302315167
+    },
+    "INTERMITTENT_MISSINGNESS": {
+      "static_T_f1": 0.5635541044497592,
+      "static_TAV_f1": 0.5686455532807694,
+      "oracle_unrestricted_f1": 0.894880981797216,
+      "oracle_reachable_f1": 0.7946397578421621,
+      "oracle_budget_feasible_f1": 0.7946397578421621,
+      "oracle_deadline_feasible_f1": 0.7946397578421621,
+      "oracle_joint_seq_par_feasible_f1": 0.7946397578421621
+    },
+    "HETEROGENEOUS_DEADLINE_STRESS": {
+      "static_T_f1": 0.5635541044497592,
+      "static_TAV_f1": 0.5686455532807694,
+      "oracle_unrestricted_f1": 0.894880981797216,
+      "oracle_reachable_f1": 0.894880981797216,
+      "oracle_budget_feasible_f1": 0.7571804581956867,
+      "oracle_deadline_feasible_f1": 0.894880981797216,
+      "oracle_joint_seq_par_feasible_f1": 0.7571804581956867
+    }
+  },
+  "transition_counts": {
+    "T_to_TA": {
+      "rescue": 118,
+      "harm": 112,
+      "total": 1750
+    },
+    "T_to_TV": {
+      "rescue": 158,
+      "harm": 246,
+      "total": 1750
+    },
+    "T_to_TAV": {
+      "rescue": 163,
+      "harm": 184,
+      "total": 1750
+    }
+  },
+  "group_cross_fitted_learnability": {
+    "rescue_T_to_TA": {
+      "positive_rate": 0.07466666666666667,
+      "positive_count": 56,
+      "total_count": 750,
+      "brier_constant": 0.06942555555555555,
+      "brier_confidence_only": 0.0670855061961156,
+      "brier_observable_state": 0.06528047084210926,
+      "auroc_confidence_only": 0.727768629065459,
+      "auroc_observable_state": 0.765901605599012
+    },
+    "harm_T_to_TA": {
+      "positive_rate": 0.056,
+      "positive_count": 42,
+      "total_count": 750,
+      "brier_constant": 0.05333,
+      "brier_confidence_only": 0.051792091834650465,
+      "brier_observable_state": 0.050663239611018165,
+      "auroc_confidence_only": 0.7178840462738767,
+      "auroc_observable_state": 0.767050040355125
+    },
+    "rescue_T_to_TAV": {
+      "positive_rate": 0.10133333333333333,
+      "positive_count": 76,
+      "total_count": 750,
+      "brier_constant": 0.0912788888888889,
+      "brier_confidence_only": 0.08743516812958059,
+      "brier_observable_state": 0.08667207763234015,
+      "auroc_confidence_only": 0.7323715445884741,
+      "auroc_observable_state": 0.7198383570201469
+    },
+    "harm_T_to_TAV": {
+      "positive_rate": 0.09866666666666667,
+      "positive_count": 74,
+      "total_count": 750,
+      "brier_constant": 0.08987555555555556,
+      "brier_confidence_only": 0.0869040716480204,
+      "brier_observable_state": 0.08536583762447139,
+      "auroc_confidence_only": 0.656105069566608,
+      "auroc_observable_state": 0.7114984807292499
+    }
+  }
+}
