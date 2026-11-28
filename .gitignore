@@ -10,6 +10,7 @@ data/**/*.pt
 data/**/*.pth
 data/**/raw/
 features_cache/
+results/v13_2/confirmatory/query_traces.json
 *.h5
 !checkpoints/.gitkeep
 
