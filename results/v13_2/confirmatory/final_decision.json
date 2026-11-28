@@ -1,0 +1,23 @@
+{
+  "dataset": "confirmatory_holdout",
+  "timestamp_utc": "2026-11-28T02:35:54.189318+00:00",
+  "num_samples": 4131,
+  "num_video_clusters": 617,
+  "seeds": [
+    42,
+    100,
+    2026
+  ],
+  "bootstrap_B": 2000,
+  "tcp_grid_complete": true,
+  "tcp_guardrails_passed": true,
+  "tcp_guardrails_metrics": {
+    "useful_on_time_rate": 0.9984784037071619,
+    "acceptance_rate": 0.9984784037071619,
+    "budget_violation_rate": 0.0
+  },
+  "offline_guardrails_passed": true,
+  "tcp_joint_criterion_passed": true,
+  "nominal_joint_criterion_passed": true,
+  "confirmatory_verdict": "CONFIRMATORY_SUPPORTED"
+}

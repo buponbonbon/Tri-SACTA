@@ -1,12 +1,39 @@
 {
   "schema_version": "13.2",
-  "phase": "PHASE_I",
-  "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
-  "fresh_holdout_features_extracted": false,
-  "fresh_holdout_inference_executed": false,
-  "fresh_holdout_predictions_written": false,
+  "phase": "PHASE_II_COMPLETED",
+  "timestamp_utc": "2026-11-28T02:35:55.553031+00:00",
+  "fresh_holdout_features_extracted": true,
+  "fresh_holdout_inference_executed": true,
+  "fresh_holdout_predictions_written": true,
   "metadata_only_eligibility_audit_executed": true,
   "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e",
-  "phase_ii_authorization": "PENDING_AUTHOR_APPROVAL",
-  "audit_scope_disclosure": "Repository and local filesystem audit evidence recorded at script execution time; not a cryptographic proof against unlogged external execution."
+  "phase_ii_authorization": "EXECUTED",
+  "audit_scope_disclosure": "Repository and local filesystem audit evidence recorded at script execution time; not a cryptographic proof against unlogged external execution.",
+  "execution_attempts": [
+    {
+      "timestamp_utc": "2026-11-28T02:15:38.068852+00:00",
+      "mode": "execute_holdout_start",
+      "outcome": "STARTED",
+      "details": "Authorization, raw mosei.pkl SHA-256, and pinned encoder verified; starting Phase II extraction.",
+      "approval_path": "C:\\Users\\ASUS\\.gemini\\antigravity\\brain\\4ab14ebf-5f3d-4351-8940-1fe736ce0927\\scratch\\phase2_author_approval.json",
+      "manifest_sha256": "fb23d9e16f8557e6aaf807d893fd5d8bf756d96e792e9c835934046e960cbdb3"
+    },
+    {
+      "timestamp_utc": "2026-11-28T02:17:09.953636+00:00",
+      "mode": "execute_holdout_extraction",
+      "outcome": "EXTRACTED",
+      "details": "Extracted 4131 holdout samples to C:\\Users\\ASUS\\Desktop\\Tri-SACTA\\results\\v13_2\\confirmatory\\features_cache",
+      "approval_path": "C:\\Users\\ASUS\\.gemini\\antigravity\\brain\\4ab14ebf-5f3d-4351-8940-1fe736ce0927\\scratch\\phase2_author_approval.json",
+      "manifest_sha256": "fb23d9e16f8557e6aaf807d893fd5d8bf756d96e792e9c835934046e960cbdb3"
+    },
+    {
+      "timestamp_utc": "2026-11-28T02:35:55.553031+00:00",
+      "mode": "execute_holdout",
+      "outcome": "EXECUTED",
+      "details": "Confirmatory verdict: CONFIRMATORY_SUPPORTED",
+      "approval_path": "C:\\Users\\ASUS\\.gemini\\antigravity\\brain\\4ab14ebf-5f3d-4351-8940-1fe736ce0927\\scratch\\phase2_author_approval.json",
+      "manifest_sha256": "fb23d9e16f8557e6aaf807d893fd5d8bf756d96e792e9c835934046e960cbdb3"
+    }
+  ],
+  "fresh_holdout_attempt_started": true
 }
