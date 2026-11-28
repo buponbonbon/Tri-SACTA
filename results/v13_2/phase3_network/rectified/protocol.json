@@ -1,0 +1,34 @@
+{
+  "schema_version": "13.2-phase3-rectified",
+  "seed": 42,
+  "num_utterances": 99,
+  "num_video_clusters": 12,
+  "policies": [
+    "SequentialConfidence_0.55_0.45",
+    "OneShot_ConfidenceRouting_0.55",
+    "AlwaysOn_Direct_Parallel",
+    "AlwaysOn_Direct_Serial",
+    "Static_TA_Direct",
+    "Unimodal_Text"
+  ],
+  "workloads": [
+    "CLEAN_MULTIMODAL",
+    "TEXT_EMBEDDING_NOISE",
+    "INTERMITTENT_MISSINGNESS",
+    "HETEROGENEOUS_DEADLINE_STRESS"
+  ],
+  "conditions": [
+    "RTT0_UNRES_A",
+    "RTT10_UNRES_A",
+    "RTT30_UNRES_A",
+    "RTT80_UNRES_A",
+    "RTT0_UNRES_B",
+    "RTT10_UNRES_B",
+    "RTT30_UNRES_B",
+    "RTT80_UNRES_B",
+    "RTT30_BW10_B",
+    "RTT30_BW1_B",
+    "RTT30_JIT5_B"
+  ],
+  "expected_requests": 26136
+}
