@@ -1,0 +1,90 @@
+# =============================================================================
+# Tri-SACTA V12.1 Systems Research Protocol & Provenance Lock
+# =============================================================================
+protocol_version: "12.1"
+date: "2026-11-24"
+base_commit: "fd010fd85f9f4b70cdc537aab546c3d800ffd01d"
+branch: "research/v12.1-budgeted-orchestration-rectification"
+
+dataset:
+  name: "cmu_mosei"
+  source: "CMU-MOSEI Authentic Multimodal Dataset"
+  cache_dir: "data/cmu_mosei/features_cache"
+  splits:
+    train:
+      samples: 1000
+      video_clusters: 112
+      role: "model_training"
+    val:
+      samples: 250
+      video_clusters: 29
+      role: "hyperparameter_selection_and_policy_development"
+      status: "development_exposed"
+    cal:
+      samples: 250
+      video_clusters: 29
+      role: "conformal_calibration"
+      status: "isolated_from_training"
+    test:
+      samples: 500
+      video_clusters: 57
+      role: "quarantined_historical_evaluation"
+      status: "quarantined_do_not_tune"
+
+task:
+  type: "3_class_sentiment"
+  mapping:
+    negative: "raw_sentiment < 0.0"
+    neutral: "raw_sentiment == 0.0"
+    positive: "raw_sentiment > 0.0"
+  num_classes: 3
+  classes: ["negative", "neutral", "positive"]
+
+features:
+  text:
+    dim: 768
+    extractor: "mDeBERTa-v3-Base (last hidden state mean pooling)"
+  audio:
+    dim: 74
+    extractor: "COVAREP acoustic features"
+  visual:
+    dim: 35
+    extractor: "FACET action unit / pose features"
+
+training:
+  seeds: [42, 100, 2026]
+  epochs: 30
+  batch_size: 32
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  early_stopping_patience: 7
+  loss: "balanced_cross_entropy"
+  aux_weight: 0.05
+
+cost_model:
+  base_cost_units:
+    text: 1.0
+    audio: 1.2
+    visual: 1.3
+  latency_budgets_ms:
+    tight: 15.0
+    medium: 30.0
+    loose: 50.0
+  safety_margin_ms: 2.0
+
+conformal:
+  alpha: 0.10
+  nominal_coverage: 0.90
+  calibration_split: "cal"
+  score_function: "one_minus_prob_true"
+
+decision_rules:
+  primary_claim: "Pareto dominance: BRMO achieves statistically non-inferior Macro-F1 (margin 0.01) with >=15% resource reduction under clean/asymmetric workloads, and significant gains under text corruption."
+  primary_effect_margin_f1: 0.01
+  min_resource_reduction_pct: 15.0
+
+target_venue:
+  primary: "Multimedia Tools and Applications (Springer)"
+  sjr_tier: "Q1 (2023-2024) / Q2 (2025)"
+  mandatory_apc_usd: 0
+  publishing_model: "Subscription"

@@ -1,0 +1,132 @@
+{
+  "bootstrap_parameters": {
+    "resamples_B": 2000,
+    "random_seed": 1301,
+    "clustering_variable": "video_id",
+    "cluster_count": 29,
+    "total_evaluated_instances": 5250
+  },
+  "target_primary_policy": "SequentialConfidence_0.55_0.45",
+  "comparisons": {
+    "SequentialConfidence_0.55_0.45_vs_AlwaysOnFusion": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "AlwaysOnFusion",
+      "observed_delta_macro_f1": 0.014682305458653788,
+      "delta_macro_f1_95_ci": [
+        -0.0012583449806816832,
+        0.03321109212682145
+      ],
+      "observed_cost_reduction_pct": 48.94164989939638,
+      "cost_reduction_pct_95_ci": [
+        47.17621336720284,
+        50.69113883437594
+      ],
+      "p_superiority": 0.9605,
+      "p_non_inferiority_neg001": 1.0,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5301090588665723,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 2.84
+    },
+    "SequentialConfidence_0.55_0.45_vs_Static_TA": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "Static_TA",
+      "observed_delta_macro_f1": 0.005647186310230534,
+      "delta_macro_f1_95_ci": [
+        -0.005302419252630787,
+        0.016521814277447738
+      ],
+      "observed_cost_reduction_pct": 19.57403651115618,
+      "cost_reduction_pct_95_ci": [
+        16.75652451516827,
+        22.31261787153561
+      ],
+      "p_superiority": 0.8565,
+      "p_non_inferiority_neg001": 0.999,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5391441780149956,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 1.8029714285714282
+    },
+    "SequentialConfidence_0.55_0.45_vs_ConfidenceRouting_0.55": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "ConfidenceRouting_0.55",
+      "observed_delta_macro_f1": 0.00303122610898765,
+      "delta_macro_f1_95_ci": [
+        -0.0067432286430757216,
+        0.013576561118895953
+      ],
+      "observed_cost_reduction_pct": 10.622710622710612,
+      "cost_reduction_pct_95_ci": [
+        9.582190667657835,
+        11.60650676954011
+      ],
+      "p_superiority": 0.7015,
+      "p_non_inferiority_neg001": 0.9965,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5417601382162385,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 1.6223999999999996
+    },
+    "SequentialConfidence_0.55_0.45_vs_UtilityRouter_V13": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "UtilityRouter_V13",
+      "observed_delta_macro_f1": 0.0019159461112627785,
+      "delta_macro_f1_95_ci": [
+        -0.003703526999051722,
+        0.007258936233263754
+      ],
+      "observed_cost_reduction_pct": 5.638533906813593,
+      "cost_reduction_pct_95_ci": [
+        4.34800077343689,
+        7.072493509954538
+      ],
+      "p_superiority": 0.753,
+      "p_non_inferiority_neg001": 0.999,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5428754182139633,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 1.5367047619047618
+    },
+    "SequentialConfidence_0.55_0.45_vs_FixedFallback": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "FixedFallback",
+      "observed_delta_macro_f1": 0.011253461542176324,
+      "delta_macro_f1_95_ci": [
+        -0.0061878713524684435,
+        0.03098953532734498
+      ],
+      "observed_cost_reduction_pct": -44.70802919708029,
+      "cost_reduction_pct_95_ci": [
+        -49.43997625779295,
+        -39.87398319792072
+      ],
+      "p_superiority": 0.8915,
+      "p_non_inferiority_neg001": 0.989,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5335379027830498,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 1.0020571428571428
+    },
+    "SequentialConfidence_0.55_0.45_vs_ConditionalUtility_0.05": {
+      "target_policy": "SequentialConfidence_0.55_0.45",
+      "comparator_policy": "ConditionalUtility_0.05",
+      "observed_delta_macro_f1": 0.012269598004911453,
+      "delta_macro_f1_95_ci": [
+        -0.0034151864934946845,
+        0.028582895126399853
+      ],
+      "observed_cost_reduction_pct": -2.3638563937071284,
+      "cost_reduction_pct_95_ci": [
+        -3.8508007439537884,
+        -0.7660846297976043
+      ],
+      "p_superiority": 0.9285,
+      "p_non_inferiority_neg001": 1.0,
+      "target_f1": 0.5447913643252261,
+      "comparator_f1": 0.5325217663203147,
+      "target_cost": 1.4500571428571427,
+      "comparator_cost": 1.4165714285714286
+    }
+  }
+}

@@ -362,3 +362,22 @@ class MultimodalFusionModel(nn.Module):
     def load_source_checkpoint(self, path: str, device: str = "cpu") -> None:
         state = torch.load(path, map_location=device)
         self.load_state_dict(state)
+
+
+class SimpleMLP(nn.Module):
+    """Standard MLP baseline with LayerNorm and Dropout for unimodal and concat baselines."""
+
+    def __init__(self, in_dim: int, hidden_dim: int = 64, num_classes: int = 3, dropout: float = 0.2):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.LayerNorm(in_dim),
+            nn.Linear(in_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, num_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.net(x)
+

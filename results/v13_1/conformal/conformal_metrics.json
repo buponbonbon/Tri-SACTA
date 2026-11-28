@@ -1,0 +1,80 @@
+{
+  "conformal_protocol": {
+    "calibration_split": "cal",
+    "calibration_samples": 250,
+    "target_coverage": 0.9,
+    "alpha": 0.1,
+    "finite_sample_k": 226,
+    "calibrated_quantiles_by_seed": {
+      "42": 0.8888947814702988,
+      "100": 0.8907004296779633,
+      "2026": 0.8926803767681122
+    },
+    "mean_conformal_quantile": 0.8907585293054581
+  },
+  "workload_evaluations": {
+    "CLEAN_MULTIMODAL": {
+      "mean_coverage": 0.9053333333333334,
+      "coverage_std": 0.019686430746977887,
+      "mean_set_size": 2.2733333333333334,
+      "singleton_rate": 0.12,
+      "empty_rate": 0.0
+    },
+    "TEXT_EMBEDDING_NOISE": {
+      "mean_coverage": 0.8000000000000002,
+      "coverage_std": 0.02847220867208347,
+      "mean_set_size": 2.001333333333333,
+      "singleton_rate": 0.20133333333333334,
+      "empty_rate": 0.0
+    },
+    "AUDIO_FEATURE_MASKING": {
+      "mean_coverage": 0.8746666666666667,
+      "coverage_std": 0.016438437341250618,
+      "mean_set_size": 2.2053333333333334,
+      "singleton_rate": 0.14133333333333334,
+      "empty_rate": 0.0
+    },
+    "VISUAL_ZERO_MASK": {
+      "mean_coverage": 0.9066666666666667,
+      "coverage_std": 0.01995550606279437,
+      "mean_set_size": 2.2893333333333334,
+      "singleton_rate": 0.11866666666666666,
+      "empty_rate": 0.0
+    },
+    "COMPOUND_FAULT": {
+      "mean_coverage": 0.7586666666666666,
+      "coverage_std": 0.021249836600678987,
+      "mean_set_size": 1.9666666666666668,
+      "singleton_rate": 0.21866666666666668,
+      "empty_rate": 0.0
+    },
+    "INTERMITTENT_MISSINGNESS": {
+      "mean_coverage": 0.908,
+      "coverage_std": 0.01496662954709578,
+      "mean_set_size": 2.3080000000000003,
+      "singleton_rate": 0.11466666666666668,
+      "empty_rate": 0.0
+    },
+    "HETEROGENEOUS_DEADLINE_STRESS": {
+      "mean_coverage": 0.9053333333333334,
+      "coverage_std": 0.019686430746977887,
+      "mean_set_size": 2.2733333333333334,
+      "singleton_rate": 0.12,
+      "empty_rate": 0.0
+    }
+  },
+  "aggregate_summary": {
+    "clean_coverage": 0.9053333333333334,
+    "overall_mean_coverage": 0.8655238095238095,
+    "overall_mean_set_size": 2.1881904761904765,
+    "target_coverage_met_on_clean": true
+  },
+  "gate_e_verdict": {
+    "status": "PASS",
+    "findings": [
+      "Split conformal calibrated on 'cal' achieves 90.5% coverage on CLEAN_MULTIMODAL (target: 90%).",
+      "Under severe distribution shift (e.g. TEXT_EMBEDDING_NOISE), coverage drops to 80.0%, confirming standard exchangeability limitations.",
+      "Conformal uncertainty is transparently reported as an operational tool without exaggerated distribution-free safety claims under shifted regimes."
+    ]
+  }
+}

@@ -1,0 +1,465 @@
+{
+  "benchmark_version": "13.2",
+  "timestamp_utc": "2026-11-25T05:11:31.920287+00:00",
+  "transport_scope": "Single-host localhost TCP loopback sockets (ports 8765, 8766); threaded providers; NOT multi-device WAN or link-layer energy/TCP-IP packet capture.",
+  "connection_mode_primary": "persistent_keep_alive_tcp_nodelay",
+  "quantile_convention": "numpy.quantile(method='linear')",
+  "environment": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+    "device": "cpu"
+  },
+  "population": {
+    "split": "val",
+    "workloads": [
+      "CLEAN_MULTIMODAL",
+      "TEXT_EMBEDDING_NOISE",
+      "AUDIO_FEATURE_MASKING",
+      "VISUAL_ZERO_MASK",
+      "COMPOUND_FAULT",
+      "INTERMITTENT_MISSINGNESS",
+      "HETEROGENEOUS_DEADLINE_STRESS"
+    ],
+    "seeds": [
+      42,
+      100,
+      2026
+    ],
+    "queries_per_policy": 5250,
+    "total_rows_in_csv": 42000
+  },
+  "offline_vs_socket_clean_parity": {
+    "sequential_confidence": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "confidence_routing_055": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "static_ta": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "always_on_serial": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "always_on_parallel": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "budget_admitted_max": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    },
+    "unimodal_text": {
+      "samples": 250,
+      "mismatches": 0,
+      "exact_parity": true
+    }
+  },
+  "byte_agreement": {
+    "client_total_app_bytes": 11740552,
+    "server_total_app_bytes": 11741673,
+    "abs_discrepancy": 1121
+  },
+  "resource_comparisons_measured_app_bytes": {
+    "vs_AlwaysOn_Direct_Serial_pct": 74.68453332676187,
+    "vs_AlwaysOn_Direct_Parallel_pct": 74.6786879790863,
+    "vs_Static_TA_Direct_pct": 51.84152616687901,
+    "vs_OneShot_ConfidenceRouting_0.55_pct": 14.25236140008469
+  },
+  "policies": {
+    "AlwaysOn_Direct_Serial": {
+      "service_quality_macro_f1": 0.5287467381518868,
+      "raw_macro_f1": 0.5287467381518868,
+      "total_application_protocol_bytes": 2759404,
+      "mean_application_protocol_bytes": 525.600761904762,
+      "total_payload_bytes": 1635700,
+      "mean_wall_ms": 0.8704039046895646,
+      "p50_wall_ms": 0.8735998999327421,
+      "p95_wall_ms": 1.3241550186648965,
+      "p99_wall_ms": 1.5911090653389706,
+      "mean_network_rtt_ms": 0.5024909140941288,
+      "mean_inference_ms": 0.2329231427450265,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.09542857142857143,
+      "mean_nominal_cost": 2.8377142857142856,
+      "num_samples": 5250
+    },
+    "AlwaysOn_Direct_Parallel": {
+      "service_quality_macro_f1": 0.5287489932892545,
+      "raw_macro_f1": 0.5287489932892545,
+      "total_application_protocol_bytes": 2758767,
+      "mean_application_protocol_bytes": 525.4794285714286,
+      "total_payload_bytes": 1635264,
+      "mean_wall_ms": 0.9164903422462798,
+      "p50_wall_ms": 0.9891499648801982,
+      "p95_wall_ms": 1.4578949892893436,
+      "p99_wall_ms": 1.7363380070310095,
+      "mean_network_rtt_ms": 0.5065758853618588,
+      "mean_inference_ms": 0.2388364944074835,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.09542857142857143,
+      "mean_nominal_cost": 2.8377142857142856,
+      "num_samples": 5250
+    },
+    "Static_TA_Direct": {
+      "service_quality_macro_f1": 0.5362515132109633,
+      "raw_macro_f1": 0.5362515132109633,
+      "total_application_protocol_bytes": 1450536,
+      "mean_application_protocol_bytes": 276.2925714285714,
+      "total_payload_bytes": 974928,
+      "mean_wall_ms": 0.505509313462036,
+      "p50_wall_ms": 0.5589499487541616,
+      "p95_wall_ms": 0.8574100094847381,
+      "p99_wall_ms": 1.1227589345071467,
+      "mean_network_rtt_ms": 0.2212367812393322,
+      "mean_inference_ms": 0.22038171455884972,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 1.7430857142857143,
+      "num_samples": 5250
+    },
+    "BudgetAdmittedMaxSubset": {
+      "service_quality_macro_f1": 0.5293643199454537,
+      "raw_macro_f1": 0.5293643199454537,
+      "total_application_protocol_bytes": 2505399,
+      "mean_application_protocol_bytes": 477.21885714285713,
+      "total_payload_bytes": 1491108,
+      "mean_wall_ms": 0.8644826090229409,
+      "p50_wall_ms": 0.7447499665431678,
+      "p95_wall_ms": 1.458909985376522,
+      "p99_wall_ms": 1.8335139914415801,
+      "mean_network_rtt_ms": 0.4634531248538267,
+      "mean_inference_ms": 0.24006426649256832,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 2.6560571428571427,
+      "num_samples": 5250
+    },
+    "OneShot_ConfidenceRouting_0.55": {
+      "service_quality_macro_f1": 0.5404560827296074,
+      "raw_macro_f1": 0.5404560827296074,
+      "total_application_protocol_bytes": 814665,
+      "mean_application_protocol_bytes": 155.1742857142857,
+      "total_payload_bytes": 484828,
+      "mean_wall_ms": 0.5354026868229821,
+      "p50_wall_ms": 0.22175005869939923,
+      "p95_wall_ms": 1.6172750270925467,
+      "p99_wall_ms": 2.0041060098446906,
+      "mean_network_rtt_ms": 0.17373378989508464,
+      "mean_inference_ms": 0.280290115225528,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 1.5310666666666668,
+      "num_samples": 5250
+    },
+    "SequentialConfidence_0.55_0.45": {
+      "service_quality_macro_f1": 0.5414508254504847,
+      "raw_macro_f1": 0.5414508254504847,
+      "total_application_protocol_bytes": 698556,
+      "mean_application_protocol_bytes": 133.05828571428572,
+      "total_payload_bytes": 435668,
+      "mean_wall_ms": 0.5055375044411492,
+      "p50_wall_ms": 0.2341500367037952,
+      "p95_wall_ms": 1.3124299817718565,
+      "p99_wall_ms": 1.8040589999873193,
+      "mean_network_rtt_ms": 0.14033788604484426,
+      "mean_inference_ms": 0.29618811458792715,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 1.416095238095238,
+      "num_samples": 5250
+    },
+    "Unimodal_Text": {
+      "service_quality_macro_f1": 0.5327715581694906,
+      "raw_macro_f1": 0.5327715581694906,
+      "total_application_protocol_bytes": 19284,
+      "mean_application_protocol_bytes": 3.673142857142857,
+      "total_payload_bytes": 12336,
+      "mean_wall_ms": 0.21673049502784297,
+      "p50_wall_ms": 0.18085003830492496,
+      "p95_wall_ms": 0.3300099517218769,
+      "p99_wall_ms": 0.677152976859361,
+      "mean_network_rtt_ms": 0.00998838088430819,
+      "mean_inference_ms": 0.19582369626455365,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 0.9997714285714286,
+      "num_samples": 5250
+    },
+    "MatchedBudgetRandom_1.45": {
+      "service_quality_macro_f1": 0.5373199916344222,
+      "raw_macro_f1": 0.5373199916344222,
+      "total_application_protocol_bytes": 733941,
+      "mean_application_protocol_bytes": 139.79828571428573,
+      "total_payload_bytes": 440844,
+      "mean_wall_ms": 0.4515615436470225,
+      "p50_wall_ms": 0.23579999106004834,
+      "p95_wall_ms": 1.1275000346358865,
+      "p99_wall_ms": 1.6441100626252594,
+      "mean_network_rtt_ms": 0.16042880006577998,
+      "mean_inference_ms": 0.2249679799147305,
+      "on_time_rate": 0.9977142857142857,
+      "acceptance_rate": 0.9977142857142857,
+      "useful_on_time_rate": 0.9977142857142857,
+      "budget_violation_rate": 0.0,
+      "mean_nominal_cost": 1.4692,
+      "num_samples": 5250
+    }
+  },
+  "sensitivity_studies": {
+    "concurrency_4": {
+      "AlwaysOn_Direct_Parallel": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 5.678922004532069,
+        "p50_wall_ms": 5.523300031200051,
+        "p95_wall_ms": 7.458474964369085,
+        "p99_wall_ms": 13.045765034621553,
+        "on_time_rate": 1.0
+      },
+      "AlwaysOn_Direct_Serial": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 5.336149601731449,
+        "p50_wall_ms": 5.232449970208108,
+        "p95_wall_ms": 7.073315000161528,
+        "p99_wall_ms": 9.880203972570591,
+        "on_time_rate": 1.0
+      },
+      "BudgetAdmittedMaxSubset": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 5.4045592015609145,
+        "p50_wall_ms": 5.245200009085238,
+        "p95_wall_ms": 6.9975399936083695,
+        "p99_wall_ms": 12.671241067582738,
+        "on_time_rate": 1.0
+      },
+      "OneShot_ConfidenceRouting_0.55": {
+        "num_queries": 250,
+        "total_app_bytes": 99496,
+        "mean_app_bytes": 397.984,
+        "mean_wall_ms": 4.488592405803502,
+        "p50_wall_ms": 5.212100048083812,
+        "p95_wall_ms": 8.2350900163874,
+        "p99_wall_ms": 12.871392979286604,
+        "on_time_rate": 1.0
+      },
+      "SequentialConfidence_0.55_0.45": {
+        "num_queries": 250,
+        "total_app_bytes": 66308,
+        "mean_app_bytes": 265.232,
+        "mean_wall_ms": 3.513987203128636,
+        "p50_wall_ms": 3.5203000297769904,
+        "p95_wall_ms": 7.848835014738139,
+        "p99_wall_ms": 9.95599198620766,
+        "on_time_rate": 1.0
+      },
+      "Static_TA_Direct": {
+        "num_queries": 250,
+        "total_app_bytes": 110030,
+        "mean_app_bytes": 440.12,
+        "mean_wall_ms": 3.689392004162073,
+        "p50_wall_ms": 3.6569999647326767,
+        "p95_wall_ms": 5.410215025767684,
+        "p99_wall_ms": 6.155878013232722,
+        "on_time_rate": 1.0
+      },
+      "Unimodal_Text": {
+        "num_queries": 250,
+        "total_app_bytes": 0,
+        "mean_app_bytes": 0.0,
+        "mean_wall_ms": 1.5021711993031204,
+        "p50_wall_ms": 1.4759500627405941,
+        "p95_wall_ms": 2.330509974854066,
+        "p99_wall_ms": 2.8227560641244045,
+        "on_time_rate": 1.0
+      }
+    },
+    "non_persistent_connect": {
+      "AlwaysOn_Direct_Parallel": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 6.178817195352167,
+        "p50_wall_ms": 2.9929500306025147,
+        "p95_wall_ms": 18.41282000532373,
+        "p99_wall_ms": 25.471272965660315,
+        "on_time_rate": 1.0
+      },
+      "AlwaysOn_Direct_Serial": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 18.65742880059406,
+        "p50_wall_ms": 16.80889999261126,
+        "p95_wall_ms": 32.77395503828301,
+        "p99_wall_ms": 39.157522997120395,
+        "on_time_rate": 1.0
+      },
+      "BudgetAdmittedMaxSubset": {
+        "num_queries": 250,
+        "total_app_bytes": 181560,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 6.74437639862299,
+        "p50_wall_ms": 2.93885002611205,
+        "p95_wall_ms": 17.089120030868795,
+        "p99_wall_ms": 21.800276024732714,
+        "on_time_rate": 1.0
+      },
+      "OneShot_ConfidenceRouting_0.55": {
+        "num_queries": 250,
+        "total_app_bytes": 99496,
+        "mean_app_bytes": 397.984,
+        "mean_wall_ms": 3.5699387970380485,
+        "p50_wall_ms": 2.520450041629374,
+        "p95_wall_ms": 16.718480014242225,
+        "p99_wall_ms": 25.482108980650068,
+        "on_time_rate": 1.0
+      },
+      "SequentialConfidence_0.55_0.45": {
+        "num_queries": 250,
+        "total_app_bytes": 66308,
+        "mean_app_bytes": 265.232,
+        "mean_wall_ms": 5.312587204389274,
+        "p50_wall_ms": 2.1772999898530543,
+        "p95_wall_ms": 16.76555001176893,
+        "p99_wall_ms": 32.04671501182015,
+        "on_time_rate": 1.0
+      },
+      "Static_TA_Direct": {
+        "num_queries": 250,
+        "total_app_bytes": 110030,
+        "mean_app_bytes": 440.12,
+        "mean_wall_ms": 8.69923239806667,
+        "p50_wall_ms": 3.416399995330721,
+        "p95_wall_ms": 21.519894944503896,
+        "p99_wall_ms": 26.86323698260821,
+        "on_time_rate": 1.0
+      },
+      "Unimodal_Text": {
+        "num_queries": 250,
+        "total_app_bytes": 0,
+        "mean_app_bytes": 0.0,
+        "mean_wall_ms": 0.19709200132638216,
+        "p50_wall_ms": 0.17929996829479933,
+        "p95_wall_ms": 0.2962350321467963,
+        "p99_wall_ms": 0.41055298293940723,
+        "on_time_rate": 1.0
+      }
+    },
+    "persistent_3reps": {
+      "AlwaysOn_Direct_Parallel": {
+        "num_queries": 750,
+        "total_app_bytes": 544680,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 1.2556251981295645,
+        "p50_wall_ms": 1.2034499668516219,
+        "p95_wall_ms": 1.5730650397017594,
+        "p99_wall_ms": 1.7868490400724109,
+        "on_time_rate": 1.0
+      },
+      "AlwaysOn_Direct_Serial": {
+        "num_queries": 750,
+        "total_app_bytes": 544452,
+        "mean_app_bytes": 725.936,
+        "mean_wall_ms": 1.1973999983941515,
+        "p50_wall_ms": 1.0798999574035406,
+        "p95_wall_ms": 1.4307450037449598,
+        "p99_wall_ms": 1.7936790303792796,
+        "on_time_rate": 0.9986666666666667
+      },
+      "BudgetAdmittedMaxSubset": {
+        "num_queries": 750,
+        "total_app_bytes": 544680,
+        "mean_app_bytes": 726.24,
+        "mean_wall_ms": 1.2113973340019584,
+        "p50_wall_ms": 1.1276000877842307,
+        "p95_wall_ms": 1.461364951683208,
+        "p99_wall_ms": 1.6768280195537955,
+        "on_time_rate": 1.0
+      },
+      "OneShot_ConfidenceRouting_0.55": {
+        "num_queries": 750,
+        "total_app_bytes": 298488,
+        "mean_app_bytes": 397.984,
+        "mean_wall_ms": 0.9454870658616225,
+        "p50_wall_ms": 1.3057999894954264,
+        "p95_wall_ms": 1.7519400047603995,
+        "p99_wall_ms": 1.9629670458380133,
+        "on_time_rate": 1.0
+      },
+      "SequentialConfidence_0.55_0.45": {
+        "num_queries": 750,
+        "total_app_bytes": 198924,
+        "mean_app_bytes": 265.232,
+        "mean_wall_ms": 0.728240933890144,
+        "p50_wall_ms": 0.7701999857090414,
+        "p95_wall_ms": 1.6141850035637613,
+        "p99_wall_ms": 2.35316198784858,
+        "on_time_rate": 1.0
+      },
+      "Static_TA_Direct": {
+        "num_queries": 750,
+        "total_app_bytes": 330090,
+        "mean_app_bytes": 440.12,
+        "mean_wall_ms": 0.6878646661837896,
+        "p50_wall_ms": 0.6341500557027757,
+        "p95_wall_ms": 0.8616849780082703,
+        "p99_wall_ms": 1.1302239913493393,
+        "on_time_rate": 1.0
+      },
+      "Unimodal_Text": {
+        "num_queries": 750,
+        "total_app_bytes": 0,
+        "mean_app_bytes": 0.0,
+        "mean_wall_ms": 0.20691733372708163,
+        "p50_wall_ms": 0.18169998656958342,
+        "p95_wall_ms": 0.309420027770102,
+        "p99_wall_ms": 0.38795698434114445,
+        "on_time_rate": 1.0
+      }
+    }
+  },
+  "fault_stress_summary": {
+    "total_fault_queries": 36,
+    "scenarios": [
+      "connection_refused",
+      "disconnect_mid_frame",
+      "non_finite_nan_feature",
+      "out_of_bounds_sample_id",
+      "oversize_malformed_header",
+      "slow_provider_timeout",
+      "tight_budget_reject",
+      "tight_deadline_reject",
+      "total_blackout"
+    ]
+  }
+}

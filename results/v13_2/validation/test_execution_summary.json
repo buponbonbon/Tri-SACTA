@@ -1,0 +1,7 @@
+{
+  "exit_code": 0,
+  "passed": 174,
+  "failed": 0,
+  "skipped": 0,
+  "runner": "tests/run_all_tests.py"
+}

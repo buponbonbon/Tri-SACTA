@@ -1,0 +1,54 @@
+{
+  "status": "PROCEED_SYSTEMS_PAPER",
+  "project_version": "V12.1",
+  "scientific_mandate": "Budgeted Multimodal Systems Contribution with Calibrated Conformal Risk",
+  "target_journal": {
+    "primary": "Multimedia Tools and Applications (Springer)",
+    "scimago_rank": "Q1 (Computer Science Applications) / Q2",
+    "mandatory_apc_fee_usd": 0.0,
+    "model": "Hybrid (Traditional subscription track has zero author-facing fees)",
+    "backup_journals": [
+      {
+        "name": "Multimedia Systems (Springer)",
+        "rank": "Q2",
+        "mandatory_apc_usd": 0.0
+      },
+      {
+        "name": "Computing (Springer)",
+        "rank": "Q2",
+        "mandatory_apc_usd": 0.0
+      }
+    ]
+  },
+  "accepted_systems_claims": [
+    "Budget-Constrained Reliability-Aware Modality Orchestrator (BRMO) achieving non-inferior predictive fidelity (Delta Macro-F1 = -0.0031 vs Always-On, margin >= -0.010)",
+    "Resource cost reduction of 17.05% on clean multimodal data and 34.29% to 45.33% under sensor faults via dynamic lazy acquisition",
+    "Standardized Centroid Distance drift triage preventing blind fast-path failure on corrupted text features (fast-path drops from 40.9% to 0.0%)",
+    "Distribution-free Split Conformal risk quantification delivering >=90% empirical marginal coverage with calibrated selective abstention",
+    "Sub-25ms warm sequential HTTP service latency with 100% deadline compliance under tight SLA stress"
+  ],
+  "withdrawn_or_refuted_claims": [
+    "WITHDRAWN: SOTA test-time adaptation (TTA) algorithms (refuted by causal zero-delta and negative transfer audits)",
+    "WITHDRAWN: Claims that multimodal fusion unconditionally outperforms unimodal text on clean data (refuted by rigorous 9-model predictor bank audit; Text MLP beats Multimodal Fusion 0.5697 vs 0.5580)",
+    "WITHDRAWN: Spectral eigenvalue heuristic metrics evaluated on low-rank feature projections (D-02)",
+    "WITHDRAWN: Claims of superiority against uncalibrated or mismatched baselines"
+  ],
+  "experimental_verification": {
+    "total_evaluation_runs": 315,
+    "multi_seed_rigor": [42, 100, 2026],
+    "workloads_evaluated": 7,
+    "policies_evaluated": 15,
+    "clean_data_non_inferiority_met": true,
+    "cost_saving_threshold_ge_15pct_met": true,
+    "conformal_calibration_guarantee_met": true,
+    "peak_inference_vram_mb": 34.8,
+    "quarantined_test_set_unexposed": true,
+    "regression_tests_passed": 94,
+    "regression_tests_failed": 0
+  },
+  "author_instruction_status": {
+    "v12_superseded_by_v12_1": true,
+    "ready_for_manual_pr_merge": true,
+    "action_after_merge": "Close obsolete V12 PR and delete research/v12-systems-contribution-validation"
+  }
+}

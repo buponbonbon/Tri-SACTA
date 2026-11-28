@@ -1,0 +1,43 @@
+{
+  "audit_version": "v12.0",
+  "date": "2026-11-23",
+  "base_commit": "717d5dfdc1f4831dd481d04a8b7bd7edbe528f04",
+  "branch": "research/v12-systems-contribution-validation",
+  "verdict": "SYSTEMS_PAPER_GO",
+  "scope": "feature_level_inference_orchestration",
+  "gates": {
+    "G0_integrity": "PASS",
+    "G1_predictive_utility": "SUPPORTED",
+    "G2_system_tradeoff": "SUPPORTED",
+    "G3_novelty": "DEFENSIBLE",
+    "G4_raw_input": "NARROWED_TO_FEATURE_STREAMING",
+    "G5_generalization": "VERIFIED_ON_VALIDATION_BOOTSTRAP",
+    "G6_publication_fit": "READY_FOR_MTAP_0_USD_APC"
+  },
+  "stage_1_retraining_summary": {
+    "task": "3_class_sentiment",
+    "majority_class": {"accuracy": 0.4000, "macro_f1": 0.1905},
+    "text_only_mlp": {"accuracy_mean": 0.5867, "macro_f1_mean": 0.5697},
+    "multimodal_fusion_directly_trained": {
+      "accuracy_mean": 0.5720,
+      "macro_f1_mean": 0.5618,
+      "peak_accuracy_seed100": 0.5920,
+      "peak_macro_f1_seed100": 0.5796,
+      "parameters": 1066397
+    },
+    "v11_remapped_historical": {"accuracy": 0.4560, "macro_f1": 0.4101}
+  },
+  "stage_2_and_3_brmo_summary": {
+    "clean_speedup_vs_always_on": "22% latency reduction (10.6ms vs 13.6ms)",
+    "clean_cost_reduction_vs_always_on": "23% sensor invocation reduction (2.68x vs 3.50x)",
+    "asr_drift_f1_gain_vs_text_only": "+6.7 F1 points (0.4057 vs 0.3384)",
+    "causal_detector_gain_vs_shuffled": "+3.4 F1 points over random routing",
+    "peak_vram_mb": 13.27
+  },
+  "recommended_venue": {
+    "journal": "Multimedia Tools and Applications (Springer)",
+    "sjr_tier": "Q1 (2023-2024) / Q2 (2025)",
+    "mandatory_apc": 0,
+    "publishing_model": "Traditional subscription (Green OA / zero-cost author option)"
+  }
+}

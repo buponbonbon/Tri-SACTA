@@ -1,0 +1,8 @@
+# Dedicated CPU-only CI dependency lock for Tri-SACTA V13.2 regression and synthetic dry-run checks.
+# Excludes Windows/CUDA packages, optional REST API (fastapi/joblib), and raw-media/HF extraction (transformers).
+# Install PyTorch CPU first via: pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+numpy==1.26.4
+pandas==2.3.3
+pydantic==2.12.5
+scikit-learn==1.7.2
+scipy==1.15.3

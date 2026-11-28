@@ -1,0 +1,391 @@
+{
+  "audit_version": "13.2",
+  "timestamp_utc": "2026-11-25T05:01:34.003778+00:00",
+  "dataset_name": "CMU-MOSEI",
+  "raw_assets": {
+    "mosei.pkl": {
+      "path": "data/cmu_mosei/raw/mosei.pkl",
+      "size_bytes": 507823345,
+      "sha256": "90701ad5bfa8767ca253af729c1d346e9a8d259ed24f16de113c845ffb60d90e"
+    },
+    "train.csv": {
+      "path": "data/cmu_mosei/raw/train.csv",
+      "size_bytes": 4649662,
+      "sha256": "e548cbf003c6ad84c2ba941c0e7626b953864f9632c745cb2171da4bc4411e40"
+    },
+    "val.csv": {
+      "path": "data/cmu_mosei/raw/val.csv",
+      "size_bytes": 552163,
+      "sha256": "6fb286af708543aa8c3bab193803fee78d36acf96a7fe07d401a21a0d3773778"
+    },
+    "test.csv": {
+      "path": "data/cmu_mosei/raw/test.csv",
+      "size_bytes": 1350962,
+      "sha256": "8723f3b6f1aac552dc6c2d2472d8e1329cf8f7b3b13ca51e3fa13b797b702b71"
+    },
+    "data_manifest.json": {
+      "path": "data/cmu_mosei/data_manifest.json",
+      "size_bytes": 1705676,
+      "sha256": "cb77d74b463aa754c562d228c785a1d516ef1d0f4c331459e1c09b6675f74f15"
+    }
+  },
+  "cached_splits": {
+    "train": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/train/text.pt",
+        "size_bytes": 1537101,
+        "sha256": "626f2cf800332a266f398b31d85f425702306bf3ffa7ffd46a6980431b476f11",
+        "shape": [
+          1000,
+          768
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/train/audio.pt",
+        "size_bytes": 149138,
+        "sha256": "44a9fde3dd4077c82476febad30d888cbb58a6a938424d695478b6abdd43c628",
+        "shape": [
+          1000,
+          74
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/train/visual.pt",
+        "size_bytes": 71127,
+        "sha256": "f1c12869cce46e0f573c7644aeecbd999140e078c553dcc753d4f52427541d47",
+        "shape": [
+          1000,
+          35
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/train/labels.pt",
+        "size_bytes": 9111,
+        "sha256": "5cabe0beef89445ef8d6c0fb65249ffe3a8eae88a73914366c35a63f12dc4e1c",
+        "shape": [
+          1000
+        ],
+        "dtype": "torch.int64"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/train/meta.pt",
+        "size_bytes": 245972,
+        "sha256": "0c342f9fd9beab5582a772819a7f6a5547d5be9591b9743298868ee00535d832",
+        "count": 1000
+      }
+    },
+    "val": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/val/text.pt",
+        "size_bytes": 385101,
+        "sha256": "6d10e938fbcabdbb0ea96c7cb7d4ea803899e6be9b58e0d40fbe395379135882",
+        "shape": [
+          250,
+          768
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/val/audio.pt",
+        "size_bytes": 38162,
+        "sha256": "ed9d9ce4b62ece67e5e66521ce7e98429e665b3faef506dc9da2cc2cecb93d5b",
+        "shape": [
+          250,
+          74
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/val/visual.pt",
+        "size_bytes": 18647,
+        "sha256": "f130eccfc5ff7056824bee31a9f6453eda7137cf7509b1d84bff18328c30517a",
+        "shape": [
+          250,
+          35
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/val/labels.pt",
+        "size_bytes": 3159,
+        "sha256": "619ca9189997753329917ce5a16f371a31f3ec38a37830ce1b8d815f2c9c6639",
+        "shape": [
+          250
+        ],
+        "dtype": "torch.int64"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/val/meta.pt",
+        "size_bytes": 58900,
+        "sha256": "0966687ee9f0e112e4dd436d5040ebf706d32e90c6ca56bdf640b9998b356b9b",
+        "count": 250
+      }
+    },
+    "cal": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/text.pt",
+        "size_bytes": 385101,
+        "sha256": "90b9818f9decbcd312bdf97f4463c93246ffc68d940a653e6872d26efa5c0ed1",
+        "shape": [
+          250,
+          768
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/audio.pt",
+        "size_bytes": 38162,
+        "sha256": "de8d73fe8e25c223885b09fa6a4755438910348b94c19ba0ed41e7d27f3b9039",
+        "shape": [
+          250,
+          74
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/visual.pt",
+        "size_bytes": 18647,
+        "sha256": "8effc2a7ba92fec7f6a85324185cd4e91b14477438eacc4f515cff895d80e5ff",
+        "shape": [
+          250,
+          35
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/labels.pt",
+        "size_bytes": 3159,
+        "sha256": "1ea04f173f4aca9f5c08cc8f12c0d5d6108c261196620c4344ec1ebfce81af6b",
+        "shape": [
+          250
+        ],
+        "dtype": "torch.int64"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/cal/meta.pt",
+        "size_bytes": 66516,
+        "sha256": "1b65514483c418b9367df1e519c594c198c45d45c7cdf8f2fbe0a018020dd4e9",
+        "count": 250
+      }
+    },
+    "test": {
+      "text.pt": {
+        "path": "data/cmu_mosei/features_cache/test/text.pt",
+        "size_bytes": 769101,
+        "sha256": "4501208dedf9d5c28d0d3f8f9e13cefba0b700801d7da78a4ffb7ae1c802abbe",
+        "shape": [
+          500,
+          768
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "audio.pt": {
+        "path": "data/cmu_mosei/features_cache/test/audio.pt",
+        "size_bytes": 75154,
+        "sha256": "42e1b443832b64d4a60c6d16aa79303067b01b5f1a1d8cfe5d5adb6c6e379f8e",
+        "shape": [
+          500,
+          74
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "visual.pt": {
+        "path": "data/cmu_mosei/features_cache/test/visual.pt",
+        "size_bytes": 36119,
+        "sha256": "0e0d88e33d45b449e53b38cf68bfc1b913a4aa6b7c1a57b99f83c94e88bbcf51",
+        "shape": [
+          500,
+          35
+        ],
+        "dtype": "torch.float16",
+        "all_finite": true
+      },
+      "labels.pt": {
+        "path": "data/cmu_mosei/features_cache/test/labels.pt",
+        "size_bytes": 5143,
+        "sha256": "8b2712208bb1e57a94785c6ffba41cd4ecbcab52ef9dfee76864576d70ac20f5",
+        "shape": [
+          500
+        ],
+        "dtype": "torch.int64"
+      },
+      "meta.pt": {
+        "path": "data/cmu_mosei/features_cache/test/meta.pt",
+        "size_bytes": 120404,
+        "sha256": "69534e394dbee93b8a6f59d23017c8707ca5fc1bc396e065fe8dc627ea3b684c",
+        "count": 500
+      }
+    }
+  },
+  "row_identity_verification": {
+    "train": {
+      "count": 1000,
+      "raw_row_mismatches": 0,
+      "labels_7class_dtype": "torch.int64",
+      "labels_7class_mismatches": 0,
+      "target_3class_counts": {
+        "negative": 390,
+        "neutral": 238,
+        "positive": 372
+      }
+    },
+    "val": {
+      "count": 250,
+      "raw_row_mismatches": 0,
+      "labels_7class_dtype": "torch.int64",
+      "labels_7class_mismatches": 0,
+      "target_3class_counts": {
+        "negative": 100,
+        "neutral": 65,
+        "positive": 85
+      }
+    },
+    "cal": {
+      "count": 250,
+      "raw_row_mismatches": 0,
+      "labels_7class_dtype": "torch.int64",
+      "labels_7class_mismatches": 0,
+      "target_3class_counts": {
+        "negative": 43,
+        "neutral": 66,
+        "positive": 141
+      }
+    },
+    "test": {
+      "count": 500,
+      "raw_row_mismatches": 0,
+      "labels_7class_dtype": "torch.int64",
+      "labels_7class_mismatches": 0,
+      "target_3class_counts": {
+        "negative": 213,
+        "neutral": 117,
+        "positive": 170
+      }
+    }
+  },
+  "raw_partition_disjointness": {
+    "raw_train_total": 16265,
+    "raw_train_unique_videos": 2247,
+    "raw_dev_total": 1869,
+    "raw_dev_unique_videos": 300,
+    "raw_test_total": 4643,
+    "raw_test_unique_videos": 675,
+    "full_raw_train_vs_dev_video_overlap": 0,
+    "full_raw_train_vs_test_video_overlap": 0,
+    "full_raw_dev_vs_test_video_overlap": 0
+  },
+  "split_lineage_and_exposure": {
+    "train": {
+      "num_utterances": 1000,
+      "num_unique_video_groups": 112,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations lack verified human speaker identities. Only YouTube video_group_id disjointness is verified."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 390,
+        "neutral (1)": 238,
+        "positive (2)": 372
+      },
+      "exposure_status": "DEVELOPMENT_FIT"
+    },
+    "val": {
+      "num_utterances": 250,
+      "num_unique_video_groups": 29,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations lack verified human speaker identities. Only YouTube video_group_id disjointness is verified."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 100,
+        "neutral (1)": 65,
+        "positive (2)": 85
+      },
+      "exposure_status": "DEVELOPMENT_FIT"
+    },
+    "cal": {
+      "num_utterances": 250,
+      "num_unique_video_groups": 46,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations lack verified human speaker identities. Only YouTube video_group_id disjointness is verified."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 43,
+        "neutral (1)": 66,
+        "positive (2)": 141
+      },
+      "exposure_status": "DEVELOPMENT_FIT"
+    },
+    "test": {
+      "num_utterances": 500,
+      "num_unique_video_groups": 58,
+      "speaker_schema": {
+        "speaker_id_verified": null,
+        "speaker_proxy": "mosei_spk_{vid[:8]}",
+        "speaker_overlap_status": "UNKNOWN",
+        "limitation_disclosure": "CMU-MOSEI raw annotations lack verified human speaker identities. Only YouTube video_group_id disjointness is verified."
+      },
+      "class_distribution_3class": {
+        "negative (0)": 213,
+        "neutral (1)": 117,
+        "positive (2)": 170
+      },
+      "exposure_status": "QUARANTINED_HISTORICAL_BENCHMARK"
+    }
+  },
+  "unexposed_pool_audit": {
+    "raw_test_pool_size": 4643,
+    "historical_test_consumed": 500,
+    "intra_video_segments_excluded": 12,
+    "unexposed_available_utterances": 4131,
+    "unexposed_unique_video_clusters": 617,
+    "cross_split_video_overlap_with_train_val_cal_test": 0,
+    "duplicate_canonical_keys": 0,
+    "class_distribution_3class": {
+      "negative (0)": 1132,
+      "neutral (1)": 900,
+      "positive (2)": 2099
+    },
+    "prior_aggregate_inspection_disclosure": "Aggregate 3-class label counts on unexposed pool were inspected during V13.1/V13.2 metadata provenance audits. No labels, raw transcripts, or features were used for model training, sample selection, or threshold tuning.",
+    "eligible_manifest_path": "results/v13_2/provenance/eligible_holdout_manifest.json",
+    "eligible_manifest_sha256": "146157febd1f2c775e4195f694293d6e8701fcf4e8537884e4d15ad55251502e",
+    "phase_i_isolation_assertion": "No model inference, feature extraction, or threshold tuning has been executed on this pool."
+  },
+  "dev_only_extraction_reproducibility": {
+    "scope": "DEV_VAL_FIRST_5_SAMPLES_ONLY",
+    "audio_covarep_max_abs_diff": 0.0,
+    "visual_facet_max_abs_diff": 0.0,
+    "audio_visual_exact_fp16_parity": true,
+    "text_encoder": {
+      "encoder_id": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
+      "snapshot_revision": "8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c",
+      "local_snapshot_present": true,
+      "status": "VERIFIED_DEV_ONLY",
+      "dev_samples_checked": 5,
+      "max_abs_diff": 0.0859375,
+      "min_cosine_similarity": 0.9999368190765381,
+      "tolerance_pass": false
+    }
+  }
+}

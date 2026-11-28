@@ -1,0 +1,806 @@
+{
+  "split": "test",
+  "sample_count": 500,
+  "unique_video_clusters": 58,
+  "bootstrap_resamples": 1000,
+  "non_inferiority_margin_f1": -0.01,
+  "cost_reduction_target_pct": 15.0,
+  "workloads": {
+    "CLEAN_MULTIMODAL": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.0077508940662492755,
+        "delta_macro_f1_95ci": [
+          -0.015056756424751034,
+          0.0302462783990772
+        ],
+        "delta_cost_mean": -0.16998629796504974,
+        "delta_cost_95ci": [
+          -0.22160151600837708,
+          -0.11837593317031861
+        ],
+        "cost_reduction_pct_mean": 8.923429392423538,
+        "cost_reduction_pct_95ci": [
+          6.555880595257676,
+          11.126306688735857
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": 0.004114901697308865,
+        "delta_macro_f1_95ci": [
+          -0.028935709137104054,
+          0.03527731734163187
+        ],
+        "delta_cost_mean": -0.693942267537117,
+        "delta_cost_95ci": [
+          -0.7494418084621429,
+          -0.6416865319013596
+        ],
+        "cost_reduction_pct_mean": 28.63510824063253,
+        "cost_reduction_pct_95ci": [
+          27.61472032549799,
+          29.585082564789055
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": 0.00964865427706125,
+        "delta_macro_f1_95ci": [
+          -0.011201906477965573,
+          0.03300696657458843
+        ],
+        "delta_cost_mean": 0.7286660312414169,
+        "delta_cost_95ci": [
+          0.6657715082168579,
+          0.797299501299858
+        ],
+        "cost_reduction_pct_mean": -72.86660239547567,
+        "cost_reduction_pct_95ci": [
+          -79.72994933268633,
+          -66.5771501559143
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.008066649528664161,
+        "delta_macro_f1_95ci": [
+          -0.012892301462554467,
+          0.03079918351522798
+        ],
+        "delta_cost_mean": -0.1010380357503891,
+        "delta_cost_95ci": [
+          -0.1821357399225235,
+          -0.014837858080864004
+        ],
+        "cost_reduction_pct_mean": 5.506110757009635,
+        "cost_reduction_pct_95ci": [
+          0.8322254349349019,
+          9.790236689816942
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.008079340369190455,
+        "delta_macro_f1_95ci": [
+          -0.02642058125339348,
+          0.04247886586281579
+        ],
+        "delta_cost_mean": -1.7713339687585832,
+        "delta_cost_95ci": [
+          -1.8342284917831422,
+          -1.702700498700142
+        ],
+        "cost_reduction_pct_mean": 50.60954181993226,
+        "cost_reduction_pct_95ci": [
+          48.648585538150954,
+          52.40652818692827
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      }
+    },
+    "TEXT_EMBEDDING_NOISE": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": -0.0010505121536000584,
+        "delta_macro_f1_95ci": [
+          -0.016544889304167327,
+          0.016538770401420485
+        ],
+        "delta_cost_mean": -0.062279360175132754,
+        "delta_cost_95ci": [
+          -0.11238992512226105,
+          -0.016632369160652166
+        ],
+        "cost_reduction_pct_mean": 3.916860470529894,
+        "cost_reduction_pct_95ci": [
+          1.107539613857479,
+          6.807875704448637
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": -0.010702740348467993,
+        "delta_macro_f1_95ci": [
+          -0.02941972538961408,
+          0.0076925816572696645
+        ],
+        "delta_cost_mean": -0.5307991306781769,
+        "delta_cost_95ci": [
+          -0.5767521440982819,
+          -0.4810133755207062
+        ],
+        "cost_reduction_pct_mean": 25.939888201103116,
+        "cost_reduction_pct_95ci": [
+          24.611738996537902,
+          27.129280280518472
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": 0.011639007092914214,
+        "delta_macro_f1_95ci": [
+          -0.004161128099837183,
+          0.0279789866745417
+        ],
+        "delta_cost_mean": 0.5145160225629807,
+        "delta_cost_95ci": [
+          0.4674045979976654,
+          0.563662412762642
+        ],
+        "cost_reduction_pct_mean": -51.451601741782056,
+        "cost_reduction_pct_95ci": [
+          -56.36624071260179,
+          -46.74045933236195
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.003303153286267144,
+        "delta_macro_f1_95ci": [
+          -0.009579837191958098,
+          0.01727559080681563
+        ],
+        "delta_cost_mean": -0.31518804442882536,
+        "delta_cost_95ci": [
+          -0.3766378045082092,
+          -0.2522834122180939
+        ],
+        "cost_reduction_pct_mean": 17.21623540636286,
+        "cost_reduction_pct_95ci": [
+          13.96880764988192,
+          20.239436883595417
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": -0.014156562576456075,
+        "delta_macro_f1_95ci": [
+          -0.03923811226204716,
+          0.010735411345565486
+        ],
+        "delta_cost_mean": -1.9854839774370194,
+        "delta_cost_95ci": [
+          -2.0325954020023347,
+          -1.936337587237358
+        ],
+        "cost_reduction_pct_mean": 56.72811347897738,
+        "cost_reduction_pct_95ci": [
+          55.323930905856145,
+          58.074154176997695
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      }
+    },
+    "AUDIO_FEATURE_MASKING": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.004407100767139773,
+        "delta_macro_f1_95ci": [
+          -0.007864620629247334,
+          0.016108731839372798
+        ],
+        "delta_cost_mean": -0.19645855724811553,
+        "delta_cost_95ci": [
+          -0.22584408819675444,
+          -0.17094145119190216
+        ],
+        "cost_reduction_pct_mean": 13.381183761907979,
+        "cost_reduction_pct_95ci": [
+          11.973893878329905,
+          15.033589154792395
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": 0.007119705939504833,
+        "delta_macro_f1_95ci": [
+          -0.016022191839153117,
+          0.029103606549666965
+        ],
+        "delta_cost_mean": -0.46891559767723084,
+        "delta_cost_95ci": [
+          -0.5065418630838394,
+          -0.4333332747220993
+        ],
+        "cost_reduction_pct_mean": 26.94825328773645,
+        "cost_reduction_pct_95ci": [
+          25.551177555260974,
+          28.531982616307758
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": -0.005385856989053714,
+        "delta_macro_f1_95ci": [
+          -0.027226034270952052,
+          0.016057999324576078
+        ],
+        "delta_cost_mean": 0.2708406479358673,
+        "delta_cost_95ci": [
+          0.22828026711940766,
+          0.3134244441986084
+        ],
+        "cost_reduction_pct_mean": -27.084064522746086,
+        "cost_reduction_pct_95ci": [
+          -31.3424441064364,
+          -22.8280264836605
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.008214520602874413,
+        "delta_macro_f1_95ci": [
+          -0.011242567010976314,
+          0.028206344858919263
+        ],
+        "delta_cost_mean": -0.15650677120685577,
+        "delta_cost_95ci": [
+          -0.21096856892108917,
+          -0.1045913189649582
+        ],
+        "cost_reduction_pct_mean": 10.954700267501527,
+        "cost_reduction_pct_95ci": [
+          7.376441616657234,
+          14.577653314233842
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.02050759341469751,
+        "delta_macro_f1_95ci": [
+          -0.008751202647298641,
+          0.04911817931358126
+        ],
+        "delta_cost_mean": -1.0291591131687163,
+        "delta_cost_95ci": [
+          -1.071719679236412,
+          -0.9865750432014465
+        ],
+        "cost_reduction_pct_mean": 44.74605284862807,
+        "cost_reduction_pct_95ci": [
+          42.894576469230664,
+          46.596508677093574
+        ],
+        "non_inferior": true,
+        "cost_dominant": true,
+        "pareto_dominant": true
+      }
+    },
+    "VISUAL_ZERO_MASK": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.0003190770567079033,
+        "delta_macro_f1_95ci": [
+          -0.009636583413065222,
+          0.012265916244924083
+        ],
+        "delta_cost_mean": 0.23048901188373566,
+        "delta_cost_95ci": [
+          0.2111933022737503,
+          0.25084625780582426
+        ],
+        "cost_reduction_pct_mean": -16.10922698973326,
+        "cost_reduction_pct_95ci": [
+          -17.73030637030298,
+          -14.63905193991957
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": -0.0011280087422164938,
+        "delta_macro_f1_95ci": [
+          -0.0038004595128196426,
+          0.0013196174668001625
+        ],
+        "delta_cost_mean": -0.021009917974472044,
+        "delta_cost_95ci": [
+          -0.028460857272148133,
+          -0.014339536428451542
+        ],
+        "cost_reduction_pct_mean": 1.2483861679944648,
+        "cost_reduction_pct_95ci": [
+          0.8569294682736938,
+          1.6880194422922257
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": 0.009053788410047815,
+        "delta_macro_f1_95ci": [
+          -0.011308818837249537,
+          0.030581075367731813
+        ],
+        "delta_cost_mean": 0.6618421335220337,
+        "delta_cost_95ci": [
+          0.6086895048618317,
+          0.7183405131101608
+        ],
+        "cost_reduction_pct_mean": -66.18421269036125,
+        "cost_reduction_pct_95ci": [
+          -71.83405059267558,
+          -60.86894987749368
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.004910536464832595,
+        "delta_macro_f1_95ci": [
+          -0.014096879625051273,
+          0.025013520112416775
+        ],
+        "delta_cost_mean": 0.2673676031827927,
+        "delta_cost_95ci": [
+          0.2054867446422577,
+          0.3319717973470688
+        ],
+        "cost_reduction_pct_mean": -19.187942339373702,
+        "cost_reduction_pct_95ci": [
+          -24.15231638842008,
+          -14.466651074080541
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.004301108179895471,
+        "delta_macro_f1_95ci": [
+          -0.0026378513580350366,
+          0.011370405093947126
+        ],
+        "delta_cost_mean": -0.5381581182479859,
+        "delta_cost_95ci": [
+          -0.5913110136985779,
+          -0.48166001141071324
+        ],
+        "cost_reduction_pct_mean": 24.46172974693661,
+        "cost_reduction_pct_95ci": [
+          21.89363156294011,
+          26.877766892454066
+        ],
+        "non_inferior": true,
+        "cost_dominant": true,
+        "pareto_dominant": true
+      }
+    },
+    "COMPOUND_FAULT": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.005779146320793631,
+        "delta_macro_f1_95ci": [
+          -0.00468390202066683,
+          0.016937130138709264
+        ],
+        "delta_cost_mean": -0.18622469544410705,
+        "delta_cost_95ci": [
+          -0.2105988085269928,
+          -0.16227641701698303
+        ],
+        "cost_reduction_pct_mean": 14.39400684578747,
+        "cost_reduction_pct_95ci": [
+          12.81171141147391,
+          16.01406415119234
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": 0.010043756484542865,
+        "delta_macro_f1_95ci": [
+          -0.005970838830085376,
+          0.027120189604275806
+        ],
+        "delta_cost_mean": -0.43235045337677,
+        "delta_cost_95ci": [
+          -0.4737341582775116,
+          -0.390140637755394
+        ],
+        "cost_reduction_pct_mean": 28.077188422090426,
+        "cost_reduction_pct_95ci": [
+          26.031873781306842,
+          30.021640159301473
+        ],
+        "non_inferior": true,
+        "cost_dominant": true,
+        "pareto_dominant": true
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": -0.005287509635214901,
+        "delta_macro_f1_95ci": [
+          -0.012823512219254492,
+          0.0020009694137460843
+        ],
+        "delta_cost_mean": 0.10687501835823059,
+        "delta_cost_95ci": [
+          0.08253739774227142,
+          0.13291053771972655
+        ],
+        "cost_reduction_pct_mean": -10.687501728948043,
+        "cost_reduction_pct_95ci": [
+          -13.29105363906212,
+          -8.253739691689747
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": -0.0027479595295118414,
+        "delta_macro_f1_95ci": [
+          -0.012888432163459211,
+          0.007404497394178579
+        ],
+        "delta_cost_mean": -0.3204724007844925,
+        "delta_cost_95ci": [
+          -0.35665078163146974,
+          -0.28222442269325254
+        ],
+        "cost_reduction_pct_mean": 22.44482790143832,
+        "cost_reduction_pct_95ci": [
+          20.090704091595075,
+          24.601254789376654
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.018935434935795834,
+        "delta_macro_f1_95ci": [
+          -0.0037638025581114717,
+          0.04060581493549433
+        ],
+        "delta_cost_mean": -1.1931247427463532,
+        "delta_cost_95ci": [
+          -1.2174623161554337,
+          -1.167088943719864
+        ],
+        "cost_reduction_pct_mean": 51.874993974881875,
+        "cost_reduction_pct_95ci": [
+          50.74300877302824,
+          52.93315053500336
+        ],
+        "non_inferior": true,
+        "cost_dominant": true,
+        "pareto_dominant": true
+      }
+    },
+    "INTERMITTENT_MISSINGNESS": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.0028236294574691817,
+        "delta_macro_f1_95ci": [
+          -0.016235060606748997,
+          0.021891628035721637
+        ],
+        "delta_cost_mean": -0.0699348111152649,
+        "delta_cost_95ci": [
+          -0.11409069001674652,
+          -0.02363759279251099
+        ],
+        "cost_reduction_pct_mean": 4.217820989193053,
+        "cost_reduction_pct_95ci": [
+          1.5107752256663947,
+          6.5655514106681405
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": 0.005899506137309788,
+        "delta_macro_f1_95ci": [
+          -0.015436083399678183,
+          0.028143258224183457
+        ],
+        "delta_cost_mean": -0.39060231852531435,
+        "delta_cost_95ci": [
+          -0.4465940535068512,
+          -0.33985804915428164
+        ],
+        "cost_reduction_pct_mean": 19.8290250605029,
+        "cost_reduction_pct_95ci": [
+          17.898970878748287,
+          21.789059400013535
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": 0.00943793259373338,
+        "delta_macro_f1_95ci": [
+          -0.010342093132724453,
+          0.029999511724691258
+        ],
+        "delta_cost_mean": 0.5567262434959411,
+        "delta_cost_95ci": [
+          0.49585966765880585,
+          0.619688892364502
+        ],
+        "cost_reduction_pct_mean": -54.53519035688476,
+        "cost_reduction_pct_95ci": [
+          -60.79673266774378,
+          -48.44187344058166
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.01617039203476977,
+        "delta_macro_f1_95ci": [
+          -0.00033436261874953684,
+          0.031940578226497505
+        ],
+        "delta_cost_mean": 0.034363544702529905,
+        "delta_cost_95ci": [
+          -0.02622985243797302,
+          0.101014706492424
+        ],
+        "cost_reduction_pct_mean": -2.237004905542519,
+        "cost_reduction_pct_95ci": [
+          -6.611854271600737,
+          1.6790374039198748
+        ],
+        "non_inferior": true,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.008919179008471787,
+        "delta_macro_f1_95ci": [
+          -0.015891618249636162,
+          0.03343615513436673
+        ],
+        "delta_cost_mean": -1.0388477556705475,
+        "delta_cost_95ci": [
+          -1.1151865690946579,
+          -0.9622042447328567
+        ],
+        "cost_reduction_pct_mean": 39.69769508603726,
+        "cost_reduction_pct_95ci": [
+          37.410346602675446,
+          41.971930260140255
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      }
+    },
+    "HETEROGENEOUS_DEADLINE_STRESS": {
+      "ConfidenceRouting_0.55": {
+        "delta_macro_f1_mean": 0.005419257838147789,
+        "delta_macro_f1_95ci": [
+          -0.011034759877166197,
+          0.0232857858977982
+        ],
+        "delta_cost_mean": 0.16666485249996185,
+        "delta_cost_95ci": [
+          0.13174899518489838,
+          0.19815346598625183
+        ],
+        "cost_reduction_pct_mean": -12.73539554302144,
+        "cost_reduction_pct_95ci": [
+          -15.59752893486763,
+          -9.726133553051987
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "ConfidenceRouting_0.65": {
+        "delta_macro_f1_mean": 0.009138709806282829,
+        "delta_macro_f1_95ci": [
+          -0.011697005730055584,
+          0.03212234667086664
+        ],
+        "delta_cost_mean": -0.0004874699115753174,
+        "delta_cost_95ci": [
+          -0.0393684595823288,
+          0.03679826557636259
+        ],
+        "cost_reduction_pct_mean": 0.011555498745362566,
+        "cost_reduction_pct_95ci": [
+          -2.573318337281225,
+          2.573250436477835
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "FixedFallback": {
+        "delta_macro_f1_mean": 0.006250620930231736,
+        "delta_macro_f1_95ci": [
+          -0.01081660615140434,
+          0.02466275111559989
+        ],
+        "delta_cost_mean": 0.4779122405052185,
+        "delta_cost_95ci": [
+          0.42994962334632875,
+          0.526382178068161
+        ],
+        "cost_reduction_pct_mean": -47.79122357260961,
+        "cost_reduction_pct_95ci": [
+          -52.638217280433935,
+          -42.99496190468326
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "MatchedBudgetRandom": {
+        "delta_macro_f1_mean": 0.003697748203054306,
+        "delta_macro_f1_95ci": [
+          -0.01152549095523871,
+          0.018933499785929887
+        ],
+        "delta_cost_mean": 0.08024295449256896,
+        "delta_cost_95ci": [
+          0.02784656286239624,
+          0.13582218587398528
+        ],
+        "cost_reduction_pct_mean": -5.752754346332366,
+        "cost_reduction_pct_95ci": [
+          -9.907108498203907,
+          -1.9695709039108775
+        ],
+        "non_inferior": false,
+        "cost_dominant": false,
+        "pareto_dominant": false
+      },
+      "AlwaysOnFusion": {
+        "delta_macro_f1_mean": 0.0039135295983584485,
+        "delta_macro_f1_95ci": [
+          -0.013716486003255784,
+          0.021366741663471113
+        ],
+        "delta_cost_mean": -0.752494247674942,
+        "delta_cost_95ci": [
+          -0.8008081823587417,
+          -0.6984093964099884
+        ],
+        "cost_reduction_pct_mean": 33.73641202343145,
+        "cost_reduction_pct_95ci": [
+          31.478772710700298,
+          35.85528101971317
+        ],
+        "non_inferior": false,
+        "cost_dominant": true,
+        "pareto_dominant": false
+      }
+    }
+  },
+  "overall_aggregate": {
+    "ConfidenceRouting_0.55": {
+      "delta_macro_f1_mean": 0.0036355133361296453,
+      "delta_macro_f1_95ci": [
+        -0.005193102477716788,
+        0.012619098169029955
+      ],
+      "delta_cost_mean": -0.04110426647322518,
+      "cost_reduction_pct_mean": 2.698510870086271,
+      "cost_reduction_pct_95ci": [
+        1.3627528207770059,
+        3.9745020453989373
+      ],
+      "non_inferior": true,
+      "cost_dominant": false,
+      "pareto_dominant": false
+    },
+    "ConfidenceRouting_0.65": {
+      "delta_macro_f1_mean": 0.0034979758534663882,
+      "delta_macro_f1_95ci": [
+        -0.009213319321850651,
+        0.016459621693354222
+      ],
+      "delta_cost_mean": -0.3625867372240339,
+      "cost_reduction_pct_mean": 19.706710704363488,
+      "cost_reduction_pct_95ci": [
+        18.958512766486493,
+        20.505915414238938
+      ],
+      "non_inferior": true,
+      "cost_dominant": true,
+      "pareto_dominant": true
+    },
+    "FixedFallback": {
+      "delta_macro_f1_mean": 0.005050948097102827,
+      "delta_macro_f1_95ci": [
+        -0.008077232774004805,
+        0.01925293144072795
+      ],
+      "delta_cost_mean": 0.47391118936879295,
+      "cost_reduction_pct_mean": -47.250200009754785,
+      "cost_reduction_pct_95ci": [
+        -51.2567557341555,
+        -43.55393910606413
+      ],
+      "non_inferior": true,
+      "cost_dominant": false,
+      "pareto_dominant": false
+    },
+    "MatchedBudgetRandom": {
+      "delta_macro_f1_mean": 0.0059450057987072225,
+      "delta_macro_f1_95ci": [
+        -0.003459774882403524,
+        0.015526823869525868
+      ],
+      "delta_cost_mean": -0.0730330227102552,
+      "cost_reduction_pct_mean": 4.70765471426124,
+      "cost_reduction_pct_95ci": [
+        1.8315191426849273,
+        7.49727938676186
+      ],
+      "non_inferior": true,
+      "cost_dominant": false,
+      "pareto_dominant": false
+    },
+    "AlwaysOnFusion": {
+      "delta_macro_f1_mean": 0.007214231847136203,
+      "delta_macro_f1_95ci": [
+        -0.007568528776604841,
+        0.022423120622830226
+      ],
+      "delta_cost_mean": -1.186943096944264,
+      "cost_reduction_pct_mean": 44.557667653373315,
+      "cost_reduction_pct_95ci": [
+        43.05980002830703,
+        45.98950150980294
+      ],
+      "non_inferior": true,
+      "cost_dominant": true,
+      "pareto_dominant": true
+    }
+  }
+}

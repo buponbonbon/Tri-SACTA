@@ -106,28 +106,96 @@ def to_7class_sentiment(val: float) -> int:
         return 6
 
 
+PINNED_HF_MODEL_ID = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
+PINNED_HF_REVISION = "8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c"
+PINNED_HF_ASSET_SHA256 = {
+    "config.json": "4e4430c95100d613df80fa01276f231931e1b535557cf62fbb3cc50323e50cca",
+    "model.safetensors": "65af50b09ecbf13ca35c840dbf038b26ff8e10e5ea89ca724828ed1e",
+    "spm.model": "13c8d666d62a7bc4ac8f040aab68e942c861f93303156cc28f5c7e885d86d6e3",
+    "tokenizer.json": "3aca3ce69a0a35aeb144a52c4f1d41c4246b8785f8f398315cc8fb6b24057810",
+    "tokenizer_config.json": "df9fd3a4482cc4a866788244824573fab8e74dadd1609d4f0e5997f9e96921dc",
+}
+
+
+def resolve_and_verify_pinned_deberta(
+    snapshot_dir: Optional[str] = None,
+    expected_repo_id: str = PINNED_HF_MODEL_ID,
+    expected_revision: str = PINNED_HF_REVISION,
+    expected_assets: Optional[Dict[str, str]] = None,
+    local_files_only: bool = True,
+) -> str:
+    """
+    Strictly resolve and verify the frozen mDeBERTa encoder snapshot & asset SHA-256 digests.
+    Fails closed if repo_id, revision, snapshot directory, or any asset digest mismatches.
+    Never falls back to an unpinned model or different encoder (e.g., microsoft/deberta-v3-base).
+    """
+    if expected_repo_id != PINNED_HF_MODEL_ID:
+        raise RuntimeError(
+            f"ENCODER PIN VIOLATION: Expected '{PINNED_HF_MODEL_ID}', got '{expected_repo_id}'."
+        )
+    if expected_revision != PINNED_HF_REVISION:
+        raise RuntimeError(
+            f"ENCODER REVISION VIOLATION: Expected '{PINNED_HF_REVISION}', got '{expected_revision}'."
+        )
+
+    assets = expected_assets if expected_assets is not None else PINNED_HF_ASSET_SHA256
+    target_dir = snapshot_dir or os.path.expanduser(
+        f"~/.cache/huggingface/hub/models--MoritzLaurer--mDeBERTa-v3-base-mnli-xnli/snapshots/{expected_revision}"
+    )
+
+    if not os.path.isdir(target_dir):
+        if local_files_only:
+            raise RuntimeError(
+                f"FROZEN ENCODER MISSING: Pinned snapshot directory not found at '{target_dir}' "
+                f"(repo={expected_repo_id}, rev={expected_revision}). Offline fallback is disabled."
+            )
+        return expected_repo_id
+
+    for fname, expected_entry in assets.items():
+        expected_sha = expected_entry["sha256"] if isinstance(expected_entry, dict) else expected_entry
+        fpath = os.path.join(target_dir, fname)
+        if not os.path.exists(fpath):
+            raise RuntimeError(f"FROZEN ENCODER ASSET MISSING: '{fname}' not found in '{target_dir}'.")
+        actual_sha = compute_sha256(fpath)
+        if actual_sha != expected_sha:
+            raise RuntimeError(
+                f"FROZEN ENCODER ASSET HASH MISMATCH for '{fname}': "
+                f"expected={expected_sha}, actual={actual_sha}."
+            )
+
+    return target_dir
+
+
 def encode_transcripts_with_deberta(
     transcripts: List[str],
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
     batch_size: int = 32,
+    snapshot_dir: Optional[str] = None,
+    expected_repo_id: str = PINNED_HF_MODEL_ID,
+    expected_revision: str = PINNED_HF_REVISION,
+    expected_assets: Optional[Dict[str, str]] = None,
+    local_files_only: bool = True,
 ) -> torch.Tensor:
-    """Encode transcript strings using cached mDeBERTa-v3 with attention-masked mean pooling."""
+    """Encode transcript strings using strictly pinned & verified mDeBERTa-v3 with attention-masked mean pooling."""
     from transformers import AutoTokenizer, AutoModel
 
-    candidate_paths = [
-        os.path.expanduser("~/.cache/huggingface/hub/models--MoritzLaurer--mDeBERTa-v3-base-mnli-xnli/snapshots/8adb042d524ecd5c26d3e3ba0e3fbcf7e2d0864c"),
-        "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
-        "microsoft/deberta-v3-base",
-    ]
-    chosen_path = None
-    for p in candidate_paths:
-        if os.path.exists(p) or "/" in p:
-            chosen_path = p
-            break
+    chosen_path = resolve_and_verify_pinned_deberta(
+        snapshot_dir=snapshot_dir,
+        expected_repo_id=expected_repo_id,
+        expected_revision=expected_revision,
+        expected_assets=expected_assets,
+        local_files_only=local_files_only,
+    )
 
-    logger.info(f"Loading text encoder from: {chosen_path} (device: {device})")
-    tokenizer = AutoTokenizer.from_pretrained(chosen_path)
-    model = AutoModel.from_pretrained(chosen_path).half().to(device).eval()
+    logger.info(
+        f"Loading strictly pinned text encoder from: {chosen_path} "
+        f"(rev={expected_revision}, local_files_only={local_files_only}, device={device})"
+    )
+    load_kwargs: Dict[str, Any] = {"local_files_only": local_files_only}
+    if not os.path.isdir(chosen_path):
+        load_kwargs["revision"] = expected_revision
+    tokenizer = AutoTokenizer.from_pretrained(chosen_path, **load_kwargs)
+    model = AutoModel.from_pretrained(chosen_path, **load_kwargs).half().to(device).eval()
 
     N = len(transcripts)
     pooled_tensors: List[torch.Tensor] = []

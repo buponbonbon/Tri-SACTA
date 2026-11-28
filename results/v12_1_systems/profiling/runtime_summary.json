@@ -1,0 +1,38 @@
+{
+  "cold_start_latency_ms": 70.51530003082007,
+  "warm_sequential_c1": {
+    "num_requests": 100,
+    "wall_latency_mean_ms": 21.156703006708995,
+    "wall_latency_std_ms": 2.405072809028989,
+    "wall_latency_p50_ms": 20.750049967318773,
+    "wall_latency_p95_ms": 23.653770057717335,
+    "wall_latency_p99_ms": 31.544830008642773,
+    "server_latency_mean_ms": 12.093874999554828,
+    "mean_compute_cost": 3.5
+  },
+  "warm_concurrent_c4": {
+    "num_requests": 50,
+    "wall_latency_mean_ms": 64.88837398588657,
+    "wall_latency_p50_ms": 65.81969995750114,
+    "wall_latency_p95_ms": 74.26730995066464,
+    "wall_latency_p99_ms": 74.864040997345,
+    "server_latency_mean_ms": 44.1491899988614
+  },
+  "service_health": {
+    "status": "healthy",
+    "service": "Tri-SACTA V12.1 BRMO",
+    "device": "cuda",
+    "available_seeds": [
+      42,
+      100,
+      2026
+    ],
+    "total_fusion_parameters": 1066397,
+    "conformal_calibration": {
+      "status": "calibrated",
+      "calibration_samples": 250,
+      "target_coverage": 0.9,
+      "calibrated_quantile": 0.8811965584754944
+    }
+  }
+}

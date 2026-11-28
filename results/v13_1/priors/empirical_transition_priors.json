@@ -1,0 +1,292 @@
+{
+  "description": "Exact empirical transition frequencies and error decomposition on validation set across seeds 42, 100, 2026",
+  "historical_v13_priors_audit": {
+    "('T', 'audio')": {
+      "gamma": 0.3768,
+      "nu": 0.116,
+      "dest": "TA",
+      "cost": 1.2
+    },
+    "('T', 'visual')": {
+      "gamma": 0.3387,
+      "nu": 0.2245,
+      "dest": "TV",
+      "cost": 1.3
+    },
+    "('TA', 'visual')": {
+      "gamma": 0.2437,
+      "nu": 0.17,
+      "dest": "TAV",
+      "cost": 1.3
+    },
+    "('TV', 'audio')": {
+      "gamma": 0.2891,
+      "nu": 0.185,
+      "dest": "TAV",
+      "cost": 1.2
+    },
+    "('A', 'text')": {
+      "gamma": 0.5495,
+      "nu": 0.12,
+      "dest": "TA",
+      "cost": 1.0
+    },
+    "('A', 'visual')": {
+      "gamma": 0.3781,
+      "nu": 0.25,
+      "dest": "AV",
+      "cost": 1.3
+    },
+    "('V', 'text')": {
+      "gamma": 0.5473,
+      "nu": 0.12,
+      "dest": "TV",
+      "cost": 1.0
+    },
+    "('V', 'audio')": {
+      "gamma": 0.3461,
+      "nu": 0.26,
+      "dest": "AV",
+      "cost": 1.2
+    },
+    "('AV', 'text')": {
+      "gamma": 0.5467,
+      "nu": 0.11,
+      "dest": "TAV",
+      "cost": 1.0
+    }
+  },
+  "empirical_val_transitions": {
+    "(T, audio)": {
+      "source_subset": "T",
+      "candidate_modality": "audio",
+      "destination_subset": "TA",
+      "incremental_cost": 1.2,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 386,
+      "correct_to_wrong_harm": 51,
+      "wrong_to_correct_rescue": 53,
+      "wrong_to_wrong": 260,
+      "total_source_errors": 313,
+      "total_source_correct": 437,
+      "gamma_rescue_rate": 0.16932907348242812,
+      "gamma_95_ci": [
+        0.13184749629926804,
+        0.21482920272005265
+      ],
+      "nu_negative_transfer_rate": 0.11670480549199085,
+      "nu_95_ci": [
+        0.0898876413012619,
+        0.1502022231761377
+      ],
+      "net_correct_change": 2,
+      "net_gain_per_query": 0.0026666666666666666
+    },
+    "(T, visual)": {
+      "source_subset": "T",
+      "candidate_modality": "visual",
+      "destination_subset": "TV",
+      "incremental_cost": 1.3,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 347,
+      "correct_to_wrong_harm": 90,
+      "wrong_to_correct_rescue": 64,
+      "wrong_to_wrong": 249,
+      "total_source_errors": 313,
+      "total_source_correct": 437,
+      "gamma_rescue_rate": 0.20447284345047922,
+      "gamma_95_ci": [
+        0.16350174409231427,
+        0.25261028160128146
+      ],
+      "nu_negative_transfer_rate": 0.20594965675057209,
+      "nu_95_ci": [
+        0.17067500818953532,
+        0.24634915649909664
+      ],
+      "net_correct_change": -26,
+      "net_gain_per_query": -0.034666666666666665
+    },
+    "(TA, visual)": {
+      "source_subset": "TA",
+      "candidate_modality": "visual",
+      "destination_subset": "TAV",
+      "incremental_cost": 1.3,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 362,
+      "correct_to_wrong_harm": 77,
+      "wrong_to_correct_rescue": 72,
+      "wrong_to_wrong": 239,
+      "total_source_errors": 311,
+      "total_source_correct": 439,
+      "gamma_rescue_rate": 0.2315112540192926,
+      "gamma_95_ci": [
+        0.18807986814730093,
+        0.28149467346346463
+      ],
+      "nu_negative_transfer_rate": 0.17539863325740318,
+      "nu_95_ci": [
+        0.14268125938186194,
+        0.21374776625619912
+      ],
+      "net_correct_change": -5,
+      "net_gain_per_query": -0.006666666666666667
+    },
+    "(TV, audio)": {
+      "source_subset": "TV",
+      "candidate_modality": "audio",
+      "destination_subset": "TAV",
+      "incremental_cost": 1.2,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 360,
+      "correct_to_wrong_harm": 51,
+      "wrong_to_correct_rescue": 74,
+      "wrong_to_wrong": 265,
+      "total_source_errors": 339,
+      "total_source_correct": 411,
+      "gamma_rescue_rate": 0.2182890855457227,
+      "gamma_95_ci": [
+        0.17760504400585592,
+        0.2652863670714463
+      ],
+      "nu_negative_transfer_rate": 0.12408759124087591,
+      "nu_95_ci": [
+        0.09565270989418895,
+        0.1594846726633945
+      ],
+      "net_correct_change": 23,
+      "net_gain_per_query": 0.030666666666666665
+    },
+    "(A, text)": {
+      "source_subset": "A",
+      "candidate_modality": "text",
+      "destination_subset": "TA",
+      "incremental_cost": 1.0,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 213,
+      "correct_to_wrong_harm": 103,
+      "wrong_to_correct_rescue": 226,
+      "wrong_to_wrong": 208,
+      "total_source_errors": 434,
+      "total_source_correct": 316,
+      "gamma_rescue_rate": 0.5207373271889401,
+      "gamma_95_ci": [
+        0.47376064301265275,
+        0.5673501148504648
+      ],
+      "nu_negative_transfer_rate": 0.3259493670886076,
+      "nu_95_ci": [
+        0.27662731758415726,
+        0.37945244189678595
+      ],
+      "net_correct_change": 123,
+      "net_gain_per_query": 0.164
+    },
+    "(A, visual)": {
+      "source_subset": "A",
+      "candidate_modality": "visual",
+      "destination_subset": "AV",
+      "incremental_cost": 1.3,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 193,
+      "correct_to_wrong_harm": 123,
+      "wrong_to_correct_rescue": 111,
+      "wrong_to_wrong": 323,
+      "total_source_errors": 434,
+      "total_source_correct": 316,
+      "gamma_rescue_rate": 0.2557603686635945,
+      "gamma_95_ci": [
+        0.2169803729830625,
+        0.29882625662910767
+      ],
+      "nu_negative_transfer_rate": 0.38924050632911394,
+      "nu_95_ci": [
+        0.33711842511028284,
+        0.4440232400139538
+      ],
+      "net_correct_change": -12,
+      "net_gain_per_query": -0.016
+    },
+    "(V, text)": {
+      "source_subset": "V",
+      "candidate_modality": "text",
+      "destination_subset": "TV",
+      "incremental_cost": 1.0,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 197,
+      "correct_to_wrong_harm": 96,
+      "wrong_to_correct_rescue": 214,
+      "wrong_to_wrong": 243,
+      "total_source_errors": 457,
+      "total_source_correct": 293,
+      "gamma_rescue_rate": 0.4682713347921225,
+      "gamma_95_ci": [
+        0.42297607210741756,
+        0.514095581146108
+      ],
+      "nu_negative_transfer_rate": 0.32764505119453924,
+      "nu_95_ci": [
+        0.2764347388685828,
+        0.38331645503415873
+      ],
+      "net_correct_change": 118,
+      "net_gain_per_query": 0.15733333333333333
+    },
+    "(V, audio)": {
+      "source_subset": "V",
+      "candidate_modality": "audio",
+      "destination_subset": "AV",
+      "incremental_cost": 1.2,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 189,
+      "correct_to_wrong_harm": 104,
+      "wrong_to_correct_rescue": 115,
+      "wrong_to_wrong": 342,
+      "total_source_errors": 457,
+      "total_source_correct": 293,
+      "gamma_rescue_rate": 0.25164113785557984,
+      "gamma_95_ci": [
+        0.21403636408877028,
+        0.2933865768957241
+      ],
+      "nu_negative_transfer_rate": 0.35494880546075086,
+      "nu_95_ci": [
+        0.3023592140747553,
+        0.41129278079388853
+      ],
+      "net_correct_change": 11,
+      "net_gain_per_query": 0.014666666666666666
+    },
+    "(AV, text)": {
+      "source_subset": "AV",
+      "candidate_modality": "text",
+      "destination_subset": "TAV",
+      "incremental_cost": 1.0,
+      "total_evaluated_queries": 750,
+      "correct_to_correct": 222,
+      "correct_to_wrong_harm": 82,
+      "wrong_to_correct_rescue": 212,
+      "wrong_to_wrong": 234,
+      "total_source_errors": 446,
+      "total_source_correct": 304,
+      "gamma_rescue_rate": 0.47533632286995514,
+      "gamma_95_ci": [
+        0.42939693937328194,
+        0.5216969567892783
+      ],
+      "nu_negative_transfer_rate": 0.26973684210526316,
+      "nu_95_ci": [
+        0.2229476177522621,
+        0.322273041184022
+      ],
+      "net_correct_change": 130,
+      "net_gain_per_query": 0.17333333333333334
+    }
+  },
+  "crossover_defect_findings": {
+    "strictly_audio_dominant": true,
+    "min_utility_difference": 0.053461538461538505,
+    "max_utility_difference": 0.07602564102564102,
+    "visual_unselectable_at_T_when_audio_available": true
+  }
+}

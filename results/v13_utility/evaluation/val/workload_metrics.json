@@ -1,0 +1,399 @@
+{
+  "split": "val",
+  "sample_count": 250,
+  "unique_video_clusters": 29,
+  "workloads": {
+    "CLEAN_MULTIMODAL": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.5898137919406091,
+        "macro_f1_std": 0.009452647689098597,
+        "accuracy_mean": 0.5986666666666666,
+        "cost_mean": 1.7733333905537922,
+        "latency_mean": 4.401333252588908,
+        "conformal_coverage_mean": 0.9146666725476583,
+        "conformal_set_size_mean": 2.3266666730244956
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.5840904402205551,
+        "macro_f1_std": 0.005871832296997115,
+        "accuracy_mean": 0.596,
+        "cost_mean": 1.9533332983652751,
+        "latency_mean": 5.957333246866862,
+        "conformal_coverage_mean": 0.9133333563804626,
+        "conformal_set_size_mean": 2.3426666259765625
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.5756952733163015,
+        "macro_f1_std": 0.007833254710265943,
+        "accuracy_mean": 0.5866666666666666,
+        "cost_mean": 2.456666628519694,
+        "latency_mean": 8.574666659037272,
+        "conformal_coverage_mean": 0.909333348274231,
+        "conformal_set_size_mean": 2.3239999612172446
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.9320000012715658,
+        "conformal_set_size_mean": 2.4119999408721924
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.5777704150507227,
+        "macro_f1_std": 0.012397435648064418,
+        "accuracy_mean": 0.5893333333333333,
+        "cost_mean": 1.8200000127156575,
+        "latency_mean": 5.222666581471761,
+        "conformal_coverage_mean": 0.9040000041325887,
+        "conformal_set_size_mean": 2.3253333568573
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.5678272982730759,
+        "macro_f1_std": 0.0029917983493736723,
+        "accuracy_mean": 0.5786666666666666,
+        "cost_mean": 3.5,
+        "latency_mean": 14.0,
+        "conformal_coverage_mean": 0.909333348274231,
+        "conformal_set_size_mean": 2.309333324432373
+      }
+    },
+    "TEXT_EMBEDDING_NOISE": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.4831650873556474,
+        "macro_f1_std": 0.012449128991940882,
+        "accuracy_mean": 0.49733333333333335,
+        "cost_mean": 1.5401333967844646,
+        "latency_mean": 3.315999984741211,
+        "conformal_coverage_mean": 0.8080000082651774,
+        "conformal_set_size_mean": 2.030666708946228
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.4949804270368124,
+        "macro_f1_std": 0.011800585795966339,
+        "accuracy_mean": 0.5066666666666667,
+        "cost_mean": 1.59333336353302,
+        "latency_mean": 4.085333347320557,
+        "conformal_coverage_mean": 0.8173333207766215,
+        "conformal_set_size_mean": 2.0760000149408975
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.4842464707840874,
+        "macro_f1_std": 0.00804600826029487,
+        "accuracy_mean": 0.49733333333333335,
+        "cost_mean": 2.0766666730244956,
+        "latency_mean": 6.598666667938232,
+        "conformal_coverage_mean": 0.8106666604677836,
+        "conformal_set_size_mean": 2.0653333266576133
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.47217867989561574,
+        "macro_f1_std": 0.004586292082368844,
+        "accuracy_mean": 0.48666666666666664,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.8266666730244955,
+        "conformal_set_size_mean": 2.1359999974568686
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.4917817800200117,
+        "macro_f1_std": 0.010261754472075422,
+        "accuracy_mean": 0.504,
+        "cost_mean": 1.8200000127156575,
+        "latency_mean": 5.222666581471761,
+        "conformal_coverage_mean": 0.8160000046094259,
+        "conformal_set_size_mean": 2.0573333501815796
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.4844730645234392,
+        "macro_f1_std": 0.0029666024642388523,
+        "accuracy_mean": 0.49866666666666665,
+        "cost_mean": 3.5,
+        "latency_mean": 14.0,
+        "conformal_coverage_mean": 0.8199999928474426,
+        "conformal_set_size_mean": 2.0733333826065063
+      }
+    },
+    "AUDIO_FEATURE_MASKING": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.567794481481791,
+        "macro_f1_std": 0.005931730127447574,
+        "accuracy_mean": 0.5773333333333333,
+        "cost_mean": 1.2721333901087444,
+        "latency_mean": 2.67466672261556,
+        "conformal_coverage_mean": 0.9053333401679993,
+        "conformal_set_size_mean": 2.32533327738444
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.5725900772319802,
+        "macro_f1_std": 0.006322376367966157,
+        "accuracy_mean": 0.58,
+        "cost_mean": 1.495733380317688,
+        "latency_mean": 4.050666570663452,
+        "conformal_coverage_mean": 0.8866666555404663,
+        "conformal_set_size_mean": 2.259999990463257
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.5506259906564461,
+        "macro_f1_std": 0.0076170391639863895,
+        "accuracy_mean": 0.556,
+        "cost_mean": 1.7574665943781536,
+        "latency_mean": 5.661333401997884,
+        "conformal_coverage_mean": 0.8693333268165588,
+        "conformal_set_size_mean": 2.206666628519694
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.9320000012715658,
+        "conformal_set_size_mean": 2.4119999408721924
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.5589625710396929,
+        "macro_f1_std": 0.018104374530346207,
+        "accuracy_mean": 0.5693333333333334,
+        "cost_mean": 1.4211999575297039,
+        "latency_mean": 3.5920000076293945,
+        "conformal_coverage_mean": 0.909333328406016,
+        "conformal_set_size_mean": 2.3480000495910645
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.544217744410448,
+        "macro_f1_std": 0.006716036453510892,
+        "accuracy_mean": 0.548,
+        "cost_mean": 2.299999952316284,
+        "latency_mean": 9.0,
+        "conformal_coverage_mean": 0.8679999907811483,
+        "conformal_set_size_mean": 2.189333359400431
+      }
+    },
+    "VISUAL_ZERO_MASK": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "cost_mean": 1.6832000414530437,
+        "latency_mean": 3.8466666539510093,
+        "conformal_coverage_mean": 0.918666660785675,
+        "conformal_set_size_mean": 2.3360000451405845
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.5778495381441524,
+        "macro_f1_std": 0.005461916977870201,
+        "accuracy_mean": 0.5893333333333333,
+        "cost_mean": 1.4575999180475872,
+        "latency_mean": 2.9066666762034097,
+        "conformal_coverage_mean": 0.9226666688919067,
+        "conformal_set_size_mean": 2.3493332862854004
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.5773722430162297,
+        "macro_f1_std": 0.002619570225086943,
+        "accuracy_mean": 0.5866666666666666,
+        "cost_mean": 1.6992000738779705,
+        "latency_mean": 3.913333257039388,
+        "conformal_coverage_mean": 0.9159999887148539,
+        "conformal_set_size_mean": 2.3293333053588867
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.9320000012715658,
+        "conformal_set_size_mean": 2.4119999408721924
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.5790086445664407,
+        "macro_f1_std": 0.010297376685951426,
+        "accuracy_mean": 0.5933333333333333,
+        "cost_mean": 1.388800064722697,
+        "latency_mean": 2.6200000445048013,
+        "conformal_coverage_mean": 0.9266666571299235,
+        "conformal_set_size_mean": 2.3986666997273765
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.5764363346454523,
+        "macro_f1_std": 0.007071252218206326,
+        "accuracy_mean": 0.5853333333333333,
+        "cost_mean": 2.200000047683716,
+        "latency_mean": 6.0,
+        "conformal_coverage_mean": 0.9173333446184794,
+        "conformal_set_size_mean": 2.3359999656677246
+      }
+    },
+    "COMPOUND_FAULT": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.43522004936237924,
+        "macro_f1_std": 0.007944181711558543,
+        "accuracy_mean": 0.4426666666666667,
+        "cost_mean": 1.1507999897003174,
+        "latency_mean": 1.9279999732971191,
+        "conformal_coverage_mean": 0.7786666750907898,
+        "conformal_set_size_mean": 2.0426666736602783
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.4293237451681024,
+        "macro_f1_std": 0.00968318089544177,
+        "accuracy_mean": 0.436,
+        "cost_mean": 1.2981333335240681,
+        "latency_mean": 2.834666649500529,
+        "conformal_coverage_mean": 0.7666666706403097,
+        "conformal_set_size_mean": 2.0173333883285522
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.4273816712105867,
+        "macro_f1_std": 0.01840811578940347,
+        "accuracy_mean": 0.432,
+        "cost_mean": 1.5390666723251343,
+        "latency_mean": 4.317333380381267,
+        "conformal_coverage_mean": 0.7506666779518127,
+        "conformal_set_size_mean": 1.9786666631698608
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.4396742293181786,
+        "macro_f1_std": 0.007273206068918761,
+        "accuracy_mean": 0.448,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.790666659673055,
+        "conformal_set_size_mean": 2.0839999516805015
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.43254435214926773,
+        "macro_f1_std": 0.001880325032879822,
+        "accuracy_mean": 0.44,
+        "cost_mean": 1.4211999575297039,
+        "latency_mean": 3.5920000076293945,
+        "conformal_coverage_mean": 0.7680000066757202,
+        "conformal_set_size_mean": 2.0386666456858316
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.4208100773858872,
+        "macro_f1_std": 0.015775866279209703,
+        "accuracy_mean": 0.424,
+        "cost_mean": 2.299999952316284,
+        "latency_mean": 9.0,
+        "conformal_coverage_mean": 0.7400000095367432,
+        "conformal_set_size_mean": 1.925333301226298
+      }
+    },
+    "INTERMITTENT_MISSINGNESS": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.5545626821580095,
+        "macro_f1_std": 0.00844165727080105,
+        "accuracy_mean": 0.5693333333333334,
+        "cost_mean": 1.5639999707539876,
+        "latency_mean": 3.821333408355713,
+        "conformal_coverage_mean": 0.9200000166893005,
+        "conformal_set_size_mean": 2.376000006993612
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.5480175895348111,
+        "macro_f1_std": 0.0303343836742893,
+        "accuracy_mean": 0.5666666666666668,
+        "cost_mean": 1.6053333679835002,
+        "latency_mean": 4.358666658401489,
+        "conformal_coverage_mean": 0.9213333328564962,
+        "conformal_set_size_mean": 2.369333267211914
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.5434857744752306,
+        "macro_f1_std": 0.035728502616587436,
+        "accuracy_mean": 0.56,
+        "cost_mean": 1.876666744550069,
+        "latency_mean": 5.71999994913737,
+        "conformal_coverage_mean": 0.9133333365122477,
+        "conformal_set_size_mean": 2.3480000495910645
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.5474221450642821,
+        "macro_f1_std": 0.0026337118724391764,
+        "accuracy_mean": 0.568,
+        "cost_mean": 1.0144000053405762,
+        "latency_mean": 1.3040000200271606,
+        "conformal_coverage_mean": 0.9360000093777975,
+        "conformal_set_size_mean": 2.4519999821980796
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.5423113952501746,
+        "macro_f1_std": 0.019808610101182053,
+        "accuracy_mean": 0.5613333333333334,
+        "cost_mean": 1.525333325068156,
+        "latency_mean": 3.859999974568685,
+        "conformal_coverage_mean": 0.9213333328564962,
+        "conformal_set_size_mean": 2.381333351135254
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.5418373903956152,
+        "macro_f1_std": 0.03522701953319634,
+        "accuracy_mean": 0.5573333333333333,
+        "cost_mean": 2.5799999237060547,
+        "latency_mean": 9.336000442504883,
+        "conformal_coverage_mean": 0.9133333365122477,
+        "conformal_set_size_mean": 2.3519999186197915
+      }
+    },
+    "HETEROGENEOUS_DEADLINE_STRESS": {
+      "UtilitySequentialPolicy": {
+        "macro_f1_mean": 0.5700725397709557,
+        "macro_f1_std": 0.0058066580893254074,
+        "accuracy_mean": 0.58,
+        "cost_mean": 1.4786667029062908,
+        "latency_mean": 3.0426665941874185,
+        "conformal_coverage_mean": 0.9173333446184794,
+        "conformal_set_size_mean": 2.3453333377838135
+      },
+      "ConfidenceRouting_0.55": {
+        "macro_f1_mean": 0.5784426837362052,
+        "macro_f1_std": 0.009708108266933677,
+        "accuracy_mean": 0.592,
+        "cost_mean": 1.3300000031789143,
+        "latency_mean": 2.7160000006357827,
+        "conformal_coverage_mean": 0.9239999850591024,
+        "conformal_set_size_mean": 2.385333299636841
+      },
+      "ConfidenceRouting_0.65": {
+        "macro_f1_mean": 0.5750354659498722,
+        "macro_f1_std": 0.00789251414038751,
+        "accuracy_mean": 0.588,
+        "cost_mean": 1.493333339691162,
+        "latency_mean": 3.565333366394043,
+        "conformal_coverage_mean": 0.91866668065389,
+        "conformal_set_size_mean": 2.3706666628519693
+      },
+      "FixedFallback": {
+        "macro_f1_mean": 0.5680503145082413,
+        "macro_f1_std": 0.005228131659745423,
+        "accuracy_mean": 0.5826666666666666,
+        "cost_mean": 1.0,
+        "latency_mean": 1.0,
+        "conformal_coverage_mean": 0.9320000012715658,
+        "conformal_set_size_mean": 2.4119999408721924
+      },
+      "MatchedBudgetRandom": {
+        "macro_f1_mean": 0.5721246476920286,
+        "macro_f1_std": 0.006416666934802389,
+        "accuracy_mean": 0.5853333333333333,
+        "cost_mean": 1.4155999819437664,
+        "latency_mean": 3.010666608810425,
+        "conformal_coverage_mean": 0.9173333247502645,
+        "conformal_set_size_mean": 2.356000026067098
+      },
+      "AlwaysOnFusion": {
+        "macro_f1_mean": 0.5721503708280449,
+        "macro_f1_std": 0.0021807328891194355,
+        "accuracy_mean": 0.5826666666666666,
+        "cost_mean": 2.2283999919891357,
+        "latency_mean": 6.97599983215332,
+        "conformal_coverage_mean": 0.9226666688919067,
+        "conformal_set_size_mean": 2.334666649500529
+      }
+    }
+  }
+}

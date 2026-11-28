@@ -61,6 +61,17 @@ import tests.test_v8_regression as test_v8_regression
 import tests.test_v9_regression as test_v9_regression
 import tests.test_v10_regression as test_v10_regression
 import tests.test_v11_integrity as test_v11_integrity
+import tests.test_v12_systems as test_v12_systems
+import tests.test_v12_1_systems as test_v12_1_systems
+import tests.test_v13_utility as test_v13_utility
+import tests.test_v13_1_utility as test_v13_1_utility
+import tests.test_v13_1_provenance as test_v13_1_provenance
+import tests.test_v13_1_accounting as test_v13_1_accounting
+import tests.test_v13_1_statistics as test_v13_1_statistics
+import tests.test_v13_2_evaluator_regression as test_v13_2_evaluator_regression
+import tests.test_v13_2_runtime_safety as test_v13_2_runtime_safety
+import tests.test_v13_2_verifier_adversarial as test_v13_2_verifier_adversarial
+import tests.test_v13_2_phase2_pipeline as test_v13_2_phase2_pipeline
 
 
 def run_test_module(module, module_name):
@@ -105,6 +116,26 @@ def run_test_module(module, module_name):
             traceback.print_exc()
             failed += 1
 
+    # Also collect unittest.TestCase classes if present
+    import unittest
+    for attr_name in dir(module):
+        attr = getattr(module, attr_name)
+        if isinstance(attr, type) and issubclass(attr, unittest.TestCase) and attr is not unittest.TestCase:
+            suite = unittest.TestLoader().loadTestsFromTestCase(attr)
+            res = unittest.TestResult()
+            suite.run(res)
+            test_names = [m for m in dir(attr) if m.startswith("test_") and callable(getattr(attr, m))]
+            for tname in test_names:
+                doc = getattr(attr, tname).__doc__
+                doc_str = doc.strip().splitlines()[0] if doc else tname
+                is_err = any(getattr(t, "_testMethodName", None) == tname for t, _ in res.errors + res.failures)
+                if is_err:
+                    print(f"  [FAIL] {attr_name}.{tname}: {doc_str}")
+                    failed += 1
+                else:
+                    print(f"  [PASS] {attr_name}.{tname}: {doc_str}")
+                    passed += 1
+
     return passed, failed
 
 
@@ -127,6 +158,17 @@ def main():
         (test_v9_regression, "V9 Scientific Evidence & Negative Transfer Suite (P0 and P1)"),
         (test_v10_regression, "V10 Independent Scientific Audit & Causal Validation Suite (V10-01 to V10-06)"),
         (test_v11_integrity, "V11 Scientific Triage & Go/No-Go Suite (V11-01 to V11-06)"),
+        (test_v12_systems, "V12 Systems Research Reframing Suite (V12-01 to V12-06)"),
+        (test_v12_1_systems, "V12.1 Budgeted Modality Orchestration & Systems Rectification Suite (V12_1-01 to V12_1-06)"),
+        (test_v13_utility, "V13 Utility-Driven Multimodal Orchestration Suite (V13-01 to V13-08)"),
+        (test_v13_1_utility, "V13.1 Utility Equivalence & Conditional Router Suite"),
+        (test_v13_1_provenance, "V13.1 Provenance, Lineage & Unexposed Pool Suite"),
+        (test_v13_1_accounting, "V13.1 Distributed Socket & Wire Byte Accounting Suite"),
+        (test_v13_1_statistics, "V13.1 Fast Macro-F1 & Video Cluster Bootstrap Suite"),
+        (test_v13_2_evaluator_regression, "V13.2 Evaluator Correctness & Regression Suite"),
+        (test_v13_2_runtime_safety, "V13.2 Runtime Safety & Fair Distributed Transport Suite"),
+        (test_v13_2_verifier_adversarial, "V13.2 Automated Fail-Closed Verifier Adversarial Suite"),
+        (test_v13_2_phase2_pipeline, "V13.2 Phase II Pipeline, Encoder Pinning & Ledger Suite"),
     ]
 
     total_passed = 0

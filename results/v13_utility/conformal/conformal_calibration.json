@@ -1,0 +1,42 @@
+{
+  "alpha": 0.1,
+  "target_coverage": 0.9,
+  "cal_samples": 250,
+  "cal_video_clusters": 46,
+  "seeds": {
+    "42": {
+      "calibrated_quantile": 0.8986396789550781,
+      "q_level": 0.904,
+      "mean_nonconformity_score": 0.5654605509117245,
+      "std_nonconformity_score": 0.22991119350605732,
+      "routing_distribution": {
+        "T": 42,
+        "TA": 196,
+        "TAV": 12
+      }
+    },
+    "100": {
+      "calibrated_quantile": 0.902933768928051,
+      "q_level": 0.904,
+      "mean_nonconformity_score": 0.5397955999616534,
+      "std_nonconformity_score": 0.2690321931660422,
+      "routing_distribution": {
+        "T": 114,
+        "TA": 130,
+        "TAV": 6
+      }
+    },
+    "2026": {
+      "calibrated_quantile": 0.8944218531250954,
+      "q_level": 0.904,
+      "mean_nonconformity_score": 0.5543439748585224,
+      "std_nonconformity_score": 0.2553033723068428,
+      "routing_distribution": {
+        "T": 118,
+        "TA": 114,
+        "TAV": 18
+      }
+    }
+  },
+  "mean_calibrated_quantile": 0.8986651003360748
+}

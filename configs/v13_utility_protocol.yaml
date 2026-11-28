@@ -1,0 +1,108 @@
+# =============================================================================
+# Tri-SACTA V13: Utility-Driven Multimodal Orchestration Protocol
+# =============================================================================
+protocol_version: "13.0"
+date: "2026-11-24"
+base_commit: "44bc28ceb4306fe51893110996841315e967a1ff"
+branch: "research/v13-utility-driven-orchestration"
+
+dataset:
+  name: "cmu_mosei"
+  source: "CMU-MOSEI Authentic Multimodal Dataset"
+  cache_dir: "data/cmu_mosei/features_cache"
+  splits:
+    train:
+      samples: 1000
+      video_clusters: 112
+      role: "model_training"
+    val:
+      samples: 250
+      video_clusters: 29
+      role: "headroom_analysis_and_policy_development"
+      status: "development_exposed"
+    cal:
+      samples: 250
+      video_clusters: 46
+      role: "policy_matched_conformal_calibration"
+      status: "isolated_from_training"
+    test:
+      samples: 500
+      video_clusters: 58
+      role: "independent_confirmatory_evaluation"
+      status: "held_out_until_confirmatory_phase"
+
+task:
+  type: "3_class_sentiment"
+  mapping:
+    negative: "raw_sentiment < 0.0"
+    neutral: "raw_sentiment == 0.0"
+    positive: "raw_sentiment > 0.0"
+  num_classes: 3
+  classes: ["negative", "neutral", "positive"]
+
+modalities:
+  text:
+    dim: 768
+    cost: 1.0
+    latency_ms: 1.0
+  audio:
+    dim: 74
+    cost: 1.2
+    latency_ms: 5.0
+  visual:
+    dim: 35
+    cost: 1.3
+    latency_ms: 8.0
+
+modality_subsets:
+  T:
+    modalities: ["text"]
+    in_dim: 768
+    cost: 1.0
+  A:
+    modalities: ["audio"]
+    in_dim: 74
+    cost: 1.2
+  V:
+    modalities: ["visual"]
+    in_dim: 35
+    cost: 1.3
+  TA:
+    modalities: ["text", "audio"]
+    in_dim: 842
+    cost: 2.2
+  TV:
+    modalities: ["text", "visual"]
+    in_dim: 803
+    cost: 2.3
+  AV:
+    modalities: ["audio", "visual"]
+    in_dim: 109
+    cost: 2.5
+  TAV:
+    modalities: ["text", "audio", "visual"]
+    in_dim: 877
+    cost: 3.5
+
+training:
+  seeds: [42, 100, 2026]
+  epochs: 35
+  batch_size: 32
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  early_stopping_patience: 7
+
+conformal:
+  alpha: 0.10
+  coverage_target: 0.90
+  calibration_split: "cal"
+  score_function: "policy_matched_softmax_residual"
+
+statistical_validation:
+  method: "paired_video_grouped_block_bootstrap"
+  clustering_key: "video_id"
+  resamples: 1000
+  confidence_level: 0.95
+  headroom_threshold_f1: 0.05
+  non_inferiority_margin_f1: -0.010
+  cost_reduction_target_pct: 15.0

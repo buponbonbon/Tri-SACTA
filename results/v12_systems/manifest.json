@@ -1,0 +1,102 @@
+{
+  "audit_stage": "Stage 0",
+  "base_git_sha": "717d5dfdc1f4831dd481d04a8b7bd7edbe528f04",
+  "branch": "research/v12-systems-contribution-validation",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 2050 (4.29 GB VRAM)",
+    "cpu_ram_gb": 16.45,
+    "os": "Windows 10 / 11"
+  },
+  "dataset": "cmu_mosei",
+  "cache_dir": "data/cmu_mosei/features_cache",
+  "splits": {
+    "train": {
+      "text.pt": {
+        "sha256": "626f2cf800332a266f398b31d85f425702306bf3ffa7ffd46a6980431b476f11",
+        "size_bytes": 1537101
+      },
+      "audio.pt": {
+        "sha256": "44a9fde3dd4077c82476febad30d888cbb58a6a938424d695478b6abdd43c628",
+        "size_bytes": 149138
+      },
+      "visual.pt": {
+        "sha256": "f1c12869cce46e0f573c7644aeecbd999140e078c553dcc753d4f52427541d47",
+        "size_bytes": 71127
+      },
+      "labels.pt": {
+        "sha256": "5cabe0beef89445ef8d6c0fb65249ffe3a8eae88a73914366c35a63f12dc4e1c",
+        "size_bytes": 9111
+      },
+      "meta.pt": {
+        "sha256": "0c342f9fd9beab5582a772819a7f6a5547d5be9591b9743298868ee00535d832",
+        "size_bytes": 245972
+      }
+    },
+    "val": {
+      "text.pt": {
+        "sha256": "6d10e938fbcabdbb0ea96c7cb7d4ea803899e6be9b58e0d40fbe395379135882",
+        "size_bytes": 385101
+      },
+      "audio.pt": {
+        "sha256": "ed9d9ce4b62ece67e5e66521ce7e98429e665b3faef506dc9da2cc2cecb93d5b",
+        "size_bytes": 38162
+      },
+      "visual.pt": {
+        "sha256": "f130eccfc5ff7056824bee31a9f6453eda7137cf7509b1d84bff18328c30517a",
+        "size_bytes": 18647
+      },
+      "labels.pt": {
+        "sha256": "619ca9189997753329917ce5a16f371a31f3ec38a37830ce1b8d815f2c9c6639",
+        "size_bytes": 3159
+      },
+      "meta.pt": {
+        "sha256": "0966687ee9f0e112e4dd436d5040ebf706d32e90c6ca56bdf640b9998b356b9b",
+        "size_bytes": 58900
+      }
+    },
+    "cal": {
+      "text.pt": {
+        "sha256": "90b9818f9decbcd312bdf97f4463c93246ffc68d940a653e6872d26efa5c0ed1",
+        "size_bytes": 385101
+      },
+      "audio.pt": {
+        "sha256": "de8d73fe8e25c223885b09fa6a4755438910348b94c19ba0ed41e7d27f3b9039",
+        "size_bytes": 38162
+      },
+      "visual.pt": {
+        "sha256": "8effc2a7ba92fec7f6a85324185cd4e91b14477438eacc4f515cff895d80e5ff",
+        "size_bytes": 18647
+      },
+      "labels.pt": {
+        "sha256": "1ea04f173f4aca9f5c08cc8f12c0d5d6108c261196620c4344ec1ebfce81af6b",
+        "size_bytes": 3159
+      },
+      "meta.pt": {
+        "sha256": "1b65514483c418b9367df1e519c594c198c45d45c7cdf8f2fbe0a018020dd4e9",
+        "size_bytes": 66516
+      }
+    },
+    "test": {
+      "text.pt": {
+        "sha256": "4501208dedf9d5c28d0d3f8f9e13cefba0b700801d7da78a4ffb7ae1c802abbe",
+        "size_bytes": 769101
+      },
+      "audio.pt": {
+        "sha256": "42e1b443832b64d4a60c6d16aa79303067b01b5f1a1d8cfe5d5adb6c6e379f8e",
+        "size_bytes": 75154
+      },
+      "visual.pt": {
+        "sha256": "0e0d88e33d45b449e53b38cf68bfc1b913a4aa6b7c1a57b99f83c94e88bbcf51",
+        "size_bytes": 36119
+      },
+      "labels.pt": {
+        "sha256": "8b2712208bb1e57a94785c6ffba41cd4ecbcab52ef9dfee76864576d70ac20f5",
+        "size_bytes": 5143
+      },
+      "meta.pt": {
+        "sha256": "69534e394dbee93b8a6f59d23017c8707ca5fc1bc396e065fe8dc627ea3b684c",
+        "size_bytes": 120404
+      }
+    }
+  }
+}
