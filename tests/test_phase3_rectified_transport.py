@@ -75,6 +75,24 @@ class TestPhase3RectifiedTransport(unittest.TestCase):
         finally:
             coord.close()
 
+    def test_event_based_critical_path_rounds_for_oneshot(self):
+        cond = NetworkCondition("RTT20", 20.0, None, 0.0, "B")
+        coord = RectifiedNetworkCoordinator(self.bank, torch.device("cpu"), cond, audio_port=self.a_port, visual_port=self.v_port)
+        try:
+            res = coord.process_query_with_events(0, torch.ones(1, 768), policy_mode="confidence_routing_055", deadline_ms=250.0, parent_request_id="paired_0")
+            evs = sorted(res["events"], key=lambda e: e["dispatch_ts"])
+            rounds, cur_end = 0, -1.0
+            for ev in evs:
+                if ev["dispatch_ts"] >= cur_end:
+                    rounds += 1
+                    cur_end = ev["complete_ts"]
+                else:
+                    cur_end = max(cur_end, ev["complete_ts"])
+            self.assertEqual(res["remote_attempted"], 2)
+            self.assertEqual(rounds, 1)
+        finally:
+            coord.close()
+
     def test_d5_deadline_exhausted_timeout(self):
         cond = NetworkCondition("RTT80", 80.0, None, 0.0, "A")
         coord = RectifiedNetworkCoordinator(self.bank, torch.device("cpu"), cond, audio_port=self.a_port, visual_port=self.v_port)

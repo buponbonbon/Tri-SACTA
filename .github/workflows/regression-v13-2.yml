@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "research/v13.2-final-systems-validation-release-candidate"
+      - "research/v13.2-phase3-network-aware-systems-evaluation"
+      - "research/v14-*"
   pull_request:
     branches:
       - "main"

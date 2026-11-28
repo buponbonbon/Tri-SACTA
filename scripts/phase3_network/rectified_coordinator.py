@@ -12,6 +12,7 @@ import os
 import sys
 import time
 import uuid
+import zlib
 import random
 from typing import Dict, Any, List, Optional
 import torch
@@ -56,6 +57,7 @@ class RectifiedNetworkCoordinator(DistributedCoordinator):
         self.network_condition = network_condition
         self._jitter_rng = random.Random(jitter_seed)
         self._parent_request_id: str = ""
+        self._base_jitter_seed: int = jitter_seed
         self.current_events: List[Dict[str, Any]] = []
 
     def try_fetch_remote_modality(
@@ -131,6 +133,9 @@ class RectifiedNetworkCoordinator(DistributedCoordinator):
         parent_request_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         self._parent_request_id = parent_request_id or str(uuid.uuid4())[:12]
+        # Paired exogenous jitter keyed by deterministic scenario/sample identity, independent of policy call count
+        det_seed = zlib.crc32(f"{self._base_jitter_seed}:{sample_idx}:{self._parent_request_id}".encode("utf-8"))
+        self._jitter_rng = random.Random(det_seed)
         self.current_events = []
         res = super().process_query(
             sample_idx=sample_idx,

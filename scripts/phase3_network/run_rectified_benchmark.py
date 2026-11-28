@@ -138,8 +138,16 @@ def main():
                                     ev["policy"] = pol_label
                                     ev_f.write(json.dumps(ev) + "\n")
 
-                                # Actual critical-path rounds from recorded events
-                                actual_rounds = 1 if (pol_mode == "always_on_parallel" and res["remote_attempted"] > 0) else res["remote_attempted"]
+                                # Actual critical-path rounds computed from overlapping CommunicationEvent intervals
+                                evs = sorted(res["events"], key=lambda e: e["dispatch_ts"])
+                                actual_rounds = 0
+                                cur_end = -1.0
+                                for ev in evs:
+                                    if ev["dispatch_ts"] >= cur_end:
+                                        actual_rounds += 1
+                                        cur_end = ev["complete_ts"]
+                                    else:
+                                        cur_end = max(cur_end, ev["complete_ts"])
                                 rows.append({
                                     "sample_idx": sel_idx[i],
                                     "video_id": vids[i],
