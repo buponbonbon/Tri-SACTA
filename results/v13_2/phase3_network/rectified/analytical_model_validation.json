@@ -1,0 +1,132 @@
+{
+  "mae_ms": 5.063435998336305,
+  "medae_ms": 4.236509469561185,
+  "predictions": [
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 11.322058080907233,
+      "observed_ms": 15.762455808469142,
+      "abs_err_ms": 4.440397727561908
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 19.809196466119076,
+      "observed_ms": 29.625537121466202,
+      "abs_err_ms": 9.816340655347126
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 7.58725883951881,
+      "observed_ms": 6.277732068385854,
+      "abs_err_ms": 1.3095267711329566
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 5.513713893085493,
+      "observed_ms": 7.437679039977604,
+      "abs_err_ms": 1.9239651468921108
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 9.3810330759828,
+      "observed_ms": 13.413654287543261,
+      "abs_err_ms": 4.032621211560462
+    },
+    {
+      "condition_id": "RTT10_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 0.4735290344258902,
+      "observed_ms": 0.5026982286992022,
+      "abs_err_ms": 0.029169194273311994
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 30.71599747484663,
+      "observed_ms": 40.623247730451624,
+      "abs_err_ms": 9.907250255604993
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 56.57687323379585,
+      "observed_ms": 63.16703812611957,
+      "abs_err_ms": 6.59016489232372
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 20.870087122347094,
+      "observed_ms": 15.60488837592379,
+      "abs_err_ms": 5.265198746423303
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 14.705633085004685,
+      "observed_ms": 16.433510604206322,
+      "abs_err_ms": 1.7278775192016376
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 26.35073004567977,
+      "observed_ms": 29.31346969250966,
+      "abs_err_ms": 2.9627396468298883
+    },
+    {
+      "condition_id": "RTT30_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 0.7765593374561932,
+      "observed_ms": 0.9019757506926779,
+      "abs_err_ms": 0.12541641323648467
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "AlwaysOn_Direct_Parallel",
+      "predicted_ms": 79.20084595969512,
+      "observed_ms": 83.68064746945024,
+      "abs_err_ms": 4.47980150975512
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "AlwaysOn_Direct_Serial",
+      "predicted_ms": 148.49606515298777,
+      "observed_ms": 158.47434040636406,
+      "abs_err_ms": 9.978275253376296
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "OneShot_ConfidenceRouting_0.55",
+      "predicted_ms": 54.07715782941781,
+      "observed_ms": 32.555489897883184,
+      "abs_err_ms": 21.521667931534623
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "SequentialConfidence_0.55_0.45",
+      "predicted_ms": 37.685431064802664,
+      "observed_ms": 40.09789494548294,
+      "abs_err_ms": 2.412463880680278
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "Static_TA_Direct",
+      "predicted_ms": 68.77497246992219,
+      "observed_ms": 73.3068545432432,
+      "abs_err_ms": 4.531882073321015
+    },
+    {
+      "condition_id": "RTT80_UNRES_B",
+      "policy": "Unimodal_Text",
+      "predicted_ms": 1.5341350950319508,
+      "observed_ms": 1.621224236030207,
+      "abs_err_ms": 0.08708914099825615
+    }
+  ]
+}

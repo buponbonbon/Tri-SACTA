@@ -19,7 +19,7 @@ class TestPhase3AuditIntegrity(unittest.TestCase):
         if not os.path.exists(csv_path):
             self.skipTest("Confirmatory CSV not present")
         info = git_blob_sha1_lf_normalized(csv_path)
-        self.assertEqual(info["crlf_line_count_diff"], 694009)
+        self.assertEqual(info["lf_normalized_sha256"], "32ed7388af2e25abf2ad73eec1fe3cf064cab4aee423f540440dfec2ef2c4438")
         self.assertEqual(info["computed_git_blob_sha1"], "391f1990789d5faa01d369881f13663f2c897310")
 
 

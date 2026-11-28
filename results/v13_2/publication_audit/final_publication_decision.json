@@ -1,23 +1,18 @@
 {
-  "schema_version": "13.2",
-  "phase": "PHASE_III_PUBLICATION_AUDIT",
+  "schema_version": "13.2-rectified",
+  "phase": "PHASE_III_RECTIFIED",
   "novelty_status": "OVERLAP_IDENTIFIED",
   "primary_publication_readiness": "CONDITIONAL_MANUSCRIPT_READY_WITH_EXPLICIT_LIMITATIONS",
   "gates": {
     "G1_phase2_evidence_integrity": "PASS",
     "G2_frozen_implementation_preservation": "PASS",
-    "G3_prior_art_verification_completeness": "PASS",
+    "G3_prior_art_verification_completeness": "PASS_WITH_OVERLAP_DISCLOSED",
     "G4_network_instrumentation_correctness": "PASS",
     "G5_supplementary_experiment_completeness": "PASS",
     "G6_statistical_and_analytical_integrity": "PASS",
     "G7_defensible_scientific_contribution": "PASS_EMPIRICAL_SYSTEMS_STUDY",
-    "G8_readme_and_documentation_consistency": "PASS",
-    "G9_reproducibility_and_ci": "PASS",
+    "G8_documentation_consistency": "PASS",
+    "G9_reproducibility_and_ci": "PENDING_CI_PUSH",
     "G10_publication_readiness_assessment": "CONDITIONAL_MANUSCRIPT_READY_WITH_EXPLICIT_LIMITATIONS"
-  },
-  "recommended_framing": "Empirical Systems Evaluation",
-  "recommended_venues": [
-    "Multimedia Tools and Applications (Springer, Q1 Media Technology / Q2 Computer Networks & Software, hybrid/no mandatory APC)",
-    "Multimedia Systems (Springer, Q1 Media Technology / Q2 Information Systems & Software, hybrid/no mandatory APC)"
-  ]
+  }
 }
